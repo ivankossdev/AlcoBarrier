@@ -1,0 +1,11 @@
+C:\Users\RR\source\repos\AlcoBarrier\bin\Debug\AlcoBarrier.exe.config
+C:\Users\RR\source\repos\AlcoBarrier\bin\Debug\AlcoBarrier.exe
+C:\Users\RR\source\repos\AlcoBarrier\bin\Debug\AlcoBarrier.pdb
+C:\Users\RR\source\repos\AlcoBarrier\obj\Debug\AlcoBarrier.csproj.AssemblyReference.cache
+C:\Users\RR\source\repos\AlcoBarrier\obj\Debug\AlcoBarrier.csproj.SuggestedBindingRedirects.cache
+C:\Users\RR\source\repos\AlcoBarrier\obj\Debug\AlcoBarrier.MainForm.resources
+C:\Users\RR\source\repos\AlcoBarrier\obj\Debug\AlcoBarrier.Properties.Resources.resources
+C:\Users\RR\source\repos\AlcoBarrier\obj\Debug\AlcoBarrier.csproj.GenerateResource.cache
+C:\Users\RR\source\repos\AlcoBarrier\obj\Debug\AlcoBarrier.csproj.CoreCompileInputs.cache
+C:\Users\RR\source\repos\AlcoBarrier\obj\Debug\AlcoBarrier.exe
+C:\Users\RR\source\repos\AlcoBarrier\obj\Debug\AlcoBarrier.pdb
