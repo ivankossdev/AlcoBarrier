@@ -13,11 +13,33 @@ namespace AlcoBarrier
 {
     public partial class MainForm : Form
     {
+        public Thread svrThread = new Thread(TcpServer.Server);
         public MainForm()
         {
             InitializeComponent();
-            new Thread(() => TcpServer.Server()).Start();
+            //new Thread(() => TcpServer.Server()).Start();
+
+           
+            svrThread.Name = "ServerThread";
+            svrThread.Start();
             
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+           
+
+            
+            Console.WriteLine("Close app");
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (svrThread.IsAlive)
+            {
+                Console.WriteLine("Close window\n");
+                svrThread.Abort();
+            }
         }
     }
 }

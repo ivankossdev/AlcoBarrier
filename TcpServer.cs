@@ -54,9 +54,6 @@ namespace AlcoBarrier
             {
                 server.Stop();
             }
-
-            Console.WriteLine("\nHit enter to continue...");
-            Console.Read();
         }
     }
 }
