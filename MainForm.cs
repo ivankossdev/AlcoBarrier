@@ -19,7 +19,6 @@ namespace AlcoBarrier
             InitializeComponent();
             //new Thread(() => TcpServer.Server()).Start();
 
-           
             svrThread.Name = "ServerThread";
             svrThread.Start();
             
@@ -27,9 +26,6 @@ namespace AlcoBarrier
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-           
-
-            
             Console.WriteLine("Close app");
         }
 
