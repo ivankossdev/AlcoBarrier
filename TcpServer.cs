@@ -18,7 +18,7 @@ namespace AlcoBarrier
             {
                 
                 Int32 port = 10500;
-                IPAddress localAddr = IPAddress.Parse("192.168.0.204");
+                IPAddress localAddr = IPAddress.Parse("127.0.0.1");
                 
                 server = new TcpListener(localAddr, port);
                 server.Start();

@@ -8,5 +8,6 @@ namespace AlcoBarrier
 {
     internal class TcpClient
     {
+
     }
 }

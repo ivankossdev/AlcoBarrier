@@ -22,11 +22,6 @@ namespace AlcoBarrier
             //new Thread(() => TcpServer.Server()).Start();
         }
 
-        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            Console.WriteLine("Close app");
-        }
-
         private void buttonFunc_Click(object sender, EventArgs e)
         {
             textBox1.AppendText($"Press button {++count} \n");

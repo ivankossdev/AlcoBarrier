@@ -79,7 +79,6 @@
             this.MinimumSize = new System.Drawing.Size(390, 265);
             this.Name = "MainForm";
             this.Text = "AlcoBarrier";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 
