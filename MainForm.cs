@@ -14,14 +14,12 @@ namespace AlcoBarrier
     public partial class MainForm : Form
     {
         public Thread svrThread = new Thread(TcpServer.Server);
+        int count = 0;
         public MainForm()
         {
             InitializeComponent();
+           
             //new Thread(() => TcpServer.Server()).Start();
-
-            svrThread.Name = "ServerThread";
-            svrThread.Start();
-            
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -29,13 +27,9 @@ namespace AlcoBarrier
             Console.WriteLine("Close app");
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void buttonFunc_Click(object sender, EventArgs e)
         {
-            if (svrThread.IsAlive)
-            {
-                Console.WriteLine("Close window\n");
-                svrThread.Abort();
-            }
+            textBox1.AppendText($"Press button {++count} \n");
         }
     }
 }
