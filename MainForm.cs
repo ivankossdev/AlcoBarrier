@@ -26,5 +26,11 @@ namespace AlcoBarrier
         {
             textBox1.AppendText($"Press button {++count} \n");
         }
+
+        /* 
+         * 1. Здесь добавить в трейде сервер 
+         * 2. Реализовать отправку сообщения через клинет
+         */
+        
     }
 }

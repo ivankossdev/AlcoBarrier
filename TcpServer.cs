@@ -42,13 +42,13 @@ namespace AlcoBarrier
                     while ((i = stream.Read(bytes, 0, bytes.Length)) != 0)
                     {
                         data = Encoding.ASCII.GetString(bytes, 0, i);
-                        Console.WriteLine("Received: {0}", data);
+                        Console.WriteLine($"Received: {data}");
                     }
                 }
             }
             catch (SocketException e)
             {
-                Console.WriteLine("SocketException: {0}", e);
+                Console.WriteLine($"SocketException: {e}");
             }
             finally
             {
