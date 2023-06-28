@@ -46,6 +46,7 @@ namespace AlcoBarrier
                     }
                 }
             }
+
             catch (SocketException e)
             {
                 Console.WriteLine($"SocketException: {e}");

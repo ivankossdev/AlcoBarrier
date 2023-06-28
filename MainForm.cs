@@ -15,6 +15,7 @@ namespace AlcoBarrier
     {
         public Thread svrThread = new Thread(TcpServer.Server);
         int count = 0;
+        HttpHandler handler = new HttpHandler();   
         public MainForm()
         {
             InitializeComponent();
@@ -25,6 +26,7 @@ namespace AlcoBarrier
         private void buttonFunc_Click(object sender, EventArgs e)
         {
             textBox1.AppendText($"Press button {++count} \n");
+            handler.GETInfo();
         }
 
         /* 
