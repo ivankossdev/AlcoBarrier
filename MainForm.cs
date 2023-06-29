@@ -28,7 +28,7 @@ namespace AlcoBarrier
             textBox1.Clear();
             textBox1.AppendText($"Get Info N# {++count} \n");
             textBox1.AppendText("\n");
-            await handler.GetInfo();
+            await handler.GetInfo("192.168.15.52");
             textBox1.AppendText(handler.res);
         }
 

@@ -21,12 +21,12 @@ namespace AlcoBarrier
 
         public string res { get; private set; } = string.Empty;
 
-        async public Task GetInfo()
+        async public Task GetInfo(string ip)
         {
 
             try
             {
-                HttpResponseMessage response = await client.GetAsync("http://192.168.15.52/cgi-bin/param.cgi?userName=Admin&password=1234&action=get&type=%20deviceInfo");
+                HttpResponseMessage response = await client.GetAsync($"http://{ip}/cgi-bin/param.cgi?userName=Admin&password=1234&action=get&type=%20deviceInfo");
 
                 response.EnsureSuccessStatusCode();
                 
