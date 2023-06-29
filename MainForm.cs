@@ -23,10 +23,13 @@ namespace AlcoBarrier
             //new Thread(() => TcpServer.Server()).Start();
         }
 
-        private void buttonFunc_Click(object sender, EventArgs e)
+        private async void buttonFunc_Click(object sender, EventArgs e)
         {
-            textBox1.AppendText($"Press button {++count} \n");
-            handler.GETInfo();
+            textBox1.Clear();
+            textBox1.AppendText($"Get Info N# {++count} \n");
+            textBox1.AppendText("\n");
+            await handler.GetInfo();
+            textBox1.AppendText(handler.res);
         }
 
         /* 
