@@ -12,7 +12,7 @@ namespace AlcoBarrier
 {
     class HttpHandler
     {
-        HttpClient client;
+        private HttpClient client;
 
         public HttpHandler() 
         {
