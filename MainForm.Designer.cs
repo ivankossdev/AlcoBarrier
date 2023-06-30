@@ -33,6 +33,8 @@
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.buttonFunc = new System.Windows.Forms.Button();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.buttonLock = new System.Windows.Forms.Button();
+            this.buttonUnLock = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -65,11 +67,33 @@
             this.buttonFunc.UseVisualStyleBackColor = true;
             this.buttonFunc.Click += new System.EventHandler(this.buttonFunc_Click);
             // 
+            // buttonLock
+            // 
+            this.buttonLock.Location = new System.Drawing.Point(15, 191);
+            this.buttonLock.Name = "buttonLock";
+            this.buttonLock.Size = new System.Drawing.Size(75, 23);
+            this.buttonLock.TabIndex = 3;
+            this.buttonLock.Text = "Lock";
+            this.buttonLock.UseVisualStyleBackColor = true;
+            this.buttonLock.Click += new System.EventHandler(this.buttonLock_Click);
+            // 
+            // buttonUnLock
+            // 
+            this.buttonUnLock.Location = new System.Drawing.Point(96, 191);
+            this.buttonUnLock.Name = "buttonUnLock";
+            this.buttonUnLock.Size = new System.Drawing.Size(75, 23);
+            this.buttonUnLock.TabIndex = 4;
+            this.buttonUnLock.Text = "UnLock";
+            this.buttonUnLock.UseVisualStyleBackColor = true;
+            this.buttonUnLock.Click += new System.EventHandler(this.buttonUnLock_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(434, 226);
+            this.Controls.Add(this.buttonUnLock);
+            this.Controls.Add(this.buttonLock);
             this.Controls.Add(this.buttonFunc);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label1);
@@ -90,6 +114,8 @@
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Button buttonFunc;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
+        private System.Windows.Forms.Button buttonLock;
+        private System.Windows.Forms.Button buttonUnLock;
     }
 }
 

@@ -26,6 +26,20 @@ namespace AlcoBarrier
             await handler.GetInfo();
             textBox1.AppendText(handler.res);
             await handler.GetDoors();
+
+        }
+
+        private async void buttonLock_Click(object sender, EventArgs e)
+        {
+            textBox1.Clear();
+            await handler.UserPermission(true);
+            textBox1.AppendText(handler.res);
+        }
+
+        private async void buttonUnLock_Click(object sender, EventArgs e)
+        {
+            textBox1.Clear();
+            await handler.UserPermission(false);
             textBox1.AppendText(handler.res);
         }
     }
