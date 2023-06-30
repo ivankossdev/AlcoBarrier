@@ -52,12 +52,12 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox1.Size = new System.Drawing.Size(347, 160);
+            this.textBox1.Size = new System.Drawing.Size(407, 160);
             this.textBox1.TabIndex = 2;
             // 
             // buttonFunc
             // 
-            this.buttonFunc.Location = new System.Drawing.Point(287, 191);
+            this.buttonFunc.Location = new System.Drawing.Point(347, 191);
             this.buttonFunc.Name = "buttonFunc";
             this.buttonFunc.Size = new System.Drawing.Size(75, 23);
             this.buttonFunc.TabIndex = 1;
@@ -69,14 +69,14 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(374, 226);
+            this.ClientSize = new System.Drawing.Size(434, 226);
             this.Controls.Add(this.buttonFunc);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(390, 265);
-            this.MinimumSize = new System.Drawing.Size(390, 265);
+            this.MaximumSize = new System.Drawing.Size(450, 265);
+            this.MinimumSize = new System.Drawing.Size(450, 265);
             this.Name = "MainForm";
             this.Text = "AlcoBarrier";
             this.ResumeLayout(false);
