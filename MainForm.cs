@@ -18,13 +18,14 @@ namespace AlcoBarrier
         public MainForm()
         {
             InitializeComponent();
-            
         }
 
         private async void buttonFunc_Click(object sender, EventArgs e)
         {
             textBox1.Clear();
             await handler.GetInfo();
+            textBox1.AppendText(handler.res);
+            await handler.GetDoors();
             textBox1.AppendText(handler.res);
         }
     }

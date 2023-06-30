@@ -36,6 +36,23 @@ namespace AlcoBarrier
                 response.EnsureSuccessStatusCode();
                 
                 string responseBody = await response.Content.ReadAsStringAsync();
+                res = $"{responseBody}\n\n";
+            }
+            catch (HttpRequestException e)
+            {
+                res = $"Message :{e.Message}";
+            }
+        }
+
+        async public Task GetDoors()
+        {
+            try
+            {
+                HttpResponseMessage response = await client.GetAsync($"http://{ipAddress}/restApi/v2/User/Door");
+
+                response.EnsureSuccessStatusCode();
+
+                string responseBody = await response.Content.ReadAsStringAsync();
                 res = $"{responseBody}";
             }
             catch (HttpRequestException e)
@@ -43,5 +60,6 @@ namespace AlcoBarrier
                 res = $"Message :{e.Message}";
             }
         }
+        // http://192.168.0.123/restApi/v2/User/Door/D1 
     }
 }
