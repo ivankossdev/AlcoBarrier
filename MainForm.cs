@@ -22,7 +22,7 @@ namespace AlcoBarrier
         private async void buttonFunc_Click(object sender, EventArgs e)
         {
             textBox1.Clear();
-            await handler.GetInfo("192.168.15.52");
+            await handler.GetInfo("192.168.0.123");
             textBox1.AppendText(handler.res);
         }
 
