@@ -15,7 +15,7 @@ namespace AlcoBarrier
     {
         private HttpClient client;
 
-        private string ipAddress = string.Empty;
+        private readonly string ipAddress = string.Empty;
 
         public HttpHandler(string ip) 
         {
