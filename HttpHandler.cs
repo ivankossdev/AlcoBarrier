@@ -15,7 +15,7 @@ namespace AlcoBarrier
     {
         private HttpClient client;
 
-        private readonly string ipAddress = string.Empty;
+        private readonly string ipAddress;
 
         public HttpHandler(string ip) 
         {
@@ -70,7 +70,7 @@ namespace AlcoBarrier
 
             try
             {
-                byte[] messageToBytes = System.Text.Encoding.UTF8.GetBytes(userPermission);
+                byte[] messageToBytes = Encoding.UTF8.GetBytes(userPermission);
                 var content = new ByteArrayContent(messageToBytes);
 
                 HttpResponseMessage response = await client.PostAsync($"http://{ipAddress}/restApi/v2/User/AddOrUpdate?IncludeObjectInResult=True", content);
