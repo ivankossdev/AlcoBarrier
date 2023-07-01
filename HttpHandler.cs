@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using System.Xml.Linq;
 
 namespace AlcoBarrier
 {
@@ -81,7 +82,7 @@ namespace AlcoBarrier
                 response.EnsureSuccessStatusCode();
 
                 string responseBody = await response.Content.ReadAsStringAsync();
-                res = $"{responseBody}";
+                res = $"{MyXml(responseBody)}";
             }
             catch (HttpRequestException e)
             {
@@ -112,6 +113,16 @@ namespace AlcoBarrier
                 }
             }
 
+            var cards = innerage.GetElementsByTagName("Cards");
+            foreach (XmlElement x in cards)
+            {
+                
+                foreach (XmlNode childnode in x.ChildNodes)
+                {
+                    Console.WriteLine(childnode.InnerXml);
+                }
+            }
+            //Console.WriteLine(xml);
             return body;
         }
     }

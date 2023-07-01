@@ -24,14 +24,7 @@ namespace AlcoBarrier
         {
             textBox1.Clear();
             await handler.GetInfo();
-            List<string> innerOut = new List<string>();
-            
-            foreach (string line in handler.res.Split('\n'))
-            {
-                textBox1.AppendText($"{line}\n");
-            }
-            //await handler.GetDoors();
-
+            AppendTextValue(handler.res.Split('\n'));
         }
 
         private async void buttonLock_Click(object sender, EventArgs e)
@@ -46,6 +39,14 @@ namespace AlcoBarrier
             textBox1.Clear();
             await handler.UserPermission(false);
             textBox1.AppendText(handler.res);
+        }
+
+        private void AppendTextValue(in string[] lines)
+        {
+            foreach (string line in lines)
+            {
+                textBox1.AppendText($"{line}\n");
+            }
         }
     }
 }
