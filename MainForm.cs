@@ -24,8 +24,13 @@ namespace AlcoBarrier
         {
             textBox1.Clear();
             await handler.GetInfo();
-            textBox1.AppendText(handler.res);
-            await handler.GetDoors();
+            List<string> innerOut = new List<string>();
+            
+            foreach (string line in handler.res.Split('\n'))
+            {
+                textBox1.AppendText($"{line}\n");
+            }
+            //await handler.GetDoors();
 
         }
 

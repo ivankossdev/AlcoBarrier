@@ -39,7 +39,7 @@ namespace AlcoBarrier
                 response.EnsureSuccessStatusCode();
                 
                 string responseBody = await response.Content.ReadAsStringAsync();
-                res = $"{MyXml(responseBody)}\n\n";
+                res = $"{MyXml(responseBody)}";
                 
             }
             catch (HttpRequestException e)
@@ -107,7 +107,7 @@ namespace AlcoBarrier
                 {
                     foreach (XmlNode childnode in xnode.ChildNodes)
                     {
-                        body += $"{childnode.InnerText} ";
+                        body += $"{childnode.InnerText} \n";
                     }
                 }
             }
