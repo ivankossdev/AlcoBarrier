@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -8,6 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace AlcoBarrier
 {
@@ -37,7 +39,8 @@ namespace AlcoBarrier
                 response.EnsureSuccessStatusCode();
                 
                 string responseBody = await response.Content.ReadAsStringAsync();
-                res = $"{responseBody}\n\n";
+                res = $"{MyXml(responseBody)}\n\n";
+                
             }
             catch (HttpRequestException e)
             {
@@ -84,6 +87,32 @@ namespace AlcoBarrier
             {
                 res = $"Message :{e.Message}";
             }
+        }
+
+        private string MyXml(string xml)
+        {
+            XmlDocument innerage = new XmlDocument();
+            //string path = $"{Directory.GetCurrentDirectory()}/Book.xml";
+            //doc.Load(path);
+
+            string body = string.Empty;
+
+            innerage.LoadXml(xml);
+
+            XmlElement node = innerage.DocumentElement;
+
+            if (node != null)
+            {
+                foreach (XmlElement xnode in node)
+                {
+                    foreach (XmlNode childnode in xnode.ChildNodes)
+                    {
+                        body += $"{childnode.InnerText} ";
+                    }
+                }
+            }
+
+            return body;
         }
     }
 }
