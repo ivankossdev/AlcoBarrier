@@ -42,8 +42,8 @@ namespace AlcoBarrier
                 response.EnsureSuccessStatusCode();
                 
                 string responseBody = await response.Content.ReadAsStringAsync();
-                res = $"{xmlHandler.PrintXmlData(responseBody)}";
-                
+                res = $"{xmlHandler.GetXmlElement(responseBody, "SystemInfo")}"; // SystemInfo
+
             }
             catch (HttpRequestException e)
             {
@@ -84,7 +84,8 @@ namespace AlcoBarrier
                 response.EnsureSuccessStatusCode();
 
                 string responseBody = await response.Content.ReadAsStringAsync();
-                res = $"{xmlHandler.PrintXmlData(responseBody)}";
+                res = $"{xmlHandler.GetXmlElement(responseBody, "Card")}";
+                
             }
             catch (HttpRequestException e)
             {

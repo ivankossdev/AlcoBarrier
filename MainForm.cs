@@ -24,21 +24,21 @@ namespace AlcoBarrier
         {
             textBox1.Clear();
             await handler.GetInfo();
-            AppendTextValue(handler.res.Split('\n'));
+            AppendTextValue(handler.res.Split('&'));
         }
 
         private async void buttonLock_Click(object sender, EventArgs e)
         {
             textBox1.Clear();
             await handler.UserPermission(true);
-            textBox1.AppendText(handler.res);
+            AppendTextValue(handler.res.Split('&'));
         }
 
         private async void buttonUnLock_Click(object sender, EventArgs e)
         {
             textBox1.Clear();
             await handler.UserPermission(false);
-            textBox1.AppendText(handler.res);
+            AppendTextValue(handler.res.Split('&'));
         }
 
         private void AppendTextValue(in string[] lines)

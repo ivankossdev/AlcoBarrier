@@ -24,37 +24,21 @@ namespace AlcoBarrier
             innerage.Load(path);
         }
 
-        public string PrintXmlData(string xml)
+        public string GetXmlElement(string xml, string name)
         {
-
             string body = string.Empty;
 
             innerage.LoadXml(xml);
-
-            XmlElement node = innerage.DocumentElement;
-
-            if (node != null)
+            var cards = innerage.GetElementsByTagName(name);
+            foreach (XmlElement x in cards)
             {
-                foreach (XmlElement xnode in node)
+                foreach (XmlNode childnode in x.ChildNodes)
                 {
-                    foreach (XmlNode childnode in xnode.ChildNodes)
-                    {
-                        body += $"{childnode.InnerText} \n";
-                    }
+                    body += $"{childnode.Name} {childnode.InnerText}&";
                 }
             }
-
+            
             return body;
         }
-        //var cards = innerage.GetElementsByTagName("Cards");
-        //foreach (XmlElement x in cards)
-        //{
-
-        //    foreach (XmlNode childnode in x.ChildNodes)
-        //    {
-        //        Console.WriteLine(childnode.InnerXml);
-        //    }
-        //}
-        //Console.WriteLine(xml);
     }
 }

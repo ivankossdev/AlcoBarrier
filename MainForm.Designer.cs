@@ -63,7 +63,7 @@
             this.buttonFunc.Name = "buttonFunc";
             this.buttonFunc.Size = new System.Drawing.Size(75, 23);
             this.buttonFunc.TabIndex = 1;
-            this.buttonFunc.Text = "Func";
+            this.buttonFunc.Text = "Get Info";
             this.buttonFunc.UseVisualStyleBackColor = true;
             this.buttonFunc.Click += new System.EventHandler(this.buttonFunc_Click);
             // 
