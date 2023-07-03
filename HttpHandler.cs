@@ -17,6 +17,7 @@ namespace AlcoBarrier
     class HttpHandler
     {
         private HttpClient client;
+        private XmlHandler xmlHandler;
 
         private readonly string ipAddress;
 
@@ -26,6 +27,7 @@ namespace AlcoBarrier
             client = new HttpClient();
             client.DefaultRequestHeaders.Add("Authorization", "Basic aW5zdGFsbGVyOmluc3RhbGxlcg==");
             client.DefaultRequestHeaders.Add("API-KEY", "q5D2I5B/1Xr4ZlEA5yQuDw==");
+            xmlHandler = new XmlHandler(); 
         }
 
         public string res { get; private set; } = string.Empty;
@@ -40,7 +42,7 @@ namespace AlcoBarrier
                 response.EnsureSuccessStatusCode();
                 
                 string responseBody = await response.Content.ReadAsStringAsync();
-                res = $"{MyXml(responseBody)}";
+                res = $"{xmlHandler.PrintXmlData(responseBody)}";
                 
             }
             catch (HttpRequestException e)
@@ -82,48 +84,12 @@ namespace AlcoBarrier
                 response.EnsureSuccessStatusCode();
 
                 string responseBody = await response.Content.ReadAsStringAsync();
-                res = $"{MyXml(responseBody)}";
+                res = $"{xmlHandler.PrintXmlData(responseBody)}";
             }
             catch (HttpRequestException e)
             {
                 res = $"Message :{e.Message}";
             }
-        }
-
-        private string MyXml(string xml)
-        {
-            XmlDocument innerage = new XmlDocument();
-            //string path = $"{Directory.GetCurrentDirectory()}/Book.xml";
-            //doc.Load(path);
-
-            string body = string.Empty;
-
-            innerage.LoadXml(xml);
-
-            XmlElement node = innerage.DocumentElement;
-
-            if (node != null)
-            {
-                foreach (XmlElement xnode in node)
-                {
-                    foreach (XmlNode childnode in xnode.ChildNodes)
-                    {
-                        body += $"{childnode.InnerText} \n";
-                    }
-                }
-            }
-
-            var cards = innerage.GetElementsByTagName("Cards");
-            foreach (XmlElement x in cards)
-            {
-                
-                foreach (XmlNode childnode in x.ChildNodes)
-                {
-                    Console.WriteLine(childnode.InnerXml);
-                }
-            }
-            //Console.WriteLine(xml);
-            return body;
         }
     }
 }
