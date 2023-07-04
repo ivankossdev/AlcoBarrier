@@ -34,10 +34,10 @@ namespace AlcoBarrier
             {
                 foreach (XmlNode childnode in x.ChildNodes)
                 {
-                    body += $"{childnode.Name} {childnode.InnerText}&";
+                    body += $"{childnode.Name} {childnode.InnerText.Trim()}&";
                 }
             }
-            
+            Console.WriteLine(xml);
             return body;
         }
     }

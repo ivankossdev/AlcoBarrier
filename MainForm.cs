@@ -48,5 +48,19 @@ namespace AlcoBarrier
                 textBox1.AppendText($"{line}\n");
             }
         }
+
+        private async void buttonOpen_Click(object sender, EventArgs e)
+        {
+            textBox1.Clear();
+            await handler.OpenTheDoor(true);
+            AppendTextValue(handler.res.Split('&'));
+        }
+
+        private async void buttonClose_Click(object sender, EventArgs e)
+        {
+            textBox1.Clear();
+            await handler.OpenTheDoor(false);
+            AppendTextValue(handler.res.Split('&'));
+        }
     }
 }
