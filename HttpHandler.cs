@@ -85,11 +85,37 @@ namespace AlcoBarrier
 
                 if (open)
                 {
-                    command = $"<DoorAction ID=\"35b753bd-b7ea-4630-b29a-2efc2478714e\">\r\n  <ID>35b753bd-b7ea-4630-b29a-2efc2478714e</ID>\r\n  <OnAssert>2</OnAssert>\r\n  <OnDeAssert>1</OnDeAssert>\r\n  <InvertQualifier>False</InvertQualifier>\r\n  <WaitUntilComplete>False</WaitUntilComplete>\r\n  <Entity>\r\n    <Ref Type=\"Door\" ID=\"5072171692982273\" />\r\n  </Entity>\r\n  <UnlockTimeTicks>0</UnlockTimeTicks>\r\n  <Genre>0</Genre>\r\n  <DisarmAreas>False</DisarmAreas>\r\n  <IgnoreInterlocks>False</IgnoreInterlocks>\r\n</DoorAction>";
+                    command = $"<DoorAction ID=\"35b753bd-b7ea-4630-b29a-2efc2478714e\">\r\n  " +
+                        $"<ID>35b753bd-b7ea-4630-b29a-2efc2478714e</ID>\r\n  " +
+                        $"<OnAssert>2</OnAssert>\r\n  " +
+                        $"<OnDeAssert>1</OnDeAssert>\r\n  " +
+                        $"<InvertQualifier>False</InvertQualifier>\r\n  " +
+                        $"<WaitUntilComplete>False</WaitUntilComplete>\r\n  " +
+                        $"<Entity>\r\n    " +
+                        $"<Ref Type=\"Door\" ID=\"5072171692982273\" />\r\n  " +
+                        $"</Entity>\r\n  " +
+                        $"<UnlockTimeTicks>0</UnlockTimeTicks>\r\n  " +
+                        $"<Genre>0</Genre>\r\n  " +
+                        $"<DisarmAreas>False</DisarmAreas>\r\n  " +
+                        $"<IgnoreInterlocks>False</IgnoreInterlocks>\r\n" +
+                        $"</DoorAction>";
                 }
                 else
                 {
-                    command = $"<DoorAction ID=\"35b753bd-b7ea-4630-b29a-2efc2478714e\">\r\n  <ID>35b753bd-b7ea-4630-b29a-2efc2478714e</ID>\r\n  <OnAssert>1</OnAssert>\r\n  <OnDeAssert>2</OnDeAssert>\r\n  <InvertQualifier>False</InvertQualifier>\r\n  <WaitUntilComplete>False</WaitUntilComplete>\r\n  <Entity>\r\n    <Ref Type=\"Door\" ID=\"5072171692982273\" />\r\n  </Entity>\r\n  <UnlockTimeTicks>0</UnlockTimeTicks>\r\n  <Genre>0</Genre>\r\n  <DisarmAreas>False</DisarmAreas>\r\n  <IgnoreInterlocks>False</IgnoreInterlocks>\r\n</DoorAction>";
+                    command = $"<DoorAction ID=\"35b753bd-b7ea-4630-b29a-2efc2478714e\">\r\n  " +
+                        $"<ID>35b753bd-b7ea-4630-b29a-2efc2478714e</ID>\r\n  " +
+                        $"<OnAssert>1</OnAssert>\r\n  " +
+                        $"<OnDeAssert>2</OnDeAssert>\r\n  " +
+                        $"<InvertQualifier>False</InvertQualifier>\r\n  " +
+                        $"<WaitUntilComplete>False</WaitUntilComplete>\r\n  " +
+                        $"<Entity>\r\n    " +
+                        $"<Ref Type=\"Door\" ID=\"5072171692982273\" />\r\n  " +
+                        $"</Entity>\r\n  " +
+                        $"<UnlockTimeTicks>0</UnlockTimeTicks>\r\n  " +
+                        $"<Genre>0</Genre>\r\n  " +
+                        $"<DisarmAreas>False</DisarmAreas>\r\n  " +
+                        $"<IgnoreInterlocks>False</IgnoreInterlocks>\r\n" +
+                        $"</DoorAction>";
                 }
                 byte[] messageToBytes = Encoding.UTF8.GetBytes(command);
                 var content = new ByteArrayContent(messageToBytes);
@@ -99,7 +125,7 @@ namespace AlcoBarrier
                 response.EnsureSuccessStatusCode();
 
                 string responseBody = await response.Content.ReadAsStringAsync();
-                res = $"{xmlHandler.GetXmlElement(responseBody, "CommandProgresses")}";
+                res = $"{xmlHandler.GetXmlElement(responseBody, "CommandProgress")}";
 
             }
             catch (HttpRequestException e)
