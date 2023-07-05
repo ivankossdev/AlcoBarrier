@@ -31,7 +31,6 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.label1 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
-            this.buttonFunc = new System.Windows.Forms.Button();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.buttonLock = new System.Windows.Forms.Button();
             this.buttonUnLock = new System.Windows.Forms.Button();
@@ -59,16 +58,6 @@
             this.textBox1.Size = new System.Drawing.Size(407, 160);
             this.textBox1.TabIndex = 2;
             // 
-            // buttonFunc
-            // 
-            this.buttonFunc.Location = new System.Drawing.Point(177, 191);
-            this.buttonFunc.Name = "buttonFunc";
-            this.buttonFunc.Size = new System.Drawing.Size(75, 36);
-            this.buttonFunc.TabIndex = 1;
-            this.buttonFunc.Text = "Get Info";
-            this.buttonFunc.UseVisualStyleBackColor = true;
-            this.buttonFunc.Click += new System.EventHandler(this.buttonFunc_Click);
-            // 
             // buttonLock
             // 
             this.buttonLock.Location = new System.Drawing.Point(15, 191);
@@ -91,7 +80,7 @@
             // 
             // buttonOpen
             // 
-            this.buttonOpen.Location = new System.Drawing.Point(15, 235);
+            this.buttonOpen.Location = new System.Drawing.Point(266, 191);
             this.buttonOpen.Name = "buttonOpen";
             this.buttonOpen.Size = new System.Drawing.Size(75, 38);
             this.buttonOpen.TabIndex = 5;
@@ -101,7 +90,7 @@
             // 
             // buttonClose
             // 
-            this.buttonClose.Location = new System.Drawing.Point(96, 235);
+            this.buttonClose.Location = new System.Drawing.Point(347, 191);
             this.buttonClose.Name = "buttonClose";
             this.buttonClose.Size = new System.Drawing.Size(75, 38);
             this.buttonClose.TabIndex = 6;
@@ -118,7 +107,6 @@
             this.Controls.Add(this.buttonOpen);
             this.Controls.Add(this.buttonUnLock);
             this.Controls.Add(this.buttonLock);
-            this.Controls.Add(this.buttonFunc);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -136,7 +124,6 @@
 
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Button buttonFunc;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.Button buttonLock;
         private System.Windows.Forms.Button buttonUnLock;

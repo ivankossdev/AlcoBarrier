@@ -18,26 +18,27 @@ namespace AlcoBarrier
         public MainForm()
         {
             InitializeComponent();
+            SystemInfo();
         }
 
-        private async void buttonFunc_Click(object sender, EventArgs e)
+        private async void SystemInfo()
         {
             textBox1.Clear();
-            await handler.GetInfo();
+            await handler.GetSystemInfo();
             AppendTextValue(handler.res.Split('&'));
         }
 
         private async void buttonLock_Click(object sender, EventArgs e)
         {
             textBox1.Clear();
-            await handler.UserPermission(true);
+            await handler.SetUserPermission(true);
             AppendTextValue(handler.res.Split('&'));
         }
 
         private async void buttonUnLock_Click(object sender, EventArgs e)
         {
             textBox1.Clear();
-            await handler.UserPermission(false);
+            await handler.SetUserPermission(false);
             AppendTextValue(handler.res.Split('&'));
         }
 

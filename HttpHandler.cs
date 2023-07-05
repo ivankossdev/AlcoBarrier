@@ -33,7 +33,7 @@ namespace AlcoBarrier
 
         public string res { get; private set; } = string.Empty;
 
-        async public Task GetInfo()
+        async public Task GetSystemInfo()
         {
 
             try
@@ -52,7 +52,7 @@ namespace AlcoBarrier
             }
         }
 
-        async public Task UserPermission(bool deny)
+        async public Task SetUserPermission(bool deny)
         {
             string userPermission = $"<User Address=\"U2\">\r\n\t<Permissions>\r\n    " +
                 $"\t<UserPermission ID=\"300ef1f9-f296-4814-abfc-9b8b016e7c3b\">\r\n      " +
