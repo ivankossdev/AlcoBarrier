@@ -71,7 +71,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HttpHandler.cs" />
+    <Compile Include="HttpRequestAlcoReader.cs" />
+    <Compile Include="HttpRequestInner.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

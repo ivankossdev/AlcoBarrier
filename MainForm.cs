@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,7 +15,8 @@ namespace AlcoBarrier
 {
     public partial class MainForm : Form
     {
-        HttpHandler handler = new HttpHandler("192.168.0.123");   
+        HttpRequestInner handler = new HttpRequestInner("192.168.0.123");
+        HttpRequestAlcoReader alcoReader = new HttpRequestAlcoReader("192.168.0.125");
         public MainForm()
         {
             InitializeComponent();
@@ -62,6 +64,13 @@ namespace AlcoBarrier
             textBox1.Clear();
             await handler.OpenTheDoor(false);
             AppendTextValue(handler.res.Split('&'));
+        }
+
+        private async void buttonAlco_Click(object sender, EventArgs e)
+        {
+            textBox1.Clear();
+            await alcoReader.GetInfo();
+            textBox1.AppendText(alcoReader.res);
         }
     }
 }

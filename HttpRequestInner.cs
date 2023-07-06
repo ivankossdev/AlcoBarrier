@@ -15,14 +15,14 @@ using System.Xml.Linq;
 
 namespace AlcoBarrier
 {
-    class HttpHandler
+    class HttpRequestInner
     {
         private HttpClient client;
         private XmlHandler xmlHandler;
 
         private readonly string ipAddress;
 
-        public HttpHandler(string ip) 
+        public HttpRequestInner(string ip) 
         {
             ipAddress = ip;
             client = new HttpClient();

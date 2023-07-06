@@ -36,6 +36,7 @@
             this.buttonUnLock = new System.Windows.Forms.Button();
             this.buttonOpen = new System.Windows.Forms.Button();
             this.buttonClose = new System.Windows.Forms.Button();
+            this.buttonAlco = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -98,11 +99,22 @@
             this.buttonClose.UseVisualStyleBackColor = true;
             this.buttonClose.Click += new System.EventHandler(this.buttonClose_Click);
             // 
+            // buttonAlco
+            // 
+            this.buttonAlco.Location = new System.Drawing.Point(15, 233);
+            this.buttonAlco.Name = "buttonAlco";
+            this.buttonAlco.Size = new System.Drawing.Size(75, 35);
+            this.buttonAlco.TabIndex = 7;
+            this.buttonAlco.Text = "Alco";
+            this.buttonAlco.UseVisualStyleBackColor = true;
+            this.buttonAlco.Click += new System.EventHandler(this.buttonAlco_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(434, 286);
+            this.Controls.Add(this.buttonAlco);
             this.Controls.Add(this.buttonClose);
             this.Controls.Add(this.buttonOpen);
             this.Controls.Add(this.buttonUnLock);
@@ -129,6 +141,7 @@
         private System.Windows.Forms.Button buttonUnLock;
         private System.Windows.Forms.Button buttonOpen;
         private System.Windows.Forms.Button buttonClose;
+        private System.Windows.Forms.Button buttonAlco;
     }
 }
 
