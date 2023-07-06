@@ -24,3 +24,13 @@ C:\Users\RR\source\repos\AlcoBarrier\bin\Debug\System.Runtime.CompilerServices.U
 C:\Users\RR\source\repos\AlcoBarrier\bin\Debug\System.Threading.Channels.xml
 C:\Users\RR\source\repos\AlcoBarrier\bin\Debug\System.Threading.Tasks.Extensions.xml
 C:\Users\RR\source\repos\AlcoBarrier\obj\Debug\AlcoBarrier.csproj.CopyComplete
+C:\Users\RR\source\repos\AlcoBarrier\bin\Debug\Newtonsoft.Json.dll
+C:\Users\RR\source\repos\AlcoBarrier\bin\Debug\Newtonsoft.Json.xml
+C:\Users\RR\source\repos\AlcoBarrier\bin\Debug\Microsoft.Bcl.AsyncInterfaces.dll
+C:\Users\RR\source\repos\AlcoBarrier\bin\Debug\System.Text.Encodings.Web.dll
+C:\Users\RR\source\repos\AlcoBarrier\bin\Debug\System.Text.Json.dll
+C:\Users\RR\source\repos\AlcoBarrier\bin\Debug\System.ValueTuple.dll
+C:\Users\RR\source\repos\AlcoBarrier\bin\Debug\Microsoft.Bcl.AsyncInterfaces.xml
+C:\Users\RR\source\repos\AlcoBarrier\bin\Debug\System.Text.Encodings.Web.xml
+C:\Users\RR\source\repos\AlcoBarrier\bin\Debug\System.Text.Json.xml
+C:\Users\RR\source\repos\AlcoBarrier\bin\Debug\System.ValueTuple.xml

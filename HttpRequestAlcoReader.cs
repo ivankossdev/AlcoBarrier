@@ -1,8 +1,12 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Nodes;
+
 using System.Threading.Tasks;
 
 namespace AlcoBarrier
@@ -22,7 +26,7 @@ namespace AlcoBarrier
         async public Task GetInfo()
         {
             string request = @"{""cmdType"":""getInf""}";
-
+            
             try
             {
                 byte[] messageToBytes = Encoding.UTF8.GetBytes(request);
@@ -31,10 +35,11 @@ namespace AlcoBarrier
                 HttpResponseMessage response = await client.PostAsync($"http://{ipAddress}:443/cmd", content);
 
                 response.EnsureSuccessStatusCode();
-
                 string responseBody = await response.Content.ReadAsStringAsync();
-                res = responseBody;
-
+                //res = responseBody;
+                JsonNode forecastNode = JsonNode.Parse(responseBody);
+                var options = new JsonSerializerOptions { WriteIndented = true };
+                res = forecastNode.ToJsonString(options);
             }
             catch (HttpRequestException e)
             {
