@@ -21,7 +21,7 @@ namespace AlcoBarrier
 
         async public Task GetInfo()
         {
-            string request = "{ \"cmdType\":\"getInf\"}";
+            string request = @"{""cmdType"":""getInf""}";
 
             try
             {
