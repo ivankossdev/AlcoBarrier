@@ -15,7 +15,8 @@ namespace AlcoBarrier
     {
         private HttpClient client;
         private readonly string ipAddress;
-        public string res { get; private set; } = string.Empty;
+        public string Res { get; private set; } = string.Empty;
+        public string CountRecords { get; private set; } = string.Empty;
 
         public HttpRequestAlcoReader(string ip)
         {
@@ -23,7 +24,7 @@ namespace AlcoBarrier
             client = new HttpClient();
         }
 
-        async public Task GetRequestCmd(string request)
+        async public Task GetRequestCmd(string request, string cmd)
         {
             try
             {
@@ -34,30 +35,34 @@ namespace AlcoBarrier
 
                 response.EnsureSuccessStatusCode();
                 string responseBody = await response.Content.ReadAsStringAsync();
-                
-                JsonNode forecastNode = JsonNode.Parse(responseBody);
-                var options = new JsonSerializerOptions { WriteIndented = true };
-                res = forecastNode.ToJsonString(options);
+
+                switch (cmd)
+                {
+                    case "getInf":
+                        Res = GetNode(responseBody); 
+                        break;
+                    case "getLogInf":
+                        CountRecords = GetNode(responseBody);
+                        break;
+                    default:
+                        Res = "Not information!!!";
+                        break;
+                }
+
+
             }
             catch (HttpRequestException e)
             {
-                res = $"Message :{e.Message}";
+                Res = $"Message :{e.Message}";
             }
         }
 
-        public void GetCountRecord()
+        private string GetNode(string responseBody)
         {
-            if(res != string.Empty)
-            {
-                Console.WriteLine(res);
-            }
+            JsonNode forecastNode = JsonNode.Parse(responseBody);
+            var options = new JsonSerializerOptions { WriteIndented = true };
+            return forecastNode.ToJsonString(options);
         }
-        public void GetEvent()
-        {
-            if (res != string.Empty)
-            {
-                Console.WriteLine(res);
-            }
-        }
+
     }
 }

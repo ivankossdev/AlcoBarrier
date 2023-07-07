@@ -10,7 +10,7 @@ namespace AlcoBarrier
 {
     public static class MyJson
     {
-        public static string GetLogMessage(string memoryAddr)
+        public static string CreateLogMessage(string memoryAddr)
         {
             var forecastObject = new JsonObject
             {
@@ -22,7 +22,7 @@ namespace AlcoBarrier
             return forecastObject.ToJsonString();
         }
 
-        public static string GetCmdTypeInfMessage(string command)
+        public static string CreateCmdTypeInfMessage(string command)
         {
             var forecastObject = new JsonObject
             {
@@ -30,6 +30,12 @@ namespace AlcoBarrier
             };
 
             return forecastObject.ToJsonString();
+        }
+
+        public static string GetCountMessage(string jsonString)
+        {
+            JsonNode jsonNode = JsonNode.Parse(jsonString);
+            return jsonNode["LastRecord"]["MemAddr"].ToString();
         }
     }
 }
