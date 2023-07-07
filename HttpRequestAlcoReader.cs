@@ -23,7 +23,7 @@ namespace AlcoBarrier
             client = new HttpClient();
         }
 
-        async public Task GetRequest(string request, string firstNode, string nextNode)
+        async public Task GetRequestCmd(string request)
         {
             try
             {
@@ -38,12 +38,18 @@ namespace AlcoBarrier
                 JsonNode forecastNode = JsonNode.Parse(responseBody);
                 var options = new JsonSerializerOptions { WriteIndented = true };
                 res = forecastNode.ToJsonString(options);
-                JsonNode hostname = forecastNode[firstNode][nextNode];
-                Console.WriteLine(hostname.ToJsonString().Trim('"'));
             }
             catch (HttpRequestException e)
             {
                 res = $"Message :{e.Message}";
+            }
+        }
+
+        public void GetCountRecord()
+        {
+            if(res != string.Empty)
+            {
+                Console.WriteLine(res);
             }
         }
     }

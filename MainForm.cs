@@ -69,8 +69,11 @@ namespace AlcoBarrier
         private async void buttonAlco_Click(object sender, EventArgs e)
         {
             textBox1.Clear();
-            await alcoReader.GetRequest(@"{""cmdType"":""getInf""}", "EthBlock", "HostName");
+            await alcoReader.GetRequestCmd(@"{""cmdType"":""getInf""}");
             textBox1.AppendText(alcoReader.res);
+            await alcoReader.GetRequestCmd(@"{""cmdType"":""getLogInf""}");
+            textBox1.AppendText(alcoReader.res);
+            alcoReader.GetCountRecord();
         }
     }
 }
