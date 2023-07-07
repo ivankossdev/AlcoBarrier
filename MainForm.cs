@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -69,9 +70,9 @@ namespace AlcoBarrier
         private async void buttonAlco_Click(object sender, EventArgs e)
         {
             textBox1.Clear();
-            await alcoReader.GetRequestCmd(@"{""cmdType"":""getInf""}");
+            await alcoReader.GetRequestCmd(MyJson.GetCmdTypeInfMessage("getInf"));
             textBox1.AppendText(alcoReader.res);
-            await alcoReader.GetRequestCmd(@"{""cmdType"":""getLogInf""}");
+            await alcoReader.GetRequestCmd(MyJson.GetCmdTypeInfMessage("getLogInf"));
             textBox1.AppendText(alcoReader.res);
             alcoReader.GetCountRecord();
         }

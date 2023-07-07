@@ -52,5 +52,12 @@ namespace AlcoBarrier
                 Console.WriteLine(res);
             }
         }
+        public void GetEvent()
+        {
+            if (res != string.Empty)
+            {
+                Console.WriteLine(res);
+            }
+        }
     }
 }

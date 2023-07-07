@@ -37,7 +37,6 @@ namespace AlcoBarrier
                     body += $"{childnode.Name} {childnode.InnerText.Trim()}&";
                 }
             }
-            Console.WriteLine(xml);
             return body;
         }
     }
