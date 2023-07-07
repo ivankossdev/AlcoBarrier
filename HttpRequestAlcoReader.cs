@@ -17,6 +17,7 @@ namespace AlcoBarrier
         private readonly string ipAddress;
         public string Res { get; private set; } = string.Empty;
         public string CountRecords { get; private set; } = string.Empty;
+        public string LastRecord { get; private set; } = string.Empty;
 
         public HttpRequestAlcoReader(string ip)
         {
@@ -43,6 +44,9 @@ namespace AlcoBarrier
                         break;
                     case "getLogInf":
                         CountRecords = GetNode(responseBody);
+                        break;
+                    case "getLog":
+                        LastRecord = GetNode(responseBody);
                         break;
                     default:
                         Res = "Not information!!!";

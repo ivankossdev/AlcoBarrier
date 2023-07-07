@@ -37,5 +37,7 @@ namespace AlcoBarrier
             JsonNode jsonNode = JsonNode.Parse(jsonString);
             return jsonNode["LastRecord"]["MemAddr"].ToString();
         }
+
+
     }
 }
