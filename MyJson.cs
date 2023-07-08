@@ -38,6 +38,11 @@ namespace AlcoBarrier
             return jsonNode["LastRecord"]["MemAddr"].ToString();
         }
 
+        public static string GetDataMemory(string jsonString)
+        {
+            JsonNode jsonNode = JsonNode.Parse(jsonString);
 
+            return jsonNode["Records"][0].ToString();
+        }
     }
 }

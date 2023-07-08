@@ -75,7 +75,8 @@ namespace AlcoBarrier
             Result = await alcoReader.GetRequestCmd(MyJson.CreateCmdTypeInfMessage("getLogInf"));
             string countRec = MyJson.GetCountMessage(Result);
             Result = await alcoReader.GetRequestCmd(MyJson.CreateLogMessage(countRec));
-            textBox1.AppendText(Result);
+
+            textBox1.AppendText(MyJson.GetDataMemory(Result));
         }
     }
 }
