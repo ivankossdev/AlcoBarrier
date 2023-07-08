@@ -72,8 +72,6 @@ namespace AlcoBarrier
         private async void buttonAlco_Click(object sender, EventArgs e)
         {
             textBox1.Clear();
-            //await alcoReader.GetRequestCmd(MyJson.CreateCmdTypeInfMessage("getInf"), "getInf");
-            //textBox1.AppendText(alcoReader.Res);
             Result = await alcoReader.GetRequestCmd(MyJson.CreateCmdTypeInfMessage("getLogInf"));
             string countRec = MyJson.GetCountMessage(Result);
             Result = await alcoReader.GetRequestCmd(MyJson.CreateLogMessage(countRec));
