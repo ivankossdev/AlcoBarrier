@@ -74,10 +74,10 @@ namespace AlcoBarrier
             textBox1.Clear();
             //await alcoReader.GetRequestCmd(MyJson.CreateCmdTypeInfMessage("getInf"), "getInf");
             //textBox1.AppendText(alcoReader.Res);
-            await alcoReader.GetRequestCmd(MyJson.CreateCmdTypeInfMessage("getLogInf"), "getLogInf");
-            string countRec = MyJson.GetCountMessage(alcoReader.CountRecords);
-            await alcoReader.GetRequestCmd(MyJson.CreateLogMessage(countRec), "getLog");
-            textBox1.AppendText(alcoReader.LastRecord);
+            Result = await alcoReader.GetRequestCmd(MyJson.CreateCmdTypeInfMessage("getLogInf"));
+            string countRec = MyJson.GetCountMessage(Result);
+            Result = await alcoReader.GetRequestCmd(MyJson.CreateLogMessage(countRec));
+            textBox1.AppendText(Result);
         }
     }
 }

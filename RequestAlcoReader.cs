@@ -15,9 +15,6 @@ namespace AlcoBarrier
     {
         private HttpClient client;
         private readonly string IpAddress;
-        public string Res { get; private set; } = string.Empty;
-        public string CountRecords { get; private set; } = string.Empty;
-        public string LastRecord { get; private set; } = string.Empty;
 
         public RequestAlcoReader(string ip)
         {
@@ -25,8 +22,9 @@ namespace AlcoBarrier
             client = new HttpClient();
         }
 
-        async public Task GetRequestCmd(string request, string cmd)
+        async public Task<string> GetRequestCmd(string request)
         {
+            string responseBody = string.Empty;
             try
             {
                 byte[] messageToBytes = Encoding.UTF8.GetBytes(request);
@@ -35,30 +33,15 @@ namespace AlcoBarrier
                 HttpResponseMessage response = await client.PostAsync($"http://{IpAddress}:443/cmd", content);
 
                 response.EnsureSuccessStatusCode();
-                string responseBody = await response.Content.ReadAsStringAsync();
-
-                switch (cmd)
-                {
-                    case "getInf":
-                        Res = GetNode(responseBody); 
-                        break;
-                    case "getLogInf":
-                        CountRecords = GetNode(responseBody);
-                        break;
-                    case "getLog":
-                        LastRecord = GetNode(responseBody);
-                        break;
-                    default:
-                        Res = "Not information!!!";
-                        break;
-                }
-
+                responseBody = await response.Content.ReadAsStringAsync();
 
             }
             catch (HttpRequestException e)
             {
-                Res = $"Message :{e.Message}";
+                responseBody = $"Message :{e.Message}";
             }
+
+            return GetNode(responseBody);
         }
 
         private string GetNode(string responseBody)
