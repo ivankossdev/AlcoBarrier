@@ -11,17 +11,17 @@ using System.Threading.Tasks;
 
 namespace AlcoBarrier
 {
-    public class HttpRequestAlcoReader
+    public class RequestAlcoReader
     {
         private HttpClient client;
-        private readonly string ipAddress;
+        private readonly string IpAddress;
         public string Res { get; private set; } = string.Empty;
         public string CountRecords { get; private set; } = string.Empty;
         public string LastRecord { get; private set; } = string.Empty;
 
-        public HttpRequestAlcoReader(string ip)
+        public RequestAlcoReader(string ip)
         {
-            ipAddress = ip;
+            IpAddress = ip;
             client = new HttpClient();
         }
 
@@ -32,7 +32,7 @@ namespace AlcoBarrier
                 byte[] messageToBytes = Encoding.UTF8.GetBytes(request);
                 var content = new ByteArrayContent(messageToBytes);
 
-                HttpResponseMessage response = await client.PostAsync($"http://{ipAddress}:443/cmd", content);
+                HttpResponseMessage response = await client.PostAsync($"http://{IpAddress}:443/cmd", content);
 
                 response.EnsureSuccessStatusCode();
                 string responseBody = await response.Content.ReadAsStringAsync();

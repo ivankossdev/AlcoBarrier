@@ -15,70 +15,73 @@ using System.Xml.Linq;
 
 namespace AlcoBarrier
 {
-    class HttpRequestInner
+    class RequestInner
     {
         private HttpClient client;
         private XmlHandler xmlHandler;
 
-        private readonly string ipAddress;
+        private readonly string IpAddress;
 
-        public HttpRequestInner(string ip) 
+        public RequestInner(string ip)
         {
-            ipAddress = ip;
+            IpAddress = ip;
             client = new HttpClient();
             client.DefaultRequestHeaders.Add("Authorization", "Basic aW5zdGFsbGVyOmluc3RhbGxlcg==");
             client.DefaultRequestHeaders.Add("API-KEY", "q5D2I5B/1Xr4ZlEA5yQuDw==");
-            xmlHandler = new XmlHandler(); 
+            xmlHandler = new XmlHandler();
         }
 
-        public string res { get; private set; } = string.Empty;
-
-        async public Task GetSystemInfo()
+        async public Task<string> GetSystemInfo()
         {
-
+            string MyResult = string.Empty;
             try
             {
-                HttpResponseMessage response = await client.GetAsync($"http://{ipAddress}/restApi/v2/SystemInfo");
+                HttpResponseMessage response = await client.GetAsync($"http://{IpAddress}/restApi/v2/SystemInfo");
 
                 response.EnsureSuccessStatusCode();
                 
                 string responseBody = await response.Content.ReadAsStringAsync();
-                res = $"{xmlHandler.GetXmlElement(responseBody, "SystemInfo")}";
+                MyResult = $"{xmlHandler.GetXmlElement(responseBody, "SystemInfo")}";
 
             }
             catch (HttpRequestException e)
             {
-                res = $"Message :{e.Message}";
+                MyResult = $"Message :{e.Message}";
             }
+            return MyResult ;
         }
 
-        async public Task SetUserPermission(bool deny)
+        async public Task<string> SetUserPermission(bool deny)
         {
             string userPermission = $"<User Address=\"U2\">\r\n\t<Permissions>\r\n    " +
                 $"\t<UserPermission ID=\"300ef1f9-f296-4814-abfc-9b8b016e7c3b\">\r\n      " +
                 $"\t\t<Deny>{deny}</Deny>\r\n        </UserPermission>\r\n  </Permissions>\r\n</User>";
+
+            string MyResult = string.Empty;
 
             try
             {
                 byte[] messageToBytes = Encoding.UTF8.GetBytes(userPermission);
                 var content = new ByteArrayContent(messageToBytes);
 
-                HttpResponseMessage response = await client.PostAsync($"http://{ipAddress}/restApi/v2/User/AddOrUpdate?IncludeObjectInResult=True", content);
+                HttpResponseMessage response = await client.PostAsync($"http://{IpAddress}/restApi/v2/User/AddOrUpdate?IncludeObjectInResult=True", content);
 
                 response.EnsureSuccessStatusCode();
 
                 string responseBody = await response.Content.ReadAsStringAsync();
-                res = $"{xmlHandler.GetXmlElement(responseBody, "Card")}";
+                MyResult = $"{xmlHandler.GetXmlElement(responseBody, "Card")}";
                 
             }
             catch (HttpRequestException e)
             {
-                res = $"Message :{e.Message}";
+                MyResult = $"Message :{e.Message}";
             }
+            return MyResult;
         }
 
-        async public Task OpenTheDoor(bool open)
+        async public Task<string> OpenTheDoor(bool open)
         {
+            string MyResult = string.Empty;
             try
             {
                 string command = string.Empty;
@@ -120,18 +123,20 @@ namespace AlcoBarrier
                 byte[] messageToBytes = Encoding.UTF8.GetBytes(command);
                 var content = new ByteArrayContent(messageToBytes);
 
-                HttpResponseMessage response = await client.PostAsync($"http://{ipAddress}/restApi/v2/BasicStatus/XML_Control", content);
+                HttpResponseMessage response = await client.PostAsync($"http://{IpAddress}/restApi/v2/BasicStatus/XML_Control", content);
 
                 response.EnsureSuccessStatusCode();
 
                 string responseBody = await response.Content.ReadAsStringAsync();
-                res = $"{xmlHandler.GetXmlElement(responseBody, "CommandProgress")}";
+                MyResult = $"{xmlHandler.GetXmlElement(responseBody, "CommandProgress")}";
 
             }
             catch (HttpRequestException e)
             {
-                res = $"Message :{e.Message}";
+                MyResult = $"Message :{e.Message}";
             }
+
+            return MyResult;
         }
     }
 }

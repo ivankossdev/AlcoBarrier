@@ -16,33 +16,35 @@ namespace AlcoBarrier
 {
     public partial class MainForm : Form
     {
-        HttpRequestInner handler = new HttpRequestInner("192.168.0.123");
-        HttpRequestAlcoReader alcoReader = new HttpRequestAlcoReader("192.168.0.125");
+        RequestInner handler = new RequestInner("192.168.0.123");
+        RequestAlcoReader alcoReader = new RequestAlcoReader("192.168.0.125");
         public MainForm()
         {
             InitializeComponent();
             SystemInfo();
         }
 
+        string Result = string.Empty;
+
         private async void SystemInfo()
         {
             textBox1.Clear();
-            await handler.GetSystemInfo();
-            AppendTextValue(handler.res.Split('&'));
+            Result = await handler.GetSystemInfo();
+            AppendTextValue(Result.Split('&'));
         }
 
         private async void buttonLock_Click(object sender, EventArgs e)
         {
             textBox1.Clear();
-            await handler.SetUserPermission(true);
-            AppendTextValue(handler.res.Split('&'));
+            Result = await handler.SetUserPermission(true);
+            AppendTextValue(Result.Split('&'));
         }
 
         private async void buttonUnLock_Click(object sender, EventArgs e)
         {
             textBox1.Clear();
-            await handler.SetUserPermission(false);
-            AppendTextValue(handler.res.Split('&'));
+            Result = await handler.SetUserPermission(false);
+            AppendTextValue(Result.Split('&'));
         }
 
         private void AppendTextValue(in string[] lines)
@@ -56,15 +58,15 @@ namespace AlcoBarrier
         private async void buttonOpen_Click(object sender, EventArgs e)
         {
             textBox1.Clear();
-            await handler.OpenTheDoor(true);
-            AppendTextValue(handler.res.Split('&'));
+            Result = await handler.OpenTheDoor(true);
+            AppendTextValue(Result.Split('&'));
         }
 
         private async void buttonClose_Click(object sender, EventArgs e)
         {
             textBox1.Clear();
-            await handler.OpenTheDoor(false);
-            AppendTextValue(handler.res.Split('&'));
+            Result = await handler.OpenTheDoor(false);
+            AppendTextValue(Result.Split('&'));
         }
 
         private async void buttonAlco_Click(object sender, EventArgs e)

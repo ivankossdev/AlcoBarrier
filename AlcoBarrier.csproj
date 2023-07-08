@@ -87,8 +87,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HttpRequestAlcoReader.cs" />
-    <Compile Include="HttpRequestInner.cs" />
+    <Compile Include="RequestAlcoReader.cs" />
+    <Compile Include="RequestInner.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
