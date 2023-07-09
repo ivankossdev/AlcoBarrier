@@ -44,5 +44,11 @@ namespace AlcoBarrier
 
             return jsonNode["Records"][0].ToString();
         }
+
+        public static string GetStatusCode(string jsonString)
+        {
+            JsonNode jsonNode = JsonNode.Parse(jsonString);
+            return jsonNode["Records"][0]["Code"].ToString();
+        }
     }
 }
