@@ -45,10 +45,20 @@ namespace AlcoBarrier
             return jsonNode["Records"][0].ToString();
         }
 
-        public static string GetStatusCode(string jsonString)
+        public static string GetStringResult(string jsonString)
         {
             JsonNode jsonNode = JsonNode.Parse(jsonString);
-            return jsonNode["Records"][0]["Code"].ToString();
+            string Code = jsonNode["Records"][0]["Code"].ToString();
+            string Message = string.Empty;
+
+            if (Code == "4" || Code == "5")
+            {
+                Message = $"{jsonNode["Records"][0]["Date"]} : " +
+                          $"{jsonNode["Records"][0]["Time"]} " +
+                          $"Промили {jsonNode["Records"][0]["Result"]} " +
+                          $"{jsonNode["Records"][0]["UnitEN"]}"; 
+            }
+            return Message;
         }
     }
 }
