@@ -53,8 +53,9 @@ namespace AlcoBarrier
 
         async public Task<string> SetUserPermission(bool deny)
         {
+            /* После обновления меняется UserPermission ID то есть перед изменением доступа запрашивать индефикатор  */
             string userPermission = $"<User Address=\"U2\">\r\n\t<Permissions>\r\n    " +
-                $"\t<UserPermission ID=\"300ef1f9-f296-4814-abfc-9b8b016e7c3b\">\r\n      " +
+                                    $"\t<UserPermission ID=\"5e83c06a-84e5-487f-b8c3-33bf34f215a9\">\r\n      " +
                 $"\t\t<Deny>{deny}</Deny>\r\n        </UserPermission>\r\n  </Permissions>\r\n</User>";
 
             string MyResult = string.Empty;

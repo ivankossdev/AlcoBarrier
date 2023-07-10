@@ -55,7 +55,7 @@ namespace AlcoBarrier
             {
                 Message = $"{jsonNode["Records"][0]["Date"]} " +
                           $"{jsonNode["Records"][0]["Time"]} " +
-                          $"Промили {jsonNode["Records"][0]["Result"]} " +
+                          $"Промилли {jsonNode["Records"][0]["Result"]} " +
                           $"{jsonNode["Records"][0]["UnitEN"]}"; 
             }
             
