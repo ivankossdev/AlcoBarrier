@@ -33,7 +33,7 @@ namespace AlcoBarrier
 
         async public Task<string> GetSystemInfo()
         {
-            string MyResult = string.Empty;
+            string MyResult;
             try
             {
                 HttpResponseMessage response = await client.GetAsync($"http://{IpAddress}/restApi/v2/SystemInfo");

@@ -53,12 +53,26 @@ namespace AlcoBarrier
 
             if (Code == "4" || Code == "5")
             {
-                Message = $"{jsonNode["Records"][0]["Date"]} : " +
+                Message = $"{jsonNode["Records"][0]["Date"]} " +
                           $"{jsonNode["Records"][0]["Time"]} " +
                           $"Промили {jsonNode["Records"][0]["Result"]} " +
                           $"{jsonNode["Records"][0]["UnitEN"]}"; 
             }
+            
             return Message;
+        }
+
+        public static float GetPpmResult(string jsonString)
+        {
+            JsonNode jsonNode = JsonNode.Parse(jsonString);
+            string Code = jsonNode["Records"][0]["Code"].ToString();
+            float ppm = 0;
+
+            if (Code == "4" || Code == "5")
+            {
+                ppm = float.Parse(jsonNode["Records"][0]["Result"].ToString(), System.Globalization.CultureInfo.InvariantCulture);
+            }
+            return ppm;
         }
     }
 }

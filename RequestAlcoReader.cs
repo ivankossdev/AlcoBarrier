@@ -13,7 +13,7 @@ namespace AlcoBarrier
 {
     public class RequestAlcoReader
     {
-        private HttpClient client;
+        private readonly HttpClient client;
         private readonly string IpAddress;
 
         public RequestAlcoReader(string ip)
@@ -24,7 +24,7 @@ namespace AlcoBarrier
 
         async public Task<string> GetRequestCmd(string request)
         {
-            string responseBody = string.Empty;
+            string responseBody;
             try
             {
                 byte[] messageToBytes = Encoding.UTF8.GetBytes(request);
