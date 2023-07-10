@@ -78,8 +78,11 @@ namespace AlcoBarrier
             textBox1.AppendText(MyJson.GetStringResult(Result));
             if (MyJson.GetPpmResult(Result) > 0)
             {
-                Result = await handler.SetUserPermission(true);
-                AppendTextValue(Result.Split('&'));
+                await handler.SetUserPermission(true);
+            }
+            else
+            {
+                await handler.SetUserPermission(false);
             }
         }
     }
