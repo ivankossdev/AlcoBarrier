@@ -6,7 +6,6 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
-using System.IO;
 
 namespace AlcoBarrier
 {
@@ -58,42 +57,5 @@ namespace AlcoBarrier
             }
         }
 
-        public static async Task StartListener(int port)
-        {
-            var tcpListener = TcpListener.Create(port);
-            tcpListener.Start();
-            for (; ; )
-            {
-                Console.WriteLine("[Server] waiting for clients...");
-                using (var tcpClient = await tcpListener.AcceptTcpClientAsync())
-                {
-                    try
-                    {
-                        Console.WriteLine("[Server] Client has connected");
-                        using (var networkStream = tcpClient.GetStream())
-                        using (var reader = new StreamReader(networkStream))
-                        using (var writer = new StreamWriter(networkStream) { AutoFlush = true })
-                        {
-                            var buffer = new byte[4096];
-                            Console.WriteLine("[Server] Reading from client");
-                            var request = await reader.ReadLineAsync();
-                            string.Format(string.Format("[Server] Client wrote '{0}'", request));
-
-                            await writer.WriteLineAsync($"[Server] to Client {request}");
-                            //for (int i = 0; i < 5; i++)
-                            //{
-                            //    await writer.WriteLineAsync("I am the server! HAHAHA!");
-                            //    Console.WriteLine("[Server] Response has been written");
-                            //    await Task.Delay(TimeSpan.FromSeconds(1));
-                            //}
-                        }
-                    }
-                    catch (Exception)
-                    {
-                        Console.WriteLine("[Server] client connection lost");
-                    }
-                }
-            }
-        }
     }
 }

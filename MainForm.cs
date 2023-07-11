@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -31,35 +32,43 @@ namespace AlcoBarrier
 
         private async void Server()
         {
-            var tcpListener = TcpListener.Create(10500);
-            tcpListener.Start();
-            for (; ; )
-            {
-                Console.WriteLine("[Server] waiting for clients...");
-                using (var tcpClient = await tcpListener.AcceptTcpClientAsync())
-                {
-                    try
-                    {
-                        Console.WriteLine("[Server] Client has connected");
-                        using (var networkStream = tcpClient.GetStream())
-                        using (var reader = new StreamReader(networkStream))
-                        using (var writer = new StreamWriter(networkStream) { AutoFlush = true })
-                        {
-                            var buffer = new byte[4096];
-                            Console.WriteLine("[Server] Reading from client");
+            TcpListener server = null;
+            Int32 port = 10500;
+            IPAddress localAddr = IPAddress.Parse("192.168.0.204");
 
-                            //for (int i = 0; i < 5; i++)
-                            //{
-                            //    await writer.WriteLineAsync("I am the server! HAHAHA!");
-                            //    Console.WriteLine("[Server] Response has been written");
-                            //    await Task.Delay(TimeSpan.FromSeconds(1));
-                            //}
+            server = new TcpListener(localAddr, port);
+            server.Start();
+
+            Byte[] bytes = new Byte[256];
+            String data = null;
+
+            while (true)
+            {
+                try
+                {
+                    Console.Write("Waiting for a connection... ");
+
+                    using (var client = await server.AcceptTcpClientAsync()){
+                        Console.WriteLine("Connected!");
+
+                        data = null;
+
+                        NetworkStream stream = client.GetStream();
+
+                        int i;
+
+                        while ((i = await stream.ReadAsync(bytes, 0, bytes.Length)) != 0)
+                        {
+                            data = Encoding.ASCII.GetString(bytes, 0, i);
+                            //Console.WriteLine($"Received: {data}");
+                            textBox1.AppendText($"Received: {data}");
                         }
                     }
-                    catch (Exception)
-                    {
-                        Console.WriteLine("[Server] client connection lost");
-                    }
+
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine($"Lost connection ");
                 }
             }
         }
