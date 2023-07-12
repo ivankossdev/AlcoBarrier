@@ -32,11 +32,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            this.buttonLock = new System.Windows.Forms.Button();
-            this.buttonUnLock = new System.Windows.Forms.Button();
             this.buttonOpen = new System.Windows.Forms.Button();
             this.buttonClose = new System.Windows.Forms.Button();
-            this.buttonAlco = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -59,26 +56,6 @@
             this.textBox1.Size = new System.Drawing.Size(407, 160);
             this.textBox1.TabIndex = 2;
             // 
-            // buttonLock
-            // 
-            this.buttonLock.Location = new System.Drawing.Point(15, 191);
-            this.buttonLock.Name = "buttonLock";
-            this.buttonLock.Size = new System.Drawing.Size(75, 36);
-            this.buttonLock.TabIndex = 3;
-            this.buttonLock.Text = "Lock";
-            this.buttonLock.UseVisualStyleBackColor = true;
-            this.buttonLock.Click += new System.EventHandler(this.buttonLock_Click);
-            // 
-            // buttonUnLock
-            // 
-            this.buttonUnLock.Location = new System.Drawing.Point(96, 191);
-            this.buttonUnLock.Name = "buttonUnLock";
-            this.buttonUnLock.Size = new System.Drawing.Size(75, 38);
-            this.buttonUnLock.TabIndex = 4;
-            this.buttonUnLock.Text = "UnLock";
-            this.buttonUnLock.UseVisualStyleBackColor = true;
-            this.buttonUnLock.Click += new System.EventHandler(this.buttonUnLock_Click);
-            // 
             // buttonOpen
             // 
             this.buttonOpen.Location = new System.Drawing.Point(266, 191);
@@ -99,26 +76,13 @@
             this.buttonClose.UseVisualStyleBackColor = true;
             this.buttonClose.Click += new System.EventHandler(this.buttonClose_Click);
             // 
-            // buttonAlco
-            // 
-            this.buttonAlco.Location = new System.Drawing.Point(15, 233);
-            this.buttonAlco.Name = "buttonAlco";
-            this.buttonAlco.Size = new System.Drawing.Size(75, 35);
-            this.buttonAlco.TabIndex = 7;
-            this.buttonAlco.Text = "Alco";
-            this.buttonAlco.UseVisualStyleBackColor = true;
-            this.buttonAlco.Click += new System.EventHandler(this.buttonAlco_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(434, 286);
-            this.Controls.Add(this.buttonAlco);
             this.Controls.Add(this.buttonClose);
             this.Controls.Add(this.buttonOpen);
-            this.Controls.Add(this.buttonUnLock);
-            this.Controls.Add(this.buttonLock);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -137,11 +101,8 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox textBox1;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
-        private System.Windows.Forms.Button buttonLock;
-        private System.Windows.Forms.Button buttonUnLock;
         private System.Windows.Forms.Button buttonOpen;
         private System.Windows.Forms.Button buttonClose;
-        private System.Windows.Forms.Button buttonAlco;
     }
 }
 

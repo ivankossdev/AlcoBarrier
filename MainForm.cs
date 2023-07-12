@@ -85,12 +85,20 @@ namespace AlcoBarrier
 
         private async void OnlineMessage()
         {
+            int count = 0;
             while(true)
             {
                 Result = await alcoReader.GetRequestCmd(MyJson.CreateCmdTypeInfMessage("getLogInf"));
                 string LastRecord = MyJson.GetCountMessage(Result);
                 Result = await alcoReader.GetRequestCmd(MyJson.CreateLogMessage(LastRecord));
                 textBox1.AppendText($"{MyJson.GetStringResult(Result)} \n");
+                count++;
+                if(count > 10) 
+                { 
+                    textBox1.Clear(); 
+                    count = 0;
+                }
+                
                 await Task.Delay(250);
             }
 
