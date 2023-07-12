@@ -26,50 +26,7 @@ namespace AlcoBarrier
         {
             InitializeComponent();
             SystemInfo();
-            Server();
-            
-        }
-
-        private async void Server()
-        {
-            TcpListener server = null;
-            Int32 port = 10500;
-            IPAddress localAddr = IPAddress.Parse("192.168.0.204");
-
-            server = new TcpListener(localAddr, port);
-            server.Start();
-
-            Byte[] bytes = new Byte[256];
-            String data = null;
-
-            while (true)
-            {
-                try
-                {
-                    Console.Write("Waiting for a connection... ");
-
-                    using (var client = await server.AcceptTcpClientAsync()){
-                        Console.WriteLine("Connected!");
-
-                        data = null;
-
-                        NetworkStream stream = client.GetStream();
-
-                        int i;
-
-                        while ((i = await stream.ReadAsync(bytes, 0, bytes.Length)) != 0)
-                        {
-                            data = Encoding.ASCII.GetString(bytes, 0, i);
-                            Console.WriteLine($"Received: {data}");
-                        }
-                    }
-
-                }
-                catch (Exception)
-                {
-                    Console.WriteLine($"Lost connection ");
-                }
-            }
+            OnlineMessage();
         }
 
         string Result = string.Empty;
@@ -124,6 +81,19 @@ namespace AlcoBarrier
             string LastRecord = MyJson.GetCountMessage(Result);
             Result = await alcoReader.GetRequestCmd(MyJson.CreateLogMessage(LastRecord));
             textBox1.AppendText(MyJson.GetStringResult(Result));
+        }
+
+        private async void OnlineMessage()
+        {
+            while(true)
+            {
+                Result = await alcoReader.GetRequestCmd(MyJson.CreateCmdTypeInfMessage("getLogInf"));
+                string LastRecord = MyJson.GetCountMessage(Result);
+                Result = await alcoReader.GetRequestCmd(MyJson.CreateLogMessage(LastRecord));
+                textBox1.AppendText($"{MyJson.GetStringResult(Result)} \n");
+                await Task.Delay(250);
+            }
+
         }
     }
 }
