@@ -55,12 +55,16 @@ namespace AlcoBarrier
             {
                 Message = $"{jsonNode["Records"][0]["Date"]} " +
                           $"{jsonNode["Records"][0]["Time"]} " +
-                          $"Концентрация {jsonNode["Records"][0]["Result"]} " +
-                          $"{jsonNode["Records"][0]["UnitEN"]} " +
+                          $"Концентрация {jsonNode["Records"][0]["Result"]} мг/л " +
                           $"Карточка {jsonNode["Records"][0]["WiegandLSB"]} "; 
             }
             
             return Message;
         }
+
+        /*
+         * 1. Асинхронная функция постоянного опроса памяти алкотестера.
+         * 2. Конвертирование кода карты.
+         */
     }
 }
