@@ -61,7 +61,6 @@ namespace AlcoBarrier
                         {
                             data = Encoding.ASCII.GetString(bytes, 0, i);
                             Console.WriteLine($"Received: {data}");
-                            //textBox1.AppendText($"Received: {data}");
                         }
                     }
 
@@ -124,15 +123,7 @@ namespace AlcoBarrier
             Result = await alcoReader.GetRequestCmd(MyJson.CreateCmdTypeInfMessage("getLogInf"));
             string LastRecord = MyJson.GetCountMessage(Result);
             Result = await alcoReader.GetRequestCmd(MyJson.CreateLogMessage(LastRecord));
-            textBox1.AppendText(Result);
-            if (MyJson.GetPpmResult(Result) > 0)
-            {
-                await handler.SetUserPermission(true);
-            }
-            else
-            {
-                await handler.SetUserPermission(false);
-            }
+            textBox1.AppendText(MyJson.GetStringResult(Result));
         }
     }
 }
