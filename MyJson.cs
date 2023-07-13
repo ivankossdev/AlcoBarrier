@@ -58,8 +58,17 @@ namespace AlcoBarrier
 
         public static string GetDataMemory(string jsonString)
         {
-            JsonNode jsonNode = JsonNode.Parse(jsonString);
-            return jsonNode["Records"][0].ToString();
+            string Result = string.Empty;
+            try
+            {
+                JsonNode jsonNode = JsonNode.Parse(jsonString);
+                return jsonNode["Records"][0].ToString();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            return Result;
         }
 
         public static string GetStringResult(string jsonString)
