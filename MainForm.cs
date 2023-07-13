@@ -72,7 +72,6 @@ namespace AlcoBarrier
                 if (OldRecord != LastRecord)
                 {
                     OldRecord = LastRecord;
-                    await Console.Out.WriteLineAsync(LastRecord);
                     Result = await alcoReader.GetRequestCmd(MyJson.CreateLogMessage(LastRecord));
                     textBox1.AppendText($"{MyJson.GetStringResult(Result)} \n");
                     count++;

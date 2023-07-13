@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Windows.Forms;
+using System.Xml.Linq;
 
 namespace AlcoBarrier
 {
@@ -16,7 +17,7 @@ namespace AlcoBarrier
             var forecastObject = new JsonObject
             {
                 ["cmdType"] = "getLog",
-                [ "Position"] = "fromAddr",
+                ["Position"] = "fromAddr",
                 ["MemAddr"] = memoryAddr
             };
 
@@ -47,9 +48,9 @@ namespace AlcoBarrier
             try
             {
                 JsonNode jsonNode = JsonNode.Parse(jsonString);
-                 Result = jsonNode["LastRecord"]["MemAddr"].ToString();
+                Result = jsonNode["LastRecord"]["MemAddr"].ToString();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(ex);
             }
@@ -74,13 +75,16 @@ namespace AlcoBarrier
         public static string GetStringResult(string jsonString)
         {
             string Message = string.Empty;
- 
-                string Code = string.Empty;
-                JsonNode jsonNode;
-                try
+
+            string Code = string.Empty;
+            JsonNode jsonNode;
+            try
+            {
+                jsonNode = JsonNode.Parse(jsonString);
+                if (jsonNode["getLog"] == null)
                 {
-                    jsonNode = JsonNode.Parse(jsonString);
                     Code = jsonNode["Records"][0]["Code"].ToString();
+
                     if (Code == "4" || Code == "5")
                     {
                         Message = $"{jsonNode["Records"][0]["Date"]} " +
@@ -89,10 +93,11 @@ namespace AlcoBarrier
                                   $"Карточка {jsonNode["Records"][0]["WiegandLSB"]} ";
                     }
                 }
-                catch(Exception ex)
-                {
-                    Console.WriteLine(ex);
-                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
 
             return Message;
         }
