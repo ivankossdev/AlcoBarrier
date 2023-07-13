@@ -80,15 +80,15 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(434, 286);
+            this.ClientSize = new System.Drawing.Size(434, 236);
             this.Controls.Add(this.buttonClose);
             this.Controls.Add(this.buttonOpen);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(450, 325);
-            this.MinimumSize = new System.Drawing.Size(450, 325);
+            this.MaximumSize = new System.Drawing.Size(450, 275);
+            this.MinimumSize = new System.Drawing.Size(450, 275);
             this.Name = "MainForm";
             this.Text = "AlcoBarrier";
             this.ResumeLayout(false);

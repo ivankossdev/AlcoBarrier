@@ -38,20 +38,6 @@ namespace AlcoBarrier
             AppendTextValue(Result.Split('&'));
         }
 
-        private async void buttonLock_Click(object sender, EventArgs e)
-        {
-            textBox1.Clear();
-            Result = await handler.SetUserPermission(true);
-            AppendTextValue(Result.Split('&'));
-        }
-
-        private async void buttonUnLock_Click(object sender, EventArgs e)
-        {
-            textBox1.Clear();
-            Result = await handler.SetUserPermission(false);
-            AppendTextValue(Result.Split('&'));
-        }
-
         private void AppendTextValue(in string[] lines)
         {
             foreach (string line in lines)
@@ -74,34 +60,31 @@ namespace AlcoBarrier
             AppendTextValue(Result.Split('&'));
         }
 
-        private async void buttonAlco_Click(object sender, EventArgs e)
-        {
-            textBox1.Clear();
-            Result = await alcoReader.GetRequestCmd(MyJson.CreateCmdTypeInfMessage("getLogInf"));
-            string LastRecord = MyJson.GetCountMessage(Result);
-            Result = await alcoReader.GetRequestCmd(MyJson.CreateLogMessage(LastRecord));
-            textBox1.AppendText(MyJson.GetStringResult(Result));
-        }
-
         private async void OnlineMessage()
         {
             int count = 0;
+            string OldRecord = string.Empty;
+
             while(true)
             {
                 Result = await alcoReader.GetRequestCmd(MyJson.CreateCmdTypeInfMessage("getLogInf"));
                 string LastRecord = MyJson.GetCountMessage(Result);
-                Result = await alcoReader.GetRequestCmd(MyJson.CreateLogMessage(LastRecord));
-                textBox1.AppendText($"{MyJson.GetStringResult(Result)} \n");
-                count++;
-                if(count > 5) 
-                { 
-                    textBox1.Clear(); 
-                    count = 0;
+                if (OldRecord != LastRecord)
+                {
+                    OldRecord = LastRecord;
+                    await Console.Out.WriteLineAsync(LastRecord);
+                    Result = await alcoReader.GetRequestCmd(MyJson.CreateLogMessage(LastRecord));
+                    textBox1.AppendText($"{MyJson.GetStringResult(Result)} \n");
+                    count++;
+                    if (count > 10)
+                    {
+                        textBox1.Clear();
+                        count = 0;
+                    }
                 }
-                
+
                 await Task.Delay(250);
             }
-
         }
     }
 }

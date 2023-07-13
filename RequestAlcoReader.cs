@@ -34,7 +34,6 @@ namespace AlcoBarrier
 
                 response.EnsureSuccessStatusCode();
                 responseBody = await response.Content.ReadAsStringAsync();
-
             }
             catch (HttpRequestException e)
             {
@@ -56,6 +55,7 @@ namespace AlcoBarrier
             {
                 Console.WriteLine(e);
             }
+
             return responseBody;
         }
 
