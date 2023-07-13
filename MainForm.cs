@@ -93,7 +93,7 @@ namespace AlcoBarrier
                 Result = await alcoReader.GetRequestCmd(MyJson.CreateLogMessage(LastRecord));
                 textBox1.AppendText($"{MyJson.GetStringResult(Result)} \n");
                 count++;
-                if(count > 10) 
+                if(count > 5) 
                 { 
                     textBox1.Clear(); 
                     count = 0;

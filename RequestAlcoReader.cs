@@ -46,9 +46,17 @@ namespace AlcoBarrier
 
         private string GetNode(string responseBody)
         {
-            JsonNode forecastNode = JsonNode.Parse(responseBody);
-            var options = new JsonSerializerOptions { WriteIndented = true };
-            return forecastNode.ToJsonString(options);
+            try
+            {
+                JsonNode forecastNode = JsonNode.Parse(responseBody);
+                var options = new JsonSerializerOptions { WriteIndented = true };
+                return forecastNode.ToJsonString(options);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            return responseBody;
         }
 
     }

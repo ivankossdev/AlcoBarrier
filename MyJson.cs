@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Windows.Forms;
 
 namespace AlcoBarrier
 {
@@ -24,46 +25,71 @@ namespace AlcoBarrier
 
         public static string CreateCmdTypeInfMessage(string command)
         {
-            var forecastObject = new JsonObject
+            try
             {
-                ["cmdType"] = command
-            };
+                var forecastObject = new JsonObject
+                {
+                    ["cmdType"] = command
+                };
 
-            return forecastObject.ToJsonString();
+                return forecastObject.ToJsonString();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            return "Not Result";
         }
 
         public static string GetCountMessage(string jsonString)
         {
-            JsonNode jsonNode = JsonNode.Parse(jsonString);
-            return jsonNode["LastRecord"]["MemAddr"].ToString();
+            string Result = string.Empty;
+            try
+            {
+                JsonNode jsonNode = JsonNode.Parse(jsonString);
+                 Result = jsonNode["LastRecord"]["MemAddr"].ToString();
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            return Result;
         }
 
         public static string GetDataMemory(string jsonString)
         {
             JsonNode jsonNode = JsonNode.Parse(jsonString);
-
             return jsonNode["Records"][0].ToString();
         }
 
         public static string GetStringResult(string jsonString)
         {
-            JsonNode jsonNode = JsonNode.Parse(jsonString);
-            string Code = jsonNode["Records"][0]["Code"].ToString();
             string Message = string.Empty;
+ 
+                string Code = string.Empty;
+                JsonNode jsonNode;
+                try
+                {
+                    jsonNode = JsonNode.Parse(jsonString);
+                    Code = jsonNode["Records"][0]["Code"].ToString();
+                    if (Code == "4" || Code == "5")
+                    {
+                        Message = $"{jsonNode["Records"][0]["Date"]} " +
+                                  $"{jsonNode["Records"][0]["Time"]} " +
+                                  $"Концентрация {jsonNode["Records"][0]["Result"]} мг/л " +
+                                  $"Карточка {jsonNode["Records"][0]["WiegandLSB"]} ";
+                    }
+                }
+                catch(Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
 
-            if (Code == "4" || Code == "5")
-            {
-                Message = $"{jsonNode["Records"][0]["Date"]} " +
-                          $"{jsonNode["Records"][0]["Time"]} " +
-                          $"Концентрация {jsonNode["Records"][0]["Result"]} мг/л " +
-                          $"Карточка {jsonNode["Records"][0]["WiegandLSB"]} "; 
-            }
-            
             return Message;
         }
 
         /*
-         * 1. Асинхронная функция постоянного опроса памяти алкотестера.
+         * V 1. Асинхронная функция постоянного опроса памяти алкотестера. 
          * 2. Конвертирование кода карты.
          */
     }
