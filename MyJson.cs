@@ -84,13 +84,15 @@ namespace AlcoBarrier
                 if (jsonNode["getLog"] == null)
                 {
                     Code = jsonNode["Records"][0]["Code"].ToString();
+                    
+                    string CardCode = jsonNode["Records"][0]["WiegandLSB"].ToString();
 
                     if (Code == "4" || Code == "5")
                     {
                         Message = $"{jsonNode["Records"][0]["Date"]} " +
                                   $"{jsonNode["Records"][0]["Time"]} " +
                                   $"Концентрация {jsonNode["Records"][0]["Result"]} мг/л " +
-                                  $"Карточка {jsonNode["Records"][0]["WiegandLSB"]} ";
+                                  $"Карточка {ConvertCodeCard(CardCode)} ";
                     }
                 }
             }
@@ -102,9 +104,11 @@ namespace AlcoBarrier
             return Message;
         }
 
-        /*
-         * V 1. Асинхронная функция постоянного опроса памяти алкотестера. 
-         * 2. Конвертирование кода карты.
-         */
+        private static string ConvertCodeCard(string code)
+        {
+            int IntCode = Convert.ToInt32(code);
+            
+            return $"{IntCode >> 16}-{IntCode & 0xFFFF}";
+        }
     }
 }

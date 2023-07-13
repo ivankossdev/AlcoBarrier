@@ -68,11 +68,14 @@ namespace AlcoBarrier
             while(true)
             {
                 Result = await alcoReader.GetRequestCmd(MyJson.CreateCmdTypeInfMessage("getLogInf"));
+                
                 string LastRecord = MyJson.GetCountMessage(Result);
+
                 if (OldRecord != LastRecord)
                 {
                     OldRecord = LastRecord;
                     Result = await alcoReader.GetRequestCmd(MyJson.CreateLogMessage(LastRecord));
+                    //await Console.Out.WriteLineAsync(Result);
                     textBox1.AppendText($"{MyJson.GetStringResult(Result)} \n");
                     count++;
                     if (count > 10)
