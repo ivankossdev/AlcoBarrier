@@ -101,6 +101,7 @@ namespace AlcoBarrier
         {
             List<string> Lines = await InnerageHandler.GetAllUsers();
             AppendTextValue(Lines);
+            SqLiteHandler.Test();
         }
     }
 }
