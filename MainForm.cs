@@ -19,7 +19,7 @@ namespace AlcoBarrier
 {
     public partial class MainForm : Form
     {
-        RequestInner handler = new RequestInner("192.168.0.123");
+        RequestInner InnerageHandler = new RequestInner("192.168.0.123");
         RequestAlcoReader alcoReader = new RequestAlcoReader("192.168.0.125");
         
         public MainForm()
@@ -27,6 +27,7 @@ namespace AlcoBarrier
             InitializeComponent();
             SystemInfo();
             OnlineMessage();
+            PrintAllUsers();
         }
 
         string Result = string.Empty;
@@ -34,7 +35,7 @@ namespace AlcoBarrier
         private async void SystemInfo()
         {
             textBox1.Clear();
-            Result = await handler.GetSystemInfo();
+            Result = await InnerageHandler.GetSystemInfo();
             AppendTextValue(Result.Split('&'));
         }
 
@@ -49,14 +50,14 @@ namespace AlcoBarrier
         private async void buttonOpen_Click(object sender, EventArgs e)
         {
             textBox1.Clear();
-            Result = await handler.OpenTheDoor(true);
+            Result = await InnerageHandler.OpenTheDoor(true);
             AppendTextValue(Result.Split('&'));
         }
 
         private async void buttonClose_Click(object sender, EventArgs e)
         {
             textBox1.Clear();
-            Result = await handler.OpenTheDoor(false);
+            Result = await InnerageHandler.OpenTheDoor(false);
             AppendTextValue(Result.Split('&'));
         }
 
@@ -78,7 +79,7 @@ namespace AlcoBarrier
                     //await Console.Out.WriteLineAsync(Result);
                     textBox1.AppendText($"{MyJson.GetStringResult(Result)} \n");
                     count++;
-                    if (count > 10)
+                    if (count > 15)
                     {
                         textBox1.Clear();
                         count = 0;
@@ -87,6 +88,11 @@ namespace AlcoBarrier
 
                 await Task.Delay(250);
             }
+        }
+
+        private async void PrintAllUsers()
+        {
+            await InnerageHandler.GetAllUsers();
         }
     }
 }

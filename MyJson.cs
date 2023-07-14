@@ -84,15 +84,13 @@ namespace AlcoBarrier
                 if (jsonNode["getLog"] == null)
                 {
                     Code = jsonNode["Records"][0]["Code"].ToString();
-                    
-                    string CardCode = jsonNode["Records"][0]["WiegandLSB"].ToString();
 
                     if (Code == "4" || Code == "5")
                     {
                         Message = $"{jsonNode["Records"][0]["Date"]} " +
                                   $"{jsonNode["Records"][0]["Time"]} " +
                                   $"Концентрация {jsonNode["Records"][0]["Result"]} мг/л " +
-                                  $"Карточка {ConvertCodeCard(CardCode)} ";
+                                  $"Карточка {ConvertCodeCard(jsonNode["Records"][0]["WiegandLSB"].ToString())} ";
                     }
                 }
             }

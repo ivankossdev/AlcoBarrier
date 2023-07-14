@@ -29,12 +29,14 @@ namespace AlcoBarrier
             string body = string.Empty;
 
             innerage.LoadXml(xml);
+
             var cards = innerage.GetElementsByTagName(name);
+
             foreach (XmlElement x in cards)
             {
                 foreach (XmlNode childnode in x.ChildNodes)
                 {
-                    body += $"{childnode.Name} {childnode.InnerText.Trim()}&";
+                    body += $"{childnode.InnerText.Trim()}&";
                 }
             }
             return body;

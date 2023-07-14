@@ -139,5 +139,29 @@ namespace AlcoBarrier
 
             return MyResult;
         }
+
+        async public Task GetAllUsers()
+        {
+            // $"http://{ip}/restApi/v2/User/User?FullObject=True" - Get All Users 
+
+            string MyResult;
+            try
+            {
+                HttpResponseMessage response = await client.GetAsync($"http://{IpAddress}/restApi/v2/User/User?FullObject=True");
+
+                response.EnsureSuccessStatusCode();
+
+                string responseBody = await response.Content.ReadAsStringAsync();
+                // MyResult = $"{xmlHandler.GetXmlElement(responseBody, "SystemInfo")}";
+                MyResult= responseBody;
+
+            }
+            catch (HttpRequestException e)
+            {
+                MyResult = $"Message :{e.Message}";
+            }
+
+            await Console.Out.WriteLineAsync(MyResult);
+        }
     }
 }
