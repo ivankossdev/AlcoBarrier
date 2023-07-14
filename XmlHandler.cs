@@ -50,11 +50,12 @@ namespace AlcoBarrier
 
             XmlNodeList users = innerage.GetElementsByTagName("Rows");
 
-            string Name = string.Empty, Address = string.Empty, CardCode = string.Empty, Id = string.Empty;
+            string Name = string.Empty, Address = string.Empty, 
+                   CardCode = string.Empty, Id = string.Empty,
+                   CardData = string.Empty;
 
             foreach (XmlElement x in users)
             {
-                //Console.WriteLine(x.InnerXml);
                 foreach (XmlNode user in x.ChildNodes)
                 {
                     foreach(XmlNode data in user.ChildNodes)
@@ -71,7 +72,6 @@ namespace AlcoBarrier
                         {
                            foreach(XmlNode card in cards.ChildNodes)
                             {
-                                //Console.WriteLine(card.Name);
                                 if (card.Name == "Name")
                                 {
                                     CardCode = card.InnerText;
@@ -80,12 +80,15 @@ namespace AlcoBarrier
                                 {
                                     Id = card.InnerText;
                                 }
+                                if (card.Name == "CardData")
+                                {
+                                    CardData = card.InnerText;
+                                }
                             }
                         }
                     }
-
-                    Console.WriteLine($"{Name} {Address} {CardCode} {Id}");
-                    Name = string.Empty; Address = string.Empty; CardCode = string.Empty;
+                    Console.WriteLine($"Name-{Name} User ID-{Address} Card code-{CardCode} hex {CardData} id-{Id}");
+                    Name = string.Empty; Address = string.Empty; CardCode = string.Empty; CardData = string.Empty;
                 }
             }
         }

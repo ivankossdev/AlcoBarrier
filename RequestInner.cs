@@ -142,8 +142,6 @@ namespace AlcoBarrier
 
         async public Task GetAllUsers()
         {
-            // $"http://{ip}/restApi/v2/User/User?FullObject=True" - Get All Users 
-
             string MyResult;
             try
             {
@@ -152,7 +150,6 @@ namespace AlcoBarrier
                 response.EnsureSuccessStatusCode();
 
                 string responseBody = await response.Content.ReadAsStringAsync();
-                // MyResult = $"{xmlHandler.GetXmlElement(responseBody, "SystemInfo")}";
                 MyResult= responseBody;
 
             }
@@ -161,9 +158,7 @@ namespace AlcoBarrier
                 MyResult = $"Message :{e.Message}";
             }
 
-            // await Console.Out.WriteLineAsync(MyResult);
             xmlHandler.GetUsers(MyResult);
-
         }
     }
 }
