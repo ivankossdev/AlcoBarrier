@@ -54,12 +54,12 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox1.Size = new System.Drawing.Size(407, 160);
+            this.textBox1.Size = new System.Drawing.Size(632, 330);
             this.textBox1.TabIndex = 2;
             // 
             // buttonOpen
             // 
-            this.buttonOpen.Location = new System.Drawing.Point(266, 191);
+            this.buttonOpen.Location = new System.Drawing.Point(491, 361);
             this.buttonOpen.Name = "buttonOpen";
             this.buttonOpen.Size = new System.Drawing.Size(75, 38);
             this.buttonOpen.TabIndex = 5;
@@ -69,7 +69,7 @@
             // 
             // buttonClose
             // 
-            this.buttonClose.Location = new System.Drawing.Point(347, 191);
+            this.buttonClose.Location = new System.Drawing.Point(572, 361);
             this.buttonClose.Name = "buttonClose";
             this.buttonClose.Size = new System.Drawing.Size(75, 38);
             this.buttonClose.TabIndex = 6;
@@ -79,7 +79,7 @@
             // 
             // buttonGetUsers
             // 
-            this.buttonGetUsers.Location = new System.Drawing.Point(15, 191);
+            this.buttonGetUsers.Location = new System.Drawing.Point(15, 361);
             this.buttonGetUsers.Name = "buttonGetUsers";
             this.buttonGetUsers.Size = new System.Drawing.Size(95, 38);
             this.buttonGetUsers.TabIndex = 7;
@@ -91,7 +91,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(434, 236);
+            this.ClientSize = new System.Drawing.Size(659, 411);
             this.Controls.Add(this.buttonGetUsers);
             this.Controls.Add(this.buttonClose);
             this.Controls.Add(this.buttonOpen);
@@ -99,8 +99,8 @@
             this.Controls.Add(this.label1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(450, 275);
-            this.MinimumSize = new System.Drawing.Size(450, 275);
+            this.MaximumSize = new System.Drawing.Size(675, 450);
+            this.MinimumSize = new System.Drawing.Size(675, 450);
             this.Name = "MainForm";
             this.Text = "AlcoBarrier";
             this.ResumeLayout(false);

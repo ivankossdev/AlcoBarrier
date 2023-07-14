@@ -46,6 +46,14 @@ namespace AlcoBarrier
             }
         }
 
+        private void AppendTextValue(in List<string> lines)
+        {
+            foreach (string line in lines)
+            {
+                textBox1.AppendText($"{line}\n");
+            }
+        }
+
         private async void buttonOpen_Click(object sender, EventArgs e)
         {
             textBox1.Clear();
@@ -91,7 +99,8 @@ namespace AlcoBarrier
 
         private async void buttonGetUsers_Click(object sender, EventArgs e)
         {
-            await InnerageHandler.GetAllUsers();
+            List<string> Lines = await InnerageHandler.GetAllUsers();
+            AppendTextValue(Lines);
         }
     }
 }

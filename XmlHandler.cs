@@ -44,7 +44,7 @@ namespace AlcoBarrier
             return body;
         }
 
-        public void GetUsers(string xml)
+        public List<string> GetUsers(string xml)
         {
             innerage.LoadXml(xml);
 
@@ -53,6 +53,8 @@ namespace AlcoBarrier
             string Name = string.Empty, Address = string.Empty, 
                    CardCode = string.Empty, Id = string.Empty,
                    CardData = string.Empty;
+
+            List<string> Info = new List<string>();
 
             foreach (XmlElement x in users)
             {
@@ -87,10 +89,13 @@ namespace AlcoBarrier
                             }
                         }
                     }
-                    Console.WriteLine($"Name-{Name} User ID-{Address} Card code-{CardCode} hex {CardData} id-{Id}");
+                    // Console.WriteLine($"Name-{Name} User ID-{Address} Card code-{CardCode} hex {CardData} id-{Id}");
+                    Info.Add($"Name-{Name} User ID-{Address} Card code-{CardCode} hex {CardData} id-{Id}");
                     Name = string.Empty; Address = string.Empty; CardCode = string.Empty; CardData = string.Empty;
                 }
             }
+
+            return Info;
         }
     }
 }

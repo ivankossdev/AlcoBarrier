@@ -140,7 +140,7 @@ namespace AlcoBarrier
             return MyResult;
         }
 
-        async public Task GetAllUsers()
+        async public Task<List<string>> GetAllUsers()
         {
             string MyResult;
             try
@@ -158,7 +158,7 @@ namespace AlcoBarrier
                 MyResult = $"Message :{e.Message}";
             }
 
-            xmlHandler.GetUsers(MyResult);
+            return xmlHandler.GetUsers(MyResult);
         }
     }
 }
