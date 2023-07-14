@@ -161,7 +161,9 @@ namespace AlcoBarrier
                 MyResult = $"Message :{e.Message}";
             }
 
-            await Console.Out.WriteLineAsync(MyResult);
+            // await Console.Out.WriteLineAsync(MyResult);
+            xmlHandler.GetUsers(MyResult);
+
         }
     }
 }

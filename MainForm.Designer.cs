@@ -34,8 +34,7 @@
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.buttonOpen = new System.Windows.Forms.Button();
             this.buttonClose = new System.Windows.Forms.Button();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.buttonGetUsers = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -78,21 +77,22 @@
             this.buttonClose.UseVisualStyleBackColor = true;
             this.buttonClose.Click += new System.EventHandler(this.buttonClose_Click);
             // 
-            // pictureBox1
+            // buttonGetUsers
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(15, 191);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(100, 38);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox1.TabIndex = 7;
-            this.pictureBox1.TabStop = false;
+            this.buttonGetUsers.Location = new System.Drawing.Point(15, 191);
+            this.buttonGetUsers.Name = "buttonGetUsers";
+            this.buttonGetUsers.Size = new System.Drawing.Size(95, 38);
+            this.buttonGetUsers.TabIndex = 7;
+            this.buttonGetUsers.Text = "Get all users";
+            this.buttonGetUsers.UseVisualStyleBackColor = true;
+            this.buttonGetUsers.Click += new System.EventHandler(this.buttonGetUsers_Click);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(434, 236);
-            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.buttonGetUsers);
             this.Controls.Add(this.buttonClose);
             this.Controls.Add(this.buttonOpen);
             this.Controls.Add(this.textBox1);
@@ -103,7 +103,6 @@
             this.MinimumSize = new System.Drawing.Size(450, 275);
             this.Name = "MainForm";
             this.Text = "AlcoBarrier";
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -116,7 +115,7 @@
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.Button buttonOpen;
         private System.Windows.Forms.Button buttonClose;
-        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Button buttonGetUsers;
     }
 }
 

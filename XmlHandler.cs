@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.IO;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Tab;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 
 namespace AlcoBarrier
 {
@@ -40,6 +42,48 @@ namespace AlcoBarrier
                 }
             }
             return body;
+        }
+
+        public void GetUsers(string xml)
+        {
+            innerage.LoadXml(xml);
+
+            XmlNodeList users = innerage.GetElementsByTagName("Rows");
+
+            string Name = string.Empty, Address = string.Empty, CardCode = string.Empty;
+
+            foreach (XmlElement x in users)
+            {
+                //Console.WriteLine(x.InnerXml);
+                foreach (XmlNode user in x.ChildNodes)
+                {
+                    foreach(XmlNode data in user.ChildNodes)
+                    {
+                       if (data.Name == "Name")
+                        {
+                            Name = data.InnerText;
+                        }
+                       if (data.Name == "Address")
+                        {
+                            Address = data.InnerText;
+                        } 
+                       foreach(XmlNode cards in data.ChildNodes)
+                        {
+                           foreach(XmlNode card in cards.ChildNodes)
+                            {
+                                //Console.WriteLine(card.Name);
+                                if (card.Name == "Name")
+                                {
+                                    CardCode = card.InnerText;
+                                }
+                            }
+                        }
+                    }
+
+                    Console.WriteLine($"{Name} {Address} {CardCode}");
+                    Name = string.Empty; Address = string.Empty; CardCode = string.Empty;
+                }
+            }
         }
     }
 }

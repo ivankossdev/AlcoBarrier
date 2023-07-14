@@ -27,7 +27,6 @@ namespace AlcoBarrier
             InitializeComponent();
             SystemInfo();
             OnlineMessage();
-            PrintAllUsers();
         }
 
         string Result = string.Empty;
@@ -90,7 +89,7 @@ namespace AlcoBarrier
             }
         }
 
-        private async void PrintAllUsers()
+        private async void buttonGetUsers_Click(object sender, EventArgs e)
         {
             await InnerageHandler.GetAllUsers();
         }
