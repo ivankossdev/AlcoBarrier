@@ -31,6 +31,27 @@ namespace AlcoBarrier
                            (3, 'Nate');
                 ";
                 command.ExecuteNonQuery();
+
+
+                var name = "andy";
+
+                #region snippet_Parameter
+                command.CommandText =
+                @"
+                    INSERT INTO user (name)
+                    VALUES ($name)
+                ";
+                command.Parameters.AddWithValue("$name", name);
+                #endregion
+                command.ExecuteNonQuery();
+
+                command.CommandText =
+                @"
+                    SELECT last_insert_rowid()
+                ";
+                var newId = (long)command.ExecuteScalar();
+
+                Console.WriteLine($"Your new user ID is {newId}.");
             }
 
         }
