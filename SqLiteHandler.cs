@@ -11,49 +11,33 @@ namespace AlcoBarrier
 {
     public static class SqLiteHandler
     {
-        public static void Test()
+        public static void CreateDB()
         {
-
-            using (var connection = new SqliteConnection("Data Source=test.db"))
+            File.Delete("employees.db");
+            using (var connection = new SqliteConnection("Data Source=employees.db"))
             {
+                // Name-Карта_1 User ID-U2 Card code-37358 hex 1A00000025000000EE910000 id-4ec8ed35-8e89-4bc9-b1d2-856c440cf969
+
                 connection.Open();
                 var command = connection.CreateCommand();
                 command.CommandText =
                 @"
                     CREATE TABLE user (
-                        id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-                        name TEXT NOT NULL
+                        idkey INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                        name TEXT NOT NULL,
+                        iduser TEXT NOT NULL,
+                        code TEXT NOT NULL,
+                        hex TEXT NOT NULL,
+                        id TEXT NOT NULL
                     );
-
-                    INSERT INTO user
-                    VALUES (1, 'Brice'),
-                           (2, 'Alexander'),
-                           (3, 'Nate');
                 ";
                 command.ExecuteNonQuery();
-
-
-                var name = "andy";
-
-                #region snippet_Parameter
-                command.CommandText =
-                @"
-                    INSERT INTO user (name)
-                    VALUES ($name)
-                ";
-                command.Parameters.AddWithValue("$name", name);
-                #endregion
-                command.ExecuteNonQuery();
-
-                command.CommandText =
-                @"
-                    SELECT last_insert_rowid()
-                ";
-                var newId = (long)command.ExecuteScalar();
-
-                Console.WriteLine($"Your new user ID is {newId}.");
+                connection.Close();
             }
-
+        }
+        public static void WriteDB()
+        {
+            
         }
     }
 }
