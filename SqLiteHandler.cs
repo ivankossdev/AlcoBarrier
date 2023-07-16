@@ -13,7 +13,6 @@ namespace AlcoBarrier
     {
         public static void CreateDB()
         {
-            File.Delete("employees.db");
             using (var connection = new SqliteConnection("Data Source=employees.db"))
             {
                 connection.Open();
@@ -31,10 +30,9 @@ namespace AlcoBarrier
                 ";
                 command.ExecuteNonQuery();
                 connection.Close();
-
-                WriteDB("Карта_1", "U2", "37358", "1A00000025000000EE910000", "4ec8ed35-8e89-4bc9-b1d2-856c440cf969");
             }
         }
+
         public static void WriteDB(string name, string iduser, string code, string hex, string id)
         {
             using (var connection = new SqliteConnection("Data Source=employees.db"))
@@ -47,7 +45,29 @@ namespace AlcoBarrier
                 command.ExecuteNonQuery();
                 connection.Close();
             }
+        }
 
+        public static string GetNameCard(string code)
+        {
+            string CardName = string.Empty;
+
+            using (var connection = new SqliteConnection("Data Source=employees.db"))
+            {
+                connection.Open();
+                var command = connection.CreateCommand();
+                command.CommandText = $"SELECT name FROM user WHERE code=\"{code}\"";
+               
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        CardName = reader.GetString(0);
+                    }
+                }
+                connection.Close();
+            }
+
+            return CardName;
         }
     }
 }

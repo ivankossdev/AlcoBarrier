@@ -27,6 +27,7 @@ namespace AlcoBarrier
             InitializeComponent();
             SystemInfo();
             OnlineMessage();
+            Console.WriteLine(SqLiteHandler.GetNameCard("37358")); 
         }
 
         string Result = string.Empty;
