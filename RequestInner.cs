@@ -158,10 +158,28 @@ namespace AlcoBarrier
                 MyResult = $"Message :{e.Message}";
             }
 
-            await Console.Out.WriteLineAsync(xmlHandler.GetUsers(MyResult).Count().ToString());
             return xmlHandler.GetUsersString(MyResult);
         }
 
+        async public Task<List<Dictionary<string, string>>> GetDictUsers()
+        {
+            string MyResult;
+            try
+            {
+                HttpResponseMessage response = await client.GetAsync($"http://{IpAddress}/restApi/v2/User/User?FullObject=True");
 
+                response.EnsureSuccessStatusCode();
+
+                string responseBody = await response.Content.ReadAsStringAsync();
+                MyResult = responseBody;
+
+            }
+            catch (HttpRequestException e)
+            {
+                MyResult = $"Message :{e.Message}";
+            }
+
+            return xmlHandler.GetUsersDict(MyResult);
+        }
     }
 }

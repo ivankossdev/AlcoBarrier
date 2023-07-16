@@ -100,7 +100,7 @@ namespace AlcoBarrier
             return Info;
         }
 
-        public List<Dictionary<string, string>> GetUsers(string xml)
+        public List<Dictionary<string, string>> GetUsersDict(string xml)
         {
             Dictionary<string, string> UsersData = new Dictionary<string, string>();
             List<Dictionary<string, string>> Users = new List<Dictionary<string, string>>();
