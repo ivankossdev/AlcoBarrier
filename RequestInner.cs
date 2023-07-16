@@ -158,7 +158,10 @@ namespace AlcoBarrier
                 MyResult = $"Message :{e.Message}";
             }
 
-            return xmlHandler.GetUsers(MyResult);
+            await Console.Out.WriteLineAsync(xmlHandler.GetUsers(MyResult).Count().ToString());
+            return xmlHandler.GetUsersString(MyResult);
         }
+
+
     }
 }

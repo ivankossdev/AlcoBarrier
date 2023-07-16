@@ -7,6 +7,8 @@ using System.Xml;
 using System.IO;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Tab;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
+using System.Net;
+using System.Xml.Linq;
 
 namespace AlcoBarrier
 {
@@ -44,7 +46,7 @@ namespace AlcoBarrier
             return body;
         }
 
-        public List<string> GetUsers(string xml)
+        public List<string> GetUsersString(string xml)
         {
             innerage.LoadXml(xml);
 
@@ -96,6 +98,67 @@ namespace AlcoBarrier
             }
 
             return Info;
+        }
+
+        public List<Dictionary<string, string>> GetUsers(string xml)
+        {
+            Dictionary<string, string> UsersData = new Dictionary<string, string>();
+            List<Dictionary<string, string>> Users = new List<Dictionary<string, string>>();
+            XmlNodeList users = innerage.GetElementsByTagName("Rows");
+
+            string Name = string.Empty, Address = string.Empty,
+                   CardCode = string.Empty, Id = string.Empty,
+                   CardData = string.Empty;
+
+            foreach (XmlElement x in users)
+            {
+                foreach (XmlNode user in x.ChildNodes)
+                {
+                    foreach (XmlNode data in user.ChildNodes)
+                    {
+                        if (data.Name == "Name")
+                        {
+                            Name = data.InnerText;
+                        }
+                        if (data.Name == "Address")
+                        {
+                            Address = data.InnerText;
+                        }
+                        foreach (XmlNode cards in data.ChildNodes)
+                        {
+                            foreach (XmlNode card in cards.ChildNodes)
+                            {
+                                if (card.Name == "Name")
+                                {
+                                    CardCode = card.InnerText;
+                                }
+                                if (card.Name == "ID")
+                                {
+                                    Id = card.InnerText;
+                                }
+                                if (card.Name == "CardData")
+                                {
+                                    CardData = card.InnerText;
+                                }
+                            }
+                        }
+                    }
+                    //Console.WriteLine($"Name-{Name} User ID-{Address} Card code-{CardCode} hex {CardData} id-{Id}");
+                    //Info.Add($"Name-{Name} User ID-{Address} Card code-{CardCode} hex {CardData} id-{Id}");
+                    UsersData.Add("Name", Name);
+                    UsersData.Add("Address", Address);
+                    UsersData.Add("CardCode", CardCode);
+                    UsersData.Add("CardData", CardData);
+                    UsersData.Add("id", Id);
+                    Users.Add(UsersData);
+                    Name = string.Empty; Address = string.Empty; CardCode = string.Empty; CardData = string.Empty;
+                    UsersData.Clear();
+                }
+            }
+
+
+
+            return Users;
         }
     }
 }
