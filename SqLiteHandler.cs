@@ -42,13 +42,14 @@ namespace AlcoBarrier
             {
                 connection.Open();
                 var command = connection.CreateCommand();
-                command.CommandText = $"SELECT name FROM user WHERE code=\"{code}\"";
+                command.CommandText = $"SELECT name FROM user WHERE code LIKE \"%{code}%\"";
                
                 using (var reader = command.ExecuteReader())
                 {
                     while (reader.Read())
                     {
                         CardName = reader.GetString(0);
+                        Console.WriteLine(CardName);
                     }
                 }
                 connection.Close();

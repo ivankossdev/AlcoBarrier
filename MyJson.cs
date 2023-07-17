@@ -76,21 +76,23 @@ namespace AlcoBarrier
         {
             string Message = string.Empty;
 
-            string Code = string.Empty;
             JsonNode jsonNode;
             try
             {
                 jsonNode = JsonNode.Parse(jsonString);
                 if (jsonNode["getLog"] == null)
                 {
-                    Code = jsonNode["Records"][0]["Code"].ToString();
+                    string Code = jsonNode["Records"][0]["Code"].ToString();
+                    string CardName = ConvertCodeCard(jsonNode["Records"][0]["WiegandLSB"].ToString());
+
+                    Console.WriteLine(SqLiteHandler.GetNameCard(CardName).Length);
 
                     if (Code == "4" || Code == "5")
                     {
                         Message = $"{jsonNode["Records"][0]["Date"]} " +
                                   $"{jsonNode["Records"][0]["Time"]} " +
                                   $"Концентрация {jsonNode["Records"][0]["Result"]} мг/л " +
-                                  $"Карточка {ConvertCodeCard(jsonNode["Records"][0]["WiegandLSB"].ToString())} ";
+                                  $"Сотрудник {SqLiteHandler.GetNameCard(CardName)} ";
                     }
                 }
             }
@@ -105,8 +107,9 @@ namespace AlcoBarrier
         private static string ConvertCodeCard(string code)
         {
             int IntCode = Convert.ToInt32(code);
-            
-            return $"{IntCode >> 16}-{IntCode & 0xFFFF}";
+
+            //return $"{IntCode >> 16}-{IntCode & 0xFFFF}";
+            return $"{IntCode & 0xFFFF}";
         }
     }
 }

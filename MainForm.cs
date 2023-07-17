@@ -27,6 +27,7 @@ namespace AlcoBarrier
             InitializeComponent();
             SystemInfo();
             OnlineMessage();
+            buttonTestDb.Enabled = false;
         }
 
         string Result = string.Empty;
@@ -83,7 +84,7 @@ namespace AlcoBarrier
                 {
                     OldRecord = LastRecord;
                     Result = await alcoReader.GetRequestCmd(MyJson.CreateLogMessage(LastRecord));
-                    //await Console.Out.WriteLineAsync(Result);
+                    // await Console.Out.WriteLineAsync(Result);
                     textBox1.AppendText($"{MyJson.GetStringResult(Result)} \n");
                     count++;
                     if (count > 15)
@@ -105,9 +106,6 @@ namespace AlcoBarrier
 
         private async void buttonTestDb_Click(object sender, EventArgs e)
         {
-            File.Delete("employees.db");
-            SqLiteHandler.CreateDB();
-
             List<string> Users = await InnerageHandler.GetDictUsers();
             await Task.Run(() => SqLiteHandler.WriteUsersDb(Users));
             buttonTestDb.Enabled = false;
