@@ -49,7 +49,6 @@ namespace AlcoBarrier
                     while (reader.Read())
                     {
                         CardName = reader.GetString(0);
-                        Console.WriteLine(CardName);
                     }
                 }
                 connection.Close();

@@ -85,8 +85,6 @@ namespace AlcoBarrier
                     string Code = jsonNode["Records"][0]["Code"].ToString();
                     string CardName = ConvertCodeCard(jsonNode["Records"][0]["WiegandLSB"].ToString());
 
-                    Console.WriteLine(SqLiteHandler.GetNameCard(CardName).Length);
-
                     if (Code == "4" || Code == "5")
                     {
                         Message = $"{jsonNode["Records"][0]["Date"]} " +
