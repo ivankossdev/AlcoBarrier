@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using Microsoft.Data.Sqlite;
+using System.Xml.Linq;
 
 
 namespace AlcoBarrier
@@ -33,20 +34,6 @@ namespace AlcoBarrier
             }
         }
 
-        public static void WriteDB(string name, string iduser, string code, string hex, string id)
-        {
-            using (var connection = new SqliteConnection("Data Source=employees.db"))
-            {
-                // Name-Карта_1 User ID-U2 Card code-37358 hex 1A00000025000000EE910000 id-4ec8ed35-8e89-4bc9-b1d2-856c440cf969
-
-                connection.Open();
-                var command = connection.CreateCommand();
-                command.CommandText = $" INSERT INTO user (name, iduser, code, hex, id) VALUES (\"{name}\", \"{iduser}\", \"{code}\", \"{hex}\", \"{id}\")";
-                command.ExecuteNonQuery();
-                connection.Close();
-            }
-        }
-
         public static string GetNameCard(string code)
         {
             string CardName = string.Empty;
@@ -70,17 +57,22 @@ namespace AlcoBarrier
             return CardName;
         }
 
-        public static void WriteUsersDb(List<Dictionary<string, string>> data)
+        public static void WriteUsersDb(List<string> data)
         {
-            //using (var connection = new SqliteConnection("Data Source=employees.db"))
-            //{
-            //    await connection.OpenAsync();
-            //    var command = connection.CreateCommand();
-            //    command.CommandText = $"";
-
-            //    command.ExecuteNonQuery();
-            //    connection.Close();
-            //}
+            using (var connection = new SqliteConnection("Data Source=employees.db"))
+            {
+                connection.Open();
+                foreach (string User in data)
+                {
+                    var command = connection.CreateCommand();
+                    string[] usersData = User.Split('&');
+                    command.CommandText = $" INSERT INTO user (name, iduser, code, hex, id) " +
+                        $"VALUES (\"{usersData[0]}\", \"{usersData[1]}\", \"{usersData[2]}\", \"{usersData[3]}\", \"{usersData[4]}\")";
+                    command.ExecuteNonQuery();
+                }
+                
+                connection.Close();
+            }
         }
     }
 }

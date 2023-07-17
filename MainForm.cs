@@ -27,7 +27,6 @@ namespace AlcoBarrier
             InitializeComponent();
             SystemInfo();
             OnlineMessage();
-            Console.WriteLine(SqLiteHandler.GetNameCard("37358")); 
         }
 
         string Result = string.Empty;
@@ -102,18 +101,16 @@ namespace AlcoBarrier
         {
             List<string> Lines = await InnerageHandler.GetAllUsers();
             AppendTextValue(Lines);
-
         }
 
         private async void buttonTestDb_Click(object sender, EventArgs e)
         {
-            List<string> Users = await InnerageHandler.GetDictUsers();
-            await Console.Out.WriteLineAsync($"Searched {Users.Count()} records");
+            File.Delete("employees.db");
+            SqLiteHandler.CreateDB();
 
-            foreach (string User in Users)
-            {
-                await Console.Out.WriteLineAsync(User.ToString());
-            }
+            List<string> Users = await InnerageHandler.GetDictUsers();
+            await Task.Run(() => SqLiteHandler.WriteUsersDb(Users));
+            buttonTestDb.Enabled = false;
         }
     }
 }
