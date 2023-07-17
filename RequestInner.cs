@@ -161,7 +161,7 @@ namespace AlcoBarrier
             return xmlHandler.GetUsersString(MyResult);
         }
 
-        async public Task<List<Dictionary<string, string>>> GetDictUsers()
+        async public Task<List<string>> GetDictUsers()
         {
             string MyResult;
             try
@@ -179,7 +179,7 @@ namespace AlcoBarrier
                 MyResult = $"Message :{e.Message}";
             }
 
-            return xmlHandler.GetUsersDict(MyResult);
+            return xmlHandler.GetUsersArray(MyResult);
         }
     }
 }

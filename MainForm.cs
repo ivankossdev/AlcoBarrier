@@ -107,8 +107,13 @@ namespace AlcoBarrier
 
         private async void buttonTestDb_Click(object sender, EventArgs e)
         {
-            List<Dictionary<string, string>> Users = await InnerageHandler.GetDictUsers();
-            await Console.Out.WriteLineAsync(Users.Count().ToString());
+            List<string> Users = await InnerageHandler.GetDictUsers();
+            await Console.Out.WriteLineAsync($"Searched {Users.Count()} records");
+
+            foreach (string User in Users)
+            {
+                await Console.Out.WriteLineAsync(User.ToString());
+            }
         }
     }
 }

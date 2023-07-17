@@ -100,10 +100,9 @@ namespace AlcoBarrier
             return Info;
         }
 
-        public List<Dictionary<string, string>> GetUsersDict(string xml)
+        public List<string> GetUsersArray(string xml)
         {
-            Dictionary<string, string> UsersData = new Dictionary<string, string>();
-            List<Dictionary<string, string>> Users = new List<Dictionary<string, string>>();
+            List<string> Users = new List<string>();
 
             XmlNodeList users = innerage.GetElementsByTagName("Rows");
             innerage.LoadXml(xml);
@@ -145,20 +144,10 @@ namespace AlcoBarrier
                             }
                         }
                     }
-                    //Console.WriteLine($"Name-{Name} User ID-{Address} Card code-{CardCode} hex {CardData} id-{Id}");
-                    //Info.Add($"Name-{Name} User ID-{Address} Card code-{CardCode} hex {CardData} id-{Id}");
-                    UsersData.Add("Name", Name);
-                    UsersData.Add("Address", Address);
-                    UsersData.Add("CardCode", CardCode);
-                    UsersData.Add("CardData", CardData);
-                    UsersData.Add("id", Id);
-                    Users.Add(UsersData);
+                    Users.Add($"{Name}&{Address}&{CardCode}&{CardData}&{Id}");
                     Name = string.Empty; Address = string.Empty; CardCode = string.Empty; CardData = string.Empty;
-                    UsersData.Clear();
                 }
             }
-
-
 
             return Users;
         }
