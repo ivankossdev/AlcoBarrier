@@ -35,7 +35,7 @@
             this.buttonOpen = new System.Windows.Forms.Button();
             this.buttonClose = new System.Windows.Forms.Button();
             this.buttonGetUsers = new System.Windows.Forms.Button();
-            this.buttonCreateDb = new System.Windows.Forms.Button();
+            this.buttonTestDb = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -88,22 +88,22 @@
             this.buttonGetUsers.UseVisualStyleBackColor = true;
             this.buttonGetUsers.Click += new System.EventHandler(this.buttonGetUsers_Click);
             // 
-            // buttonCreateDb
+            // buttonTestDb
             // 
-            this.buttonCreateDb.Location = new System.Drawing.Point(116, 361);
-            this.buttonCreateDb.Name = "buttonCreateDb";
-            this.buttonCreateDb.Size = new System.Drawing.Size(95, 38);
-            this.buttonCreateDb.TabIndex = 8;
-            this.buttonCreateDb.Text = "Create DB";
-            this.buttonCreateDb.UseVisualStyleBackColor = true;
-            this.buttonCreateDb.Click += new System.EventHandler(this.buttonCreateDb_Click);
+            this.buttonTestDb.Location = new System.Drawing.Point(116, 361);
+            this.buttonTestDb.Name = "buttonTestDb";
+            this.buttonTestDb.Size = new System.Drawing.Size(95, 38);
+            this.buttonTestDb.TabIndex = 8;
+            this.buttonTestDb.Text = "Test DB";
+            this.buttonTestDb.UseVisualStyleBackColor = true;
+            this.buttonTestDb.Click += new System.EventHandler(this.buttonTestDb_Click);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(659, 411);
-            this.Controls.Add(this.buttonCreateDb);
+            this.Controls.Add(this.buttonTestDb);
             this.Controls.Add(this.buttonGetUsers);
             this.Controls.Add(this.buttonClose);
             this.Controls.Add(this.buttonOpen);
@@ -128,7 +128,7 @@
         private System.Windows.Forms.Button buttonOpen;
         private System.Windows.Forms.Button buttonClose;
         private System.Windows.Forms.Button buttonGetUsers;
-        private System.Windows.Forms.Button buttonCreateDb;
+        private System.Windows.Forms.Button buttonTestDb;
     }
 }
 

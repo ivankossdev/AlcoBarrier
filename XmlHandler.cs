@@ -104,7 +104,9 @@ namespace AlcoBarrier
         {
             Dictionary<string, string> UsersData = new Dictionary<string, string>();
             List<Dictionary<string, string>> Users = new List<Dictionary<string, string>>();
+
             XmlNodeList users = innerage.GetElementsByTagName("Rows");
+            innerage.LoadXml(xml);
 
             string Name = string.Empty, Address = string.Empty,
                    CardCode = string.Empty, Id = string.Empty,

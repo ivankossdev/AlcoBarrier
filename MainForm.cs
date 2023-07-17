@@ -102,13 +102,13 @@ namespace AlcoBarrier
         {
             List<string> Lines = await InnerageHandler.GetAllUsers();
             AppendTextValue(Lines);
-            List<Dictionary<string, string>> Users = await InnerageHandler.GetDictUsers();
-            await Console.Out.WriteLineAsync(Users.Count().ToString());
+
         }
 
-        private void buttonCreateDb_Click(object sender, EventArgs e)
+        private async void buttonTestDb_Click(object sender, EventArgs e)
         {
-            SqLiteHandler.CreateDB();
+            List<Dictionary<string, string>> Users = await InnerageHandler.GetDictUsers();
+            await Console.Out.WriteLineAsync(Users.Count().ToString());
         }
     }
 }

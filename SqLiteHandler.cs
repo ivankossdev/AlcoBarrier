@@ -69,5 +69,18 @@ namespace AlcoBarrier
 
             return CardName;
         }
+
+        public static void WriteUsersDb(List<Dictionary<string, string>> data)
+        {
+            //using (var connection = new SqliteConnection("Data Source=employees.db"))
+            //{
+            //    await connection.OpenAsync();
+            //    var command = connection.CreateCommand();
+            //    command.CommandText = $"";
+
+            //    command.ExecuteNonQuery();
+            //    connection.Close();
+            //}
+        }
     }
 }
