@@ -27,7 +27,7 @@ namespace AlcoBarrier
             InitializeComponent();
             SystemInfo();
             OnlineMessage();
-            //buttonTestDb.Enabled = false;
+            buttonTestDb.Enabled = false;
         }
 
         string Result = string.Empty;
@@ -90,9 +90,10 @@ namespace AlcoBarrier
 
         private async void buttonTestDb_Click(object sender, EventArgs e)
         {
+            SqLiteHandler.CreateDB();
             List<string> Users = await InnerageHandler.GetDictUsers();
-            //await Task.Run(() => SqLiteHandler.WriteUsersDb(Users));
-            //buttonTestDb.Enabled = false;
+            await Task.Run(() => SqLiteHandler.WriteUsersDb(Users));
+            buttonTestDb.Enabled = false;
         }
 
         private void timer1_Tick(object sender, EventArgs e)

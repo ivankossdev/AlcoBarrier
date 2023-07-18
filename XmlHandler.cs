@@ -153,7 +153,6 @@ namespace AlcoBarrier
                         }
                     }
                     Users.Add($"{Name}&{Address}&{CardCode}&{CardData}&{Id}&{CardTemplate}");
-                    Console.WriteLine($"{Name}&{Address}&{CardCode}&{CardData}&{Id}&{CardTemplate}");
                     Name = string.Empty; Address = string.Empty; CardCode = string.Empty; CardData = string.Empty;
                     CardTemplate = string.Empty;
                 }

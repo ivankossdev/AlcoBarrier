@@ -26,7 +26,8 @@ namespace AlcoBarrier
                         iduser TEXT NOT NULL,
                         code TEXT NOT NULL,
                         hex TEXT NOT NULL,
-                        id TEXT NOT NULL
+                        id TEXT NOT NULL,
+                        CardTemplate TEXT NOT NULL
                     );
                 ";
                 command.ExecuteNonQuery();
@@ -66,8 +67,8 @@ namespace AlcoBarrier
                 {
                     var command = connection.CreateCommand();
                     string[] usersData = User.Split('&');
-                    command.CommandText = $" INSERT INTO user (name, iduser, code, hex, id) " +
-                        $"VALUES (\"{usersData[0]}\", \"{usersData[1]}\", \"{usersData[2]}\", \"{usersData[3]}\", \"{usersData[4]}\")";
+                    command.CommandText = $" INSERT INTO user (name, iduser, code, hex, id, CardTemplate) " +
+                        $"VALUES (\"{usersData[0]}\", \"{usersData[1]}\", \"{usersData[2]}\", \"{usersData[3]}\", \"{usersData[4]}\", \"{usersData[5]}\")";
                     command.ExecuteNonQuery();
                 }
                 
