@@ -109,7 +109,7 @@ namespace AlcoBarrier
 
             string Name = string.Empty, Address = string.Empty,
                    CardCode = string.Empty, Id = string.Empty,
-                   CardData = string.Empty;
+                   CardData = string.Empty, CardTemplate = string.Empty;
 
             foreach (XmlElement x in users)
             {
@@ -141,11 +141,21 @@ namespace AlcoBarrier
                                 {
                                     CardData = card.InnerText;
                                 }
+                                foreach (XmlNode RefType in card.ChildNodes)
+                                {
+                                    if(RefType.Name == "Ref")
+                                    {
+                                        if (RefType.Attributes.GetNamedItem("Type").Value == "CardTemplate")
+                                            CardTemplate = RefType.Attributes.GetNamedItem("ID").Value;
+                                    }
+                                }
                             }
                         }
                     }
-                    Users.Add($"{Name}&{Address}&{CardCode}&{CardData}&{Id}");
+                    Users.Add($"{Name}&{Address}&{CardCode}&{CardData}&{Id}&{CardTemplate}");
+                    Console.WriteLine($"{Name}&{Address}&{CardCode}&{CardData}&{Id}&{CardTemplate}");
                     Name = string.Empty; Address = string.Empty; CardCode = string.Empty; CardData = string.Empty;
+                    CardTemplate = string.Empty;
                 }
             }
 
