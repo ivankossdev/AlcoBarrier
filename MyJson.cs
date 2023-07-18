@@ -83,7 +83,6 @@ namespace AlcoBarrier
                 if (jsonNode["getLog"] == null)
                 {
                     string Code = jsonNode["Records"][0]["Code"].ToString();
-                   
 
                     if (Code == "4" || Code == "5")
                     {
