@@ -34,8 +34,13 @@
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.buttonOpen = new System.Windows.Forms.Button();
             this.buttonClose = new System.Windows.Forms.Button();
-            this.buttonGetUsers = new System.Windows.Forms.Button();
             this.buttonTestDb = new System.Windows.Forms.Button();
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Time = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Promile = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Employe = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -50,12 +55,12 @@
             // textBox1
             // 
             this.textBox1.BackColor = System.Drawing.SystemColors.Window;
-            this.textBox1.Location = new System.Drawing.Point(15, 25);
+            this.textBox1.Location = new System.Drawing.Point(15, 274);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox1.Size = new System.Drawing.Size(632, 330);
+            this.textBox1.Size = new System.Drawing.Size(632, 81);
             this.textBox1.TabIndex = 2;
             // 
             // buttonOpen
@@ -78,19 +83,9 @@
             this.buttonClose.UseVisualStyleBackColor = true;
             this.buttonClose.Click += new System.EventHandler(this.buttonClose_Click);
             // 
-            // buttonGetUsers
-            // 
-            this.buttonGetUsers.Location = new System.Drawing.Point(15, 361);
-            this.buttonGetUsers.Name = "buttonGetUsers";
-            this.buttonGetUsers.Size = new System.Drawing.Size(95, 38);
-            this.buttonGetUsers.TabIndex = 7;
-            this.buttonGetUsers.Text = "Get all users";
-            this.buttonGetUsers.UseVisualStyleBackColor = true;
-            this.buttonGetUsers.Click += new System.EventHandler(this.buttonGetUsers_Click);
-            // 
             // buttonTestDb
             // 
-            this.buttonTestDb.Location = new System.Drawing.Point(116, 361);
+            this.buttonTestDb.Location = new System.Drawing.Point(15, 361);
             this.buttonTestDb.Name = "buttonTestDb";
             this.buttonTestDb.Size = new System.Drawing.Size(95, 38);
             this.buttonTestDb.TabIndex = 8;
@@ -98,13 +93,54 @@
             this.buttonTestDb.UseVisualStyleBackColor = true;
             this.buttonTestDb.Click += new System.EventHandler(this.buttonTestDb_Click);
             // 
+            // dataGridView1
+            // 
+            this.dataGridView1.AllowUserToAddRows = false;
+            this.dataGridView1.AllowUserToDeleteRows = false;
+            this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Date,
+            this.Time,
+            this.Promile,
+            this.Employe});
+            this.dataGridView1.Location = new System.Drawing.Point(15, 25);
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.ReadOnly = true;
+            this.dataGridView1.Size = new System.Drawing.Size(632, 243);
+            this.dataGridView1.TabIndex = 9;
+            // 
+            // Date
+            // 
+            this.Date.HeaderText = "Дата";
+            this.Date.Name = "Date";
+            this.Date.ReadOnly = true;
+            // 
+            // Time
+            // 
+            this.Time.HeaderText = "Время";
+            this.Time.Name = "Time";
+            this.Time.ReadOnly = true;
+            // 
+            // Promile
+            // 
+            this.Promile.HeaderText = "Концентрация";
+            this.Promile.Name = "Promile";
+            this.Promile.ReadOnly = true;
+            // 
+            // Employe
+            // 
+            this.Employe.HeaderText = "Сотрудник";
+            this.Employe.Name = "Employe";
+            this.Employe.ReadOnly = true;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(659, 411);
+            this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.buttonTestDb);
-            this.Controls.Add(this.buttonGetUsers);
             this.Controls.Add(this.buttonClose);
             this.Controls.Add(this.buttonOpen);
             this.Controls.Add(this.textBox1);
@@ -114,7 +150,9 @@
             this.MaximumSize = new System.Drawing.Size(675, 450);
             this.MinimumSize = new System.Drawing.Size(675, 450);
             this.Name = "MainForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "AlcoBarrier";
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -127,8 +165,12 @@
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.Button buttonOpen;
         private System.Windows.Forms.Button buttonClose;
-        private System.Windows.Forms.Button buttonGetUsers;
         private System.Windows.Forms.Button buttonTestDb;
+        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Date;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Time;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Promile;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Employe;
     }
 }
 

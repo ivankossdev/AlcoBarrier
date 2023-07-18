@@ -72,9 +72,9 @@ namespace AlcoBarrier
             return Result;
         }
 
-        public static string GetStringResult(string jsonString)
+        public static string[] GetArrayResult(string jsonString)
         {
-            string Message = string.Empty;
+            string[] Message = new string[4];
 
             JsonNode jsonNode;
             try
@@ -83,14 +83,15 @@ namespace AlcoBarrier
                 if (jsonNode["getLog"] == null)
                 {
                     string Code = jsonNode["Records"][0]["Code"].ToString();
-                    string CardName = ConvertCodeCard(jsonNode["Records"][0]["WiegandLSB"].ToString());
+                   
 
                     if (Code == "4" || Code == "5")
                     {
-                        Message = $"{jsonNode["Records"][0]["Date"]} " +
-                                  $"{jsonNode["Records"][0]["Time"]} " +
-                                  $"Концентрация {jsonNode["Records"][0]["Result"]} мг/л " +
-                                  $"Сотрудник {SqLiteHandler.GetNameCard(CardName)} ";
+                        string CardName = ConvertCodeCard(jsonNode["Records"][0]["WiegandLSB"].ToString());
+                        Message[0] = jsonNode["Records"][0]["Date"].ToString();
+                        Message[1] = jsonNode["Records"][0]["Time"].ToString();
+                        Message[2] = $"{jsonNode["Records"][0]["Result"]} мг/л";
+                        Message[3] = SqLiteHandler.GetNameCard(CardName);
                     }
                 }
             }

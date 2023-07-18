@@ -91,7 +91,7 @@ namespace AlcoBarrier
                             }
                         }
                     }
-                    // Console.WriteLine($"Name-{Name} User ID-{Address} Card code-{CardCode} hex {CardData} id-{Id}");
+
                     Info.Add($"Name-{Name} User ID-{Address} Card code-{CardCode} hex {CardData} id-{Id}");
                     Name = string.Empty; Address = string.Empty; CardCode = string.Empty; CardData = string.Empty;
                 }

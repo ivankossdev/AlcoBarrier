@@ -71,7 +71,7 @@ namespace AlcoBarrier
 
         private async void OnlineMessage()
         {
-            int count = 0;
+            //int count = 0;
             string OldRecord = string.Empty;
 
             while(true)
@@ -84,14 +84,7 @@ namespace AlcoBarrier
                 {
                     OldRecord = LastRecord;
                     Result = await alcoReader.GetRequestCmd(MyJson.CreateLogMessage(LastRecord));
-                    // await Console.Out.WriteLineAsync(Result);
-                    textBox1.AppendText($"{MyJson.GetStringResult(Result)} \n");
-                    count++;
-                    if (count > 15)
-                    {
-                        textBox1.Clear();
-                        count = 0;
-                    }
+                    dataGridView1.Rows.Add(MyJson.GetArrayResult(Result));
                 }
 
                 await Task.Delay(250);
@@ -100,8 +93,7 @@ namespace AlcoBarrier
 
         private async void buttonGetUsers_Click(object sender, EventArgs e)
         {
-            List<string> Lines = await InnerageHandler.GetAllUsers();
-            AppendTextValue(Lines);
+
         }
 
         private async void buttonTestDb_Click(object sender, EventArgs e)
