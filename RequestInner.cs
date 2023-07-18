@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlTypes;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
@@ -49,6 +50,7 @@ namespace AlcoBarrier
            </Cards>
         </User> 
          */
+
         async public Task<string> GetSystemInfo()
         {
             string MyResult;
@@ -67,35 +69,6 @@ namespace AlcoBarrier
                 MyResult = $"Message :{e.Message}";
             }
             return MyResult ;
-        }
-
-        async public Task<string> SetUserPermission(bool deny)
-        {
-            /* После обновления меняется UserPermission ID то есть перед изменением доступа запрашивать индефикатор  */
-            string userPermission = $"<User Address=\"U2\">\r\n\t<Permissions>\r\n    " +
-                                    $"\t<UserPermission ID=\"5e83c06a-84e5-487f-b8c3-33bf34f215a9\">\r\n      " +
-                $"\t\t<Deny>{deny}</Deny>\r\n        </UserPermission>\r\n  </Permissions>\r\n</User>";
-
-            string MyResult = string.Empty;
-
-            try
-            {
-                byte[] messageToBytes = Encoding.UTF8.GetBytes(userPermission);
-                var content = new ByteArrayContent(messageToBytes);
-
-                HttpResponseMessage response = await client.PostAsync($"http://{IpAddress}/restApi/v2/User/AddOrUpdate?IncludeObjectInResult=True", content);
-
-                response.EnsureSuccessStatusCode();
-
-                string responseBody = await response.Content.ReadAsStringAsync();
-                MyResult = $"{xmlHandler.GetXmlElement(responseBody, "Card")}";
-                
-            }
-            catch (HttpRequestException e)
-            {
-                MyResult = $"Message :{e.Message}";
-            }
-            return MyResult;
         }
 
         async public Task<string> OpenTheDoor(bool open)
@@ -198,6 +171,54 @@ namespace AlcoBarrier
             }
 
             return xmlHandler.GetUsersArray(MyResult);
+        }
+
+        async public Task BlockedUser(bool set) 
+        {
+            string MyResult = string.Empty;
+            try
+            {
+                string command = string.Empty;
+
+                if (set)
+                {
+                    command = $"<User Address=\"U2\">\r\n" +
+                              $"<Cards>\r\n" +
+                              $"<Card>\r\n<Name>37358</Name>\r\n" +
+                              $"<State>Active</State>\r\n" +
+                              $"<CardType>\r\n<Ref Type=\"CardTemplate\" PartitionID=\"0\" ID=\"TM38\" />\r\n" +
+                              $"</CardType>\r\n<CardNumber>37358</CardNumber>\r\n<CardNumberNumeric>37358</CardNumberNumeric>\r\n" +
+                              $"<IssueNumber>0</IssueNumber>\r\n" +
+                              $"<CardData>1A00000025000000EE910000</CardData>\r\n" +
+                              $"<ExternalCredentials />\r\n<CloudCredentialType>None</CloudCredentialType>\r\n</Card>\r\n</Cards>\r\n</User>";
+                }
+                else
+                {
+                    command = $"<User Address=\"U2\">\r\n" +
+                              $"<Cards>\r\n" +
+                              $"<Card>\r\n<Name>37358</Name>\r\n" +
+                              $"<State>Active</State>\r\n" +
+                              $"<CardType>\r\n<Ref Type=\"CardTemplate\" PartitionID=\"0\" ID=\"TM38\" />\r\n" +
+                              $"</CardType>\r\n<CardNumber>37358</CardNumber>\r\n<CardNumberNumeric>37358</CardNumberNumeric>\r\n" +
+                              $"<IssueNumber>0</IssueNumber>\r\n" +
+                              $"<CardData>1A00000025000000EE910000</CardData>\r\n" +
+                              $"<ExternalCredentials />\r\n<CloudCredentialType>None</CloudCredentialType>\r\n</Card>\r\n</Cards>\r\n</User>";
+                }
+                byte[] messageToBytes = Encoding.UTF8.GetBytes(command);
+                var content = new ByteArrayContent(messageToBytes);
+
+                HttpResponseMessage response = await client.PostAsync($"http://{IpAddress}/restApi/v2/BasicStatus/XML_Control", content);
+
+                response.EnsureSuccessStatusCode();
+
+                string responseBody = await response.Content.ReadAsStringAsync();
+                MyResult = $"{xmlHandler.GetXmlElement(responseBody, "CommandProgress")}";
+
+            }
+            catch (HttpRequestException e)
+            {
+                MyResult = $"Message :{e.Message}";
+            }
         }
     }
 }

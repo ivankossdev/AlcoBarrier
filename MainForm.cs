@@ -47,14 +47,6 @@ namespace AlcoBarrier
             }
         }
 
-        private void AppendTextValue(in List<string> lines)
-        {
-            foreach (string line in lines)
-            {
-                textBox1.AppendText($"{line}\n");
-            }
-        }
-
         private async void buttonOpen_Click(object sender, EventArgs e)
         {
             textBox1.Clear();
@@ -87,12 +79,8 @@ namespace AlcoBarrier
                     string[] rows = MyJson.GetArrayResult(Result);
                     if (rows[0] != null  && rows[1] != null && rows[2] != null && rows[3] != null)
                     {
-                        await Console.Out.WriteLineAsync($"---{rows[0]}---");
                         dataGridView1.Rows.Add(rows);
-
                     }
-
-                    
                     // dataGridView1.Rows.RemoveAt(0);
                 }
 
