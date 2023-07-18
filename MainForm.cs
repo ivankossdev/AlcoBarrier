@@ -85,15 +85,11 @@ namespace AlcoBarrier
                     OldRecord = LastRecord;
                     Result = await alcoReader.GetRequestCmd(MyJson.CreateLogMessage(LastRecord));
                     dataGridView1.Rows.Add(MyJson.GetArrayResult(Result));
+                    // dataGridView1.Rows.RemoveAt(0);
                 }
 
                 await Task.Delay(250);
             }
-        }
-
-        private async void buttonGetUsers_Click(object sender, EventArgs e)
-        {
-
         }
 
         private async void buttonTestDb_Click(object sender, EventArgs e)
