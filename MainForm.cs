@@ -98,5 +98,11 @@ namespace AlcoBarrier
             await Task.Run(() => SqLiteHandler.WriteUsersDb(Users));
             buttonTestDb.Enabled = false;
         }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            textBox1.AppendText("!!! Timer !!!\n");
+            timer1.Stop();
+        }
     }
 }

@@ -30,7 +30,25 @@ namespace AlcoBarrier
             client.DefaultRequestHeaders.Add("API-KEY", "q5D2I5B/1Xr4ZlEA5yQuDw==");
             xmlHandler = new XmlHandler();
         }
-
+        /*
+         <User Address="U2">
+          <Cards>
+            <Card>
+              <Name>37358</Name>
+              <State>Active</State>
+              <CardType>
+                <Ref Type="CardTemplate" PartitionID="0" ID="TM38" />
+              </CardType>
+              <CardNumber>37358</CardNumber>
+              <CardNumberNumeric>37358</CardNumberNumeric>
+              <IssueNumber>0</IssueNumber>
+              <CardData>1A00000025000000EE910000</CardData>
+              <ExternalCredentials />
+              <CloudCredentialType>None</CloudCredentialType>
+            </Card>
+           </Cards>
+        </User> 
+         */
         async public Task<string> GetSystemInfo()
         {
             string MyResult;
