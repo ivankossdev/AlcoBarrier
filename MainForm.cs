@@ -63,7 +63,6 @@ namespace AlcoBarrier
 
         private async void OnlineMessage()
         {
-            //int count = 0;
             string OldRecord = string.Empty;
 
             while(true)
@@ -99,8 +98,13 @@ namespace AlcoBarrier
         private void timer1_Tick(object sender, EventArgs e)
         {
             textBox1.AppendText("!!! Timer !!!\n");
-            dataGridView1.Rows.RemoveAt(0);
-            timer1.Stop();
+            //dataGridView1.Rows.RemoveAt(0);
+            //timer1.Stop();
+        }
+
+        private void dataGridView1_RowHeaderMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            Console.WriteLine("Double click!!!");
         }
     }
 }
