@@ -31,25 +31,6 @@ namespace AlcoBarrier
             client.DefaultRequestHeaders.Add("API-KEY", "q5D2I5B/1Xr4ZlEA5yQuDw==");
             xmlHandler = new XmlHandler();
         }
-        /*
-         <User Address="U2">
-          <Cards>
-            <Card>
-              <Name>37358</Name>
-              <State>Active</State>
-              <CardType>
-                <Ref Type="CardTemplate" PartitionID="0" ID="TM38" />
-              </CardType>
-              <CardNumber>37358</CardNumber>
-              <CardNumberNumeric>37358</CardNumberNumeric>
-              <IssueNumber>0</IssueNumber>
-              <CardData>1A00000025000000EE910000</CardData>
-              <ExternalCredentials />
-              <CloudCredentialType>None</CloudCredentialType>
-            </Card>
-           </Cards>
-        </User> 
-         */
 
         async public Task<string> GetSystemInfo()
         {
@@ -173,7 +154,7 @@ namespace AlcoBarrier
             return xmlHandler.GetUsersArray(MyResult);
         }
 
-        async public Task BlockedUser(bool set) 
+        async public Task BlockedUser(bool set, string Address, string Name, string Id, string CardData) 
         {
             string MyResult = string.Empty;
             try
@@ -182,14 +163,14 @@ namespace AlcoBarrier
 
                 if (set)
                 {
-                    command = $"<User Address=\"U2\">\r\n" +
+                    command = $"<User Address=\"{Address}\">\r\n" +
                               $"<Cards>\r\n" +
-                              $"<Card>\r\n<Name>37358</Name>\r\n" +
+                              $"<Card>\r\n<Name>{Name}</Name>\r\n" +
                               $"<State>Active</State>\r\n" +
-                              $"<CardType>\r\n<Ref Type=\"CardTemplate\" PartitionID=\"0\" ID=\"TM38\" />\r\n" +
-                              $"</CardType>\r\n<CardNumber>37358</CardNumber>\r\n<CardNumberNumeric>37358</CardNumberNumeric>\r\n" +
+                              $"<CardType>\r\n<Ref Type=\"CardTemplate\" PartitionID=\"0\" ID=\"{Id}\" />\r\n" +
+                              $"</CardType>\r\n<CardNumber>{Name}</CardNumber>\r\n<CardNumberNumeric>{Name}</CardNumberNumeric>\r\n" +
                               $"<IssueNumber>0</IssueNumber>\r\n" +
-                              $"<CardData>1A00000025000000EE910000</CardData>\r\n" +
+                              $"<CardData>{CardData}</CardData>\r\n" +
                               $"<ExternalCredentials />\r\n<CloudCredentialType>None</CloudCredentialType>\r\n</Card>\r\n</Cards>\r\n</User>";
                 }
                 else
@@ -204,6 +185,25 @@ namespace AlcoBarrier
                               $"<CardData>1A00000025000000EE910000</CardData>\r\n" +
                               $"<ExternalCredentials />\r\n<CloudCredentialType>None</CloudCredentialType>\r\n</Card>\r\n</Cards>\r\n</User>";
                 }
+                /*
+                 <User Address="U2">
+                  <Cards>
+                    <Card>
+                      <Name>37358</Name>
+                      <State>Active</State>
+                      <CardType>
+                        <Ref Type="CardTemplate" PartitionID="0" ID="TM38" />
+                      </CardType>
+                      <CardNumber>37358</CardNumber>
+                      <CardNumberNumeric>37358</CardNumberNumeric>
+                      <IssueNumber>0</IssueNumber>
+                      <CardData>1A00000025000000EE910000</CardData>
+                      <ExternalCredentials />
+                      <CloudCredentialType>None</CloudCredentialType>
+                    </Card>
+                   </Cards>
+                 </User> 
+                */
                 byte[] messageToBytes = Encoding.UTF8.GetBytes(command);
                 var content = new ByteArrayContent(messageToBytes);
 

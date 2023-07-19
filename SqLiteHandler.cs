@@ -75,5 +75,30 @@ namespace AlcoBarrier
                 connection.Close();
             }
         }
+
+        public static string[] GetUserParam(string code)
+        {
+            string[] Params = new string[3];
+            using (var connection = new SqliteConnection("Data Source=employees.db"))
+            {
+                connection.Open();
+                var command = connection.CreateCommand();
+                command.CommandText = $"SELECT name, iduser, CardTemplate  FROM user WHERE code LIKE \"%{code}%\"";
+
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        for(int i = 0; i < reader.FieldCount; i++) 
+                        {
+                            Params[i] = reader.GetString(i);
+                        }
+                    }
+                }
+                connection.Close();
+            }
+
+            return Params;
+        }
     }
 }

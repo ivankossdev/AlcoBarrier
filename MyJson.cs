@@ -74,7 +74,7 @@ namespace AlcoBarrier
 
         public static string[] GetArrayResult(string jsonString)
         {
-            string[] Message = new string[4];
+            string[] Message = new string[5];
 
             JsonNode jsonNode;
             try
@@ -90,6 +90,7 @@ namespace AlcoBarrier
                         Message[1] = jsonNode["Records"][0]["Time"].ToString();
                         Message[2] = $"{jsonNode["Records"][0]["Result"]} мг/л";
                         Message[3] = SqLiteHandler.GetNameCard(CardName);
+                        Message[4] = CardName;
                     }
                 }
             }

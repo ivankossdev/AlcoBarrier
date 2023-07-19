@@ -81,7 +81,7 @@ namespace AlcoBarrier
                     {
                         dataGridView1.Rows.Add(rows);
                     }
-                    // dataGridView1.Rows.RemoveAt(0);
+                    
                 }
 
                 await Task.Delay(250);
@@ -99,6 +99,7 @@ namespace AlcoBarrier
         private void timer1_Tick(object sender, EventArgs e)
         {
             textBox1.AppendText("!!! Timer !!!\n");
+            dataGridView1.Rows.RemoveAt(0);
             timer1.Stop();
         }
     }
