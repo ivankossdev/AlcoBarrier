@@ -78,12 +78,12 @@ namespace AlcoBarrier
 
         public static string[] GetUserParam(string code)
         {
-            string[] Params = new string[3];
+            string[] Params = new string[4];
             using (var connection = new SqliteConnection("Data Source=employees.db"))
             {
                 connection.Open();
                 var command = connection.CreateCommand();
-                command.CommandText = $"SELECT name, iduser, CardTemplate  FROM user WHERE code LIKE \"%{code}%\"";
+                command.CommandText = $"SELECT code, hex, iduser, CardTemplate  FROM user WHERE code LIKE \"%{code}%\"";
 
                 using (var reader = command.ExecuteReader())
                 {

@@ -102,9 +102,13 @@ namespace AlcoBarrier
             //timer1.Stop();
         }
 
-        private void dataGridView1_RowHeaderMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+        private async void dataGridView1_RowHeaderMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            Console.WriteLine("Double click!!!");
+            string CardCode = dataGridView1[4, e.RowIndex].Value.ToString();
+
+            string[] u = SqLiteHandler.GetUserParam(CardCode);
+
+            await InnerageHandler.BlockedUser(false, u);
         }
     }
 }

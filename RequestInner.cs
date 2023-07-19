@@ -154,36 +154,36 @@ namespace AlcoBarrier
             return xmlHandler.GetUsersArray(MyResult);
         }
 
-        async public Task BlockedUser(bool set, string Address, string Name, string Id, string CardData) 
+        async public Task BlockedUser(bool set, string[] UserData)
         {
             string MyResult = string.Empty;
-
-            string[] UserParam = SqLiteHandler.GetUserParam(Name);
 
             try
             {
                 string command = string.Empty;
 
-                string State = "Active";
+                string Active = "Active";
 
                 if (set)
                 {
-                    State = "Unused";
+                    Active = "Unused";
                 }
-                command = $"<User Address=\"{Address}\">\r\n" +
+                command = $"<User Address=\"{UserData[2]}\">\r\n" +
                           $"<Cards>\r\n" +
-                          $"<Card>\r\n<Name>{Name}</Name>\r\n" +
-                          $"<State>{State}</State>\r\n" +
-                          $"<CardType>\r\n<Ref Type=\"CardTemplate\" PartitionID=\"0\" ID=\"{Id}\" />\r\n" +
-                          $"</CardType>\r\n<CardNumber>{Name}</CardNumber>\r\n<CardNumberNumeric>{Name}</CardNumberNumeric>\r\n" +
+                          $"<Card>\r\n<Name>{UserData[0]}</Name>\r\n" +
+                          $"<State>{Active}</State>\r\n" +
+                          $"<CardType>\r\n<Ref Type=\"CardTemplate\" PartitionID=\"0\" ID=\"{UserData[3]}\" />\r\n" +
+                          $"</CardType>\r\n<CardNumber>{UserData[0]}</CardNumber>\r\n<CardNumberNumeric>{UserData[0]}</CardNumberNumeric>\r\n" +
                           $"<IssueNumber>0</IssueNumber>\r\n" +
-                          $"<CardData>{CardData}</CardData>\r\n" +
+                          $"<CardData>{UserData[1]}</CardData>\r\n" +
                           $"<ExternalCredentials />\r\n<CloudCredentialType>None</CloudCredentialType>\r\n</Card>\r\n</Cards>\r\n</User>";
+
+                await Console.Out.WriteLineAsync(command);
 
                 byte[] messageToBytes = Encoding.UTF8.GetBytes(command);
                 var content = new ByteArrayContent(messageToBytes);
 
-                HttpResponseMessage response = await client.PostAsync($"http://{IpAddress}/restApi/v2/BasicStatus/XML_Control", content);
+                HttpResponseMessage response = await client.PostAsync($"http://{IpAddress}/restApi/v2/User/AddOrUpdate", content);
 
                 response.EnsureSuccessStatusCode();
 
