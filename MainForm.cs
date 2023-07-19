@@ -95,10 +95,15 @@ namespace AlcoBarrier
             buttonTestDb.Enabled = false;
         }
 
-        private void timer1_Tick(object sender, EventArgs e)
+        private async void timer1_Tick(object sender, EventArgs e)
         {
             textBox1.AppendText("!!! Timer !!!\n");
-            //dataGridView1.Rows.RemoveAt(0);
+            string CardCode = dataGridView1[4, 0].Value.ToString();
+
+            string[] u = SqLiteHandler.GetUserParam(CardCode);
+
+            await InnerageHandler.BlockedUser(true, u);
+            dataGridView1.Rows.RemoveAt(0);
             //timer1.Stop();
         }
 
