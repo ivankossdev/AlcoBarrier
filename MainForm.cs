@@ -14,6 +14,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using System.Globalization;
+using Microsoft.Data.Sqlite;
 
 namespace AlcoBarrier
 {
@@ -27,7 +29,6 @@ namespace AlcoBarrier
             InitializeComponent();
             SystemInfo();
             OnlineMessage();
-            buttonTestDb.Enabled = false;
         }
 
         string Result = string.Empty;
@@ -45,20 +46,6 @@ namespace AlcoBarrier
             {
                 textBox1.AppendText($"{line}\n");
             }
-        }
-
-        private async void buttonOpen_Click(object sender, EventArgs e)
-        {
-            textBox1.Clear();
-            Result = await InnerageHandler.OpenTheDoor(true);
-            AppendTextValue(Result.Split('&'));
-        }
-
-        private async void buttonClose_Click(object sender, EventArgs e)
-        {
-            textBox1.Clear();
-            Result = await InnerageHandler.OpenTheDoor(false);
-            AppendTextValue(Result.Split('&'));
         }
 
         private async void OnlineMessage()
@@ -86,25 +73,20 @@ namespace AlcoBarrier
                 await Task.Delay(250);
             }
         }
-
-        private async void buttonTestDb_Click(object sender, EventArgs e)
+    
+        DateTime t = DateTime.Now;
+        private  void timer1_Tick(object sender, EventArgs e)
         {
-            SqLiteHandler.CreateDB();
-            List<string> Users = await InnerageHandler.GetDictUsers();
-            await Task.Run(() => SqLiteHandler.WriteUsersDb(Users));
-            buttonTestDb.Enabled = false;
-        }
-
-        private async void timer1_Tick(object sender, EventArgs e)
-        {
-            textBox1.AppendText("!!! Timer !!!\n");
-            if(dataGridView1.Rows.Count > 0)
-            {
-                string CardCode = dataGridView1[4, 0].Value.ToString();
-                string[] u = SqLiteHandler.GetUserParam(CardCode);
-                await InnerageHandler.BlockedUser(true, u);
-                dataGridView1.Rows.RemoveAt(0);
-            }
+            var v = DateTime.Now - t;
+            
+            textBox1.AppendText($"{v.Seconds}\n");
+            //if(dataGridView1.Rows.Count > 0)
+            //{
+            //    string CardCode = dataGridView1[4, 0].Value.ToString();
+            //    string[] u = SqLiteHandler.GetUserParam(CardCode);
+            //    await InnerageHandler.BlockedUser(true, u);
+            //    dataGridView1.Rows.RemoveAt(0);
+            //}
 
             //timer1.Stop();
         }
