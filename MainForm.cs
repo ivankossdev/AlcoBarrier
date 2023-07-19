@@ -98,12 +98,14 @@ namespace AlcoBarrier
         private async void timer1_Tick(object sender, EventArgs e)
         {
             textBox1.AppendText("!!! Timer !!!\n");
-            string CardCode = dataGridView1[4, 0].Value.ToString();
+            if(dataGridView1.Rows.Count > 0)
+            {
+                string CardCode = dataGridView1[4, 0].Value.ToString();
+                string[] u = SqLiteHandler.GetUserParam(CardCode);
+                await InnerageHandler.BlockedUser(true, u);
+                dataGridView1.Rows.RemoveAt(0);
+            }
 
-            string[] u = SqLiteHandler.GetUserParam(CardCode);
-
-            await InnerageHandler.BlockedUser(true, u);
-            dataGridView1.Rows.RemoveAt(0);
             //timer1.Stop();
         }
 
