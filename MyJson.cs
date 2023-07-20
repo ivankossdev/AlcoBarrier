@@ -10,9 +10,10 @@ using System.Xml.Linq;
 
 namespace AlcoBarrier
 {
-    public static class MyJson
+    public class MyJson
     {
-        public static string CreateLogMessage(string memoryAddr)
+        Emloeyes employee = new Emloeyes("employees");
+        public string CreateLogMessage(string memoryAddr)
         {
             var forecastObject = new JsonObject
             {
@@ -24,7 +25,7 @@ namespace AlcoBarrier
             return forecastObject.ToJsonString();
         }
 
-        public static string CreateCmdTypeInfMessage(string command)
+        public string CreateCmdTypeInfMessage(string command)
         {
             try
             {
@@ -42,7 +43,7 @@ namespace AlcoBarrier
             return "Not Result";
         }
 
-        public static string GetCountMessage(string jsonString)
+        public string GetCountMessage(string jsonString)
         {
             string Result = string.Empty;
             try
@@ -57,7 +58,7 @@ namespace AlcoBarrier
             return Result;
         }
 
-        public static string GetDataMemory(string jsonString)
+        public string GetDataMemory(string jsonString)
         {
             string Result = string.Empty;
             try
@@ -72,7 +73,7 @@ namespace AlcoBarrier
             return Result;
         }
 
-        public static string[] GetArrayResult(string jsonString)
+        public string[] GetArrayResult(string jsonString)
         {
             string[] Message = new string[5];
 
@@ -89,7 +90,7 @@ namespace AlcoBarrier
                         Message[0] = jsonNode["Records"][0]["Date"].ToString();
                         Message[1] = jsonNode["Records"][0]["Time"].ToString();
                         Message[2] = $"{jsonNode["Records"][0]["Result"]} мг/л";
-                        Message[3] = SqLiteHandler.GetNameCard(CardName);
+                        Message[3] = employee.GetNameCard(CardName);
                         Message[4] = CardName;
                     }
                 }
@@ -102,7 +103,7 @@ namespace AlcoBarrier
             return Message;
         }
 
-        private static string ConvertCodeCard(string code)
+        private string ConvertCodeCard(string code)
         {
             int IntCode = Convert.ToInt32(code);
 

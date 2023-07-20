@@ -9,15 +9,16 @@ namespace AlcoBarrier
 {
     public class BaseSQLite
     {
-        readonly string db = string.Empty;
+        private readonly string _db  = string.Empty;
+
         public BaseSQLite(string NameDataBase)
         {
-            db = NameDataBase;
+            _db = NameDataBase;
         }
 
-        protected void Write(string sqlCommand)
+        private protected void Write(string sqlCommand)
         {
-            using (var connection = new SqliteConnection($"Data Source={db}.db"))
+            using (var connection = new SqliteConnection($"Data Source={_db}.db"))
             {
                 connection.Open();
                 var command = connection.CreateCommand();
@@ -27,10 +28,10 @@ namespace AlcoBarrier
             }
         }
 
-        protected string[] Read(string sqlCommand) 
+        private protected string[] Read(string sqlCommand) 
         {
             string[] result = null;
-            using (var connection = new SqliteConnection($"Data Source={db}.db"))
+            using (var connection = new SqliteConnection($"Data Source={_db}.db"))
             {
                 connection.Open();
                 var command = connection.CreateCommand();

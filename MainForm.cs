@@ -23,12 +23,15 @@ namespace AlcoBarrier
     {
         RequestInner InnerageHandler = new RequestInner("192.168.0.123");
         RequestAlcoReader alcoReader = new RequestAlcoReader("192.168.0.125");
+        Emloeyes test = new Emloeyes("employees");
+        MyJson myJson = new MyJson();
         
         public MainForm()
         {
             InitializeComponent();
             SystemInfo();
             OnlineMessage();
+            test.GetNameCard("37358");
         }
 
         string Result = string.Empty;
@@ -54,15 +57,15 @@ namespace AlcoBarrier
 
             while(true)
             {
-                Result = await alcoReader.GetRequestCmd(MyJson.CreateCmdTypeInfMessage("getLogInf"));
+                Result = await alcoReader.GetRequestCmd(myJson.CreateCmdTypeInfMessage("getLogInf"));
                 
-                string LastRecord = MyJson.GetCountMessage(Result);
+                string LastRecord = myJson.GetCountMessage(Result);
 
                 if (OldRecord != LastRecord)
                 {
                     OldRecord = LastRecord;
-                    Result = await alcoReader.GetRequestCmd(MyJson.CreateLogMessage(LastRecord));
-                    string[] rows = MyJson.GetArrayResult(Result);
+                    Result = await alcoReader.GetRequestCmd(myJson.CreateLogMessage(LastRecord));
+                    string[] rows = myJson.GetArrayResult(Result);
                     if (rows[0] != null  && rows[1] != null && rows[2] != null && rows[3] != null)
                     {
                         dataGridView1.Rows.Add(rows);
@@ -91,13 +94,16 @@ namespace AlcoBarrier
             //timer1.Stop();
         }
 
-        private async void dataGridView1_RowHeaderMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+        private  void dataGridView1_RowHeaderMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             string CardCode = dataGridView1[4, e.RowIndex].Value.ToString();
 
-            string[] u = SqLiteHandler.GetUserParam(CardCode);
-
-            await InnerageHandler.BlockedUser(false, u);
+            string[] u = test.GetUserParam(CardCode);
+            foreach(string s in u)
+            {
+                Console.WriteLine(s);
+            }
+            //await InnerageHandler.BlockedUser(false, u);
         }
     }
 }
