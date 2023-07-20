@@ -24,6 +24,7 @@ namespace AlcoBarrier
         RequestInner InnerageHandler = new RequestInner("192.168.0.123");
         RequestAlcoReader alcoReader = new RequestAlcoReader("192.168.0.125");
         Emloeyes test = new Emloeyes("employees");
+        Events events = new Events("events");
         MyJson myJson = new MyJson();
         
         public MainForm()
@@ -31,7 +32,6 @@ namespace AlcoBarrier
             InitializeComponent();
             SystemInfo();
             OnlineMessage();
-            test.GetNameCard("37358");
         }
 
         string Result = string.Empty;
@@ -66,9 +66,12 @@ namespace AlcoBarrier
                     OldRecord = LastRecord;
                     Result = await alcoReader.GetRequestCmd(myJson.CreateLogMessage(LastRecord));
                     string[] rows = myJson.GetArrayResult(Result);
-                    if (rows[0] != null  && rows[1] != null && rows[2] != null && rows[3] != null)
+                    if (rows[0] != null  && rows[1] != null && rows[2] != null && rows[3] != null && rows[4] != null)
                     {
                         dataGridView1.Rows.Add(rows);
+
+                        string[] data = await Task.Run<string[]>(() => test.GetUserParam(rows[4]));
+                        await Task.Run(() => events.WriteEvent(data));
                     }
                     
                 }
@@ -94,16 +97,12 @@ namespace AlcoBarrier
             //timer1.Stop();
         }
 
-        private void dataGridView1_RowHeaderMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+        private async void dataGridView1_RowHeaderMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             string CardCode = dataGridView1[4, e.RowIndex].Value.ToString();
 
             string[] u = test.GetUserParam(CardCode);
-            foreach(string s in u)
-            {
-                Console.WriteLine(s);
-            }
-            //await InnerageHandler.BlockedUser(false, u);
+            await InnerageHandler.BlockedUser(false, u);
         }
     }
 }

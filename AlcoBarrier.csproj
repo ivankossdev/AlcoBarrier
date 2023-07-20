@@ -105,6 +105,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseSQLite.cs" />
+    <Compile Include="Events.cs" />
     <Compile Include="RequestAlcoReader.cs" />
     <Compile Include="RequestInner.cs" />
     <Compile Include="MainForm.cs">
