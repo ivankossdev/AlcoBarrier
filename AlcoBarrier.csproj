@@ -104,6 +104,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseSQLite.cs" />
     <Compile Include="RequestAlcoReader.cs" />
     <Compile Include="RequestInner.cs" />
     <Compile Include="MainForm.cs">
