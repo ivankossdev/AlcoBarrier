@@ -94,7 +94,7 @@ namespace AlcoBarrier
             //timer1.Stop();
         }
 
-        private  void dataGridView1_RowHeaderMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+        private void dataGridView1_RowHeaderMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             string CardCode = dataGridView1[4, e.RowIndex].Value.ToString();
 

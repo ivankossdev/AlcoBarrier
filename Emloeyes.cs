@@ -9,10 +9,7 @@ namespace AlcoBarrier
 {
     public class Emloeyes : BaseSQLite
     {
-        public Emloeyes(string NameDataBase) : base(NameDataBase) 
-        {
-           
-        }
+        public Emloeyes(string NameDataBase) : base(NameDataBase) {}
         
         public void CreateDB(string Table)
         {

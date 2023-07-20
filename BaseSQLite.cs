@@ -28,6 +28,21 @@ namespace AlcoBarrier
             }
         }
 
+        private protected void Write(List<string> data)
+        {
+            using (var connection = new SqliteConnection($"Data Source={_db}.db"))
+            {
+                connection.Open();
+                foreach (string User in data)
+                {
+                    var command = connection.CreateCommand();
+                    command.CommandText = User;
+                    command.ExecuteNonQuery();
+                }
+                connection.Close();
+            }
+        }
+
         private protected string[] Read(string sqlCommand) 
         {
             string[] result = null;

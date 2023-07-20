@@ -116,7 +116,6 @@
     <Compile Include="MyJson.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SqLiteHandler.cs" />
     <Compile Include="Emloeyes.cs" />
     <Compile Include="TcpSendMessage.cs" />
     <Compile Include="TcpServer.cs" />
