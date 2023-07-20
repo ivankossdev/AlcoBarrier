@@ -23,8 +23,8 @@ namespace AlcoBarrier
     {
         RequestInner InnerageHandler = new RequestInner("192.168.0.123");
         RequestAlcoReader alcoReader = new RequestAlcoReader("192.168.0.125");
-        Emloeyes test = new Emloeyes("employees");
-        Events events = new Events("events");
+        EmloeyesDB test = new EmloeyesDB("employees");
+        EventsDB events = new EventsDB("events");
         MyJson myJson = new MyJson();
         
         public MainForm()
@@ -69,11 +69,9 @@ namespace AlcoBarrier
                     if (rows[0] != null  && rows[1] != null && rows[2] != null && rows[3] != null && rows[4] != null)
                     {
                         dataGridView1.Rows.Add(rows);
-
                         string[] data = await Task.Run<string[]>(() => test.GetUserParam(rows[4]));
                         await Task.Run(() => events.WriteEvent(data));
                     }
-                    
                 }
 
                 await Task.Delay(250);

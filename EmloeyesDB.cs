@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace AlcoBarrier
 {
-    public class Emloeyes : BaseSQLite
+    public class EmloeyesDB : BaseSQLite
     {
-        public Emloeyes(string NameDataBase) : base(NameDataBase) {}
+        public EmloeyesDB(string NameDataBase) : base(NameDataBase) {}
         
         public void CreateDB(string Table)
         {

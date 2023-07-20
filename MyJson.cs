@@ -12,7 +12,7 @@ namespace AlcoBarrier
 {
     public class MyJson
     {
-        Emloeyes employee = new Emloeyes("employees");
+        EmloeyesDB employee = new EmloeyesDB("employees");
         public string CreateLogMessage(string memoryAddr)
         {
             var forecastObject = new JsonObject

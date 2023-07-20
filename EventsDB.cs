@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace AlcoBarrier
 {
-    internal class Events : BaseSQLite
+    internal class EventsDB : BaseSQLite
     {
-        public Events(string NameDataBase) : base(NameDataBase)
+        public EventsDB(string NameDataBase) : base(NameDataBase)
         {
         }
 
