@@ -32,6 +32,7 @@ namespace AlcoBarrier
             InitializeComponent();
             SystemInfo();
             OnlineMessage();
+
         }
 
         string Result = string.Empty;
@@ -77,20 +78,13 @@ namespace AlcoBarrier
                 await Task.Delay(250);
             }
         }
-    
-        DateTime t = DateTime.Now;
+   
         private  void timer1_Tick(object sender, EventArgs e)
         {
-            var v = DateTime.Now - t;
-            
-            textBox1.AppendText($"{v.Seconds}\n");
-            //if(dataGridView1.Rows.Count > 0)
-            //{
-            //    string CardCode = dataGridView1[4, 0].Value.ToString();
-            //    string[] u = SqLiteHandler.GetUserParam(CardCode);
-            //    await InnerageHandler.BlockedUser(true, u);
-            //    dataGridView1.Rows.RemoveAt(0);
-            //}
+            foreach(string s in events.ReadEvent())
+            {
+                Console.WriteLine(s);
+            }
 
             //timer1.Stop();
         }

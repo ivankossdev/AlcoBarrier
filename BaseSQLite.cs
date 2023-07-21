@@ -70,5 +70,34 @@ namespace AlcoBarrier
 
             return result;
         }
+
+        private protected List<string> ReadList(string sqlCommand)
+        {
+           List<string> result = new List<string>();
+
+            using (var connection = new SqliteConnection($"Data Source={_db}.db"))
+            {
+                connection.Open();
+                var command = connection.CreateCommand();
+                command.CommandText = sqlCommand;
+
+                using (var reader = command.ExecuteReader())
+                {
+                    int lenghtArray = reader.FieldCount;
+                    string Data = string.Empty;
+                    while (reader.Read())
+                    {
+                        for (int i = 0; i < lenghtArray; i++)
+                        {
+                            Data += $"{reader.GetString(i)} ";
+                        }
+                        result.Add(Data);
+                        Data = string.Empty;
+                    }                  
+                }
+                connection.Close();
+            }
+            return result;
+        }
     }
 }

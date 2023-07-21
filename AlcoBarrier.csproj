@@ -105,7 +105,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseSQLite.cs" />
-    <Compile Include="Events.cs" />
+    <Compile Include="EventsDB.cs" />
     <Compile Include="RequestAlcoReader.cs" />
     <Compile Include="RequestInner.cs" />
     <Compile Include="MainForm.cs">
@@ -117,7 +117,7 @@
     <Compile Include="MyJson.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Emloeyes.cs" />
+    <Compile Include="EmloeyesDB.cs" />
     <Compile Include="TcpSendMessage.cs" />
     <Compile Include="TcpServer.cs" />
     <Compile Include="XmlHandler.cs" />
