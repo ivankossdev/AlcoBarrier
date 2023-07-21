@@ -26,7 +26,7 @@ namespace AlcoBarrier
         EmloeyesDB test = new EmloeyesDB("employees");
         EventsDB events = new EventsDB("events");
         MyJson myJson = new MyJson();
-        EditDataBases editdatabases = new EditDataBases();
+        
 
         public MainForm()
         {
@@ -100,7 +100,11 @@ namespace AlcoBarrier
 
         private void MenuEditDataBase_Click(object sender, EventArgs e)
         {
-            editdatabases.ShowDialog();
+            using (EditDataBases editdatabases = new EditDataBases())
+            {
+                editdatabases.ShowDialog();
+            }
+                
         }
     }
 }
