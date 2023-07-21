@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace AlcoBarrier
 {
-    public partial class Settings : Form
+    public partial class EditDataBases : Form
     {
-        public Settings()
+        public EditDataBases()
         {
             InitializeComponent();
         }

@@ -26,7 +26,8 @@ namespace AlcoBarrier
         EmloeyesDB test = new EmloeyesDB("employees");
         EventsDB events = new EventsDB("events");
         MyJson myJson = new MyJson();
-        
+        EditDataBases editdatabases = new EditDataBases();
+
         public MainForm()
         {
             InitializeComponent();
@@ -95,6 +96,11 @@ namespace AlcoBarrier
 
             string[] u = test.GetUserParam(CardCode);
             await InnerageHandler.BlockedUser(false, u);
+        }
+
+        private void MenuEditDataBase_Click(object sender, EventArgs e)
+        {
+            editdatabases.ShowDialog();
         }
     }
 }
