@@ -41,3 +41,4 @@ C:\Users\RR\source\repos\AlcoBarrier\obj\Debug\AlcoBarrier.csproj.CopyComplete
 C:\Users\RR\source\repos\AlcoBarrier\obj\Debug\AlcoBarrier.exe
 C:\Users\RR\source\repos\AlcoBarrier\obj\Debug\AlcoBarrier.pdb
 C:\Users\RR\source\repos\AlcoBarrier\obj\Debug\AlcoBarrier.EditDataBases.resources
+C:\Users\RR\source\repos\AlcoBarrier\obj\Debug\AlcoBarrier.EditConnection.resources

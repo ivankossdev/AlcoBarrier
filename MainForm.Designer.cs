@@ -43,8 +43,11 @@
             this.MenuSettings = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuConnection = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuEditDataBase = new System.Windows.Forms.ToolStripMenuItem();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.menuStrip1.SuspendLayout();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // textBox1
@@ -56,7 +59,7 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox1.Size = new System.Drawing.Size(632, 108);
+            this.textBox1.Size = new System.Drawing.Size(632, 95);
             this.textBox1.TabIndex = 2;
             // 
             // dataGridView1
@@ -143,6 +146,7 @@
             this.MenuConnection.Name = "MenuConnection";
             this.MenuConnection.Size = new System.Drawing.Size(180, 22);
             this.MenuConnection.Text = "Подключение";
+            this.MenuConnection.Click += new System.EventHandler(this.MenuConnection_Click);
             // 
             // MenuEditDataBase
             // 
@@ -151,11 +155,28 @@
             this.MenuEditDataBase.Text = "Управление БД";
             this.MenuEditDataBase.Click += new System.EventHandler(this.MenuEditDataBase_Click);
             // 
+            // statusStrip1
+            // 
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripStatusLabel1});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 539);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(659, 22);
+            this.statusStrip1.TabIndex = 11;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // toolStripStatusLabel1
+            // 
+            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(118, 17);
+            this.toolStripStatusLabel1.Text = "toolStripStatusLabel1";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(659, 561);
+            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.menuStrip1);
@@ -170,6 +191,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -188,6 +211,8 @@
         private System.Windows.Forms.ToolStripMenuItem MenuSettings;
         private System.Windows.Forms.ToolStripMenuItem MenuConnection;
         private System.Windows.Forms.ToolStripMenuItem MenuEditDataBase;
+        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
     }
 }
 

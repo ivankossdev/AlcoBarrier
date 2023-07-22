@@ -106,5 +106,13 @@ namespace AlcoBarrier
             }
                 
         }
+
+        private void MenuConnection_Click(object sender, EventArgs e)
+        {
+            using(EditConnection editconnection = new EditConnection())
+            {
+                editconnection.ShowDialog();
+            }
+        }
     }
 }
