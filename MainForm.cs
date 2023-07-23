@@ -40,17 +40,9 @@ namespace AlcoBarrier
 
         private async void SystemInfo()
         {
-            textBox1.Clear();
             Result = await InnerageHandler.GetSystemInfo();
-            AppendTextValue(Result.Split('&'));
-        }
-
-        private void AppendTextValue(in string[] lines)
-        {
-            foreach (string line in lines)
-            {
-                textBox1.AppendText($"{line}\n");
-            }
+            await Console.Out.WriteLineAsync(Result);
+            toolStripStatusLabel1.Text = Result;
         }
 
         private async void OnlineMessage()

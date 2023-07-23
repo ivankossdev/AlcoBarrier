@@ -36,11 +36,11 @@ namespace AlcoBarrier
 
             var cards = innerage.GetElementsByTagName(name);
 
-            foreach (XmlElement x in cards)
+            foreach (XmlElement elemnt in cards)
             {
-                foreach (XmlNode childnode in x.ChildNodes)
+                for(int x = 0; x < 2; x++)
                 {
-                    body += $"{childnode.InnerText.Trim()}&";
+                    body += $"{elemnt.ChildNodes[x].InnerText} ";
                 }
             }
             return body;
