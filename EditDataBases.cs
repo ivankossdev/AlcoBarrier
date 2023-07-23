@@ -16,5 +16,20 @@ namespace AlcoBarrier
         {
             InitializeComponent();
         }
+
+        private void buttonSyncBDInnerage_Click(object sender, EventArgs e)
+        {
+            textBoxLog.AppendText("БД Innerage\n");
+        }
+
+        private void buttonCreateSettings_Click(object sender, EventArgs e)
+        {
+            textBoxLog.AppendText("БД настройки\n");
+        }
+
+        private void buttonCreateEventsDB_Click(object sender, EventArgs e)
+        {
+            textBoxLog.AppendText("БД События\n");
+        }
     }
 }

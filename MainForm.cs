@@ -41,7 +41,6 @@ namespace AlcoBarrier
         private async void SystemInfo()
         {
             Result = await InnerageHandler.GetSystemInfo();
-            await Console.Out.WriteLineAsync(Result);
             toolStripStatusLabel1.Text = Result;
         }
 

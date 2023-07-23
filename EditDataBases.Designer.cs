@@ -29,49 +29,63 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EditDataBases));
-            this.button1 = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.button2 = new System.Windows.Forms.Button();
+            this.buttonCreateEventsDB = new System.Windows.Forms.Button();
+            this.textBoxLog = new System.Windows.Forms.TextBox();
+            this.buttonSyncBDInnerage = new System.Windows.Forms.Button();
+            this.buttonCreateSettings = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // button1
+            // buttonCreateEventsDB
             // 
-            this.button1.Location = new System.Drawing.Point(12, 12);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(100, 50);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
+            this.buttonCreateEventsDB.Location = new System.Drawing.Point(12, 12);
+            this.buttonCreateEventsDB.Name = "buttonCreateEventsDB";
+            this.buttonCreateEventsDB.Size = new System.Drawing.Size(124, 50);
+            this.buttonCreateEventsDB.TabIndex = 0;
+            this.buttonCreateEventsDB.Text = "Создать БД событий";
+            this.buttonCreateEventsDB.UseVisualStyleBackColor = true;
+            this.buttonCreateEventsDB.Click += new System.EventHandler(this.buttonCreateEventsDB_Click);
             // 
-            // textBox1
+            // textBoxLog
             // 
-            this.textBox1.Location = new System.Drawing.Point(118, 12);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(334, 197);
-            this.textBox1.TabIndex = 1;
+            this.textBoxLog.Location = new System.Drawing.Point(142, 12);
+            this.textBoxLog.Multiline = true;
+            this.textBoxLog.Name = "textBoxLog";
+            this.textBoxLog.Size = new System.Drawing.Size(310, 197);
+            this.textBoxLog.TabIndex = 1;
             // 
-            // button2
+            // buttonSyncBDInnerage
             // 
-            this.button2.Location = new System.Drawing.Point(12, 68);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(100, 50);
-            this.button2.TabIndex = 2;
-            this.button2.Text = "button2";
-            this.button2.UseVisualStyleBackColor = true;
+            this.buttonSyncBDInnerage.Location = new System.Drawing.Point(12, 68);
+            this.buttonSyncBDInnerage.Name = "buttonSyncBDInnerage";
+            this.buttonSyncBDInnerage.Size = new System.Drawing.Size(124, 50);
+            this.buttonSyncBDInnerage.TabIndex = 2;
+            this.buttonSyncBDInnerage.Text = "Синхронизировать БД с Innerage";
+            this.buttonSyncBDInnerage.UseVisualStyleBackColor = true;
+            this.buttonSyncBDInnerage.Click += new System.EventHandler(this.buttonSyncBDInnerage_Click);
+            // 
+            // buttonCreateSettings
+            // 
+            this.buttonCreateSettings.Location = new System.Drawing.Point(12, 124);
+            this.buttonCreateSettings.Name = "buttonCreateSettings";
+            this.buttonCreateSettings.Size = new System.Drawing.Size(124, 50);
+            this.buttonCreateSettings.TabIndex = 3;
+            this.buttonCreateSettings.Text = "Создать БД настроек";
+            this.buttonCreateSettings.UseVisualStyleBackColor = true;
+            this.buttonCreateSettings.Click += new System.EventHandler(this.buttonCreateSettings_Click);
             // 
             // EditDataBases
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(464, 221);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.buttonCreateSettings);
+            this.Controls.Add(this.buttonSyncBDInnerage);
+            this.Controls.Add(this.textBoxLog);
+            this.Controls.Add(this.buttonCreateEventsDB);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "EditDataBases";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "EditDataBases";
+            this.Text = "Создание БД";
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -79,8 +93,9 @@
 
         #endregion
 
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button buttonCreateEventsDB;
+        private System.Windows.Forms.TextBox textBoxLog;
+        private System.Windows.Forms.Button buttonSyncBDInnerage;
+        private System.Windows.Forms.Button buttonCreateSettings;
     }
 }
