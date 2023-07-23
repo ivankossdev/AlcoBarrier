@@ -145,6 +145,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="EmloeyesDB.cs" />
+    <Compile Include="SettingsDB.cs" />
     <Compile Include="TcpSendMessage.cs" />
     <Compile Include="TcpServer.cs" />
     <Compile Include="XmlHandler.cs" />

@@ -12,6 +12,7 @@ namespace AlcoBarrier
 {
     public partial class EditDataBases : Form
     {
+        SettingsDB SetDb = new SettingsDB("Settings");
         public EditDataBases()
         {
             InitializeComponent();
@@ -24,7 +25,9 @@ namespace AlcoBarrier
 
         private void buttonCreateSettings_Click(object sender, EventArgs e)
         {
-            textBoxLog.AppendText("БД настройки\n");
+            string message = SetDb.CreateDB();
+            textBoxLog.AppendText($"{message} \n");
+            buttonCreateSettings.Enabled = false;
         }
 
         private void buttonCreateEventsDB_Click(object sender, EventArgs e)
