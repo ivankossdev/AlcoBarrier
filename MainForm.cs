@@ -33,7 +33,6 @@ namespace AlcoBarrier
             InitializeComponent();
             SystemInfo();
             OnlineMessage();
-
         }
 
         string Result = string.Empty;
