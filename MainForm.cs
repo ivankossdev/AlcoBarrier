@@ -32,7 +32,19 @@ namespace AlcoBarrier
         {
             InitializeComponent();
             SystemInfo();
-            OnlineMessage();
+            
+            if(check_databases("employees", "events", "settings"))
+            {
+                OnlineMessage();
+            }
+            else
+            {
+                timer1.Stop();
+                using (EditDataBases editdatabases = new EditDataBases())
+                {
+                    editdatabases.ShowDialog();
+                }
+            }
         }
 
         string Result = string.Empty;
@@ -103,6 +115,19 @@ namespace AlcoBarrier
             {
                 editconnection.ShowDialog();
             }
+        }
+
+        private bool check_databases(params string[] databases)
+        {
+            foreach (string database in databases)
+            {
+                string db = Directory.GetCurrentDirectory() + $"\\{database}.db";
+                if (!File.Exists(db))
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }
