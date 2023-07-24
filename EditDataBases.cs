@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,6 +17,17 @@ namespace AlcoBarrier
         public EditDataBases()
         {
             InitializeComponent();
+            
+            string CurrentDb = Directory.GetCurrentDirectory() + "\\Settings.db";
+            if (!File.Exists(CurrentDb))
+            {
+
+                buttonCreateSettings.Enabled = true;
+            }
+            else
+            {
+                buttonCreateSettings.Enabled = false;
+            }
         }
 
         private void buttonSyncBDInnerage_Click(object sender, EventArgs e)
