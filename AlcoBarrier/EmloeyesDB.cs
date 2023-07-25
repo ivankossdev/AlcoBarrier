@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -9,7 +10,7 @@ namespace AlcoBarrier
 {
     public class EmloeyesDB : BaseSQLite
     {
-        public EmloeyesDB(string NameDataBase) : base(NameDataBase) {}
+        public EmloeyesDB(string NameDataBase) : base(NameDataBase) {  }
         
         public void CreateDB(string Table)
         {

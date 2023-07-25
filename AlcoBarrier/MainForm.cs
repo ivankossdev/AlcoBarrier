@@ -23,15 +23,15 @@ namespace AlcoBarrier
     {
         RequestInner InnerageHandler = new RequestInner("192.168.0.123");
         RequestAlcoReader alcoReader = new RequestAlcoReader("192.168.0.125");
-        EmloeyesDB test = new EmloeyesDB("employees");
-        EventsDB events = new EventsDB("events");
+        EmloeyesDB test = new EmloeyesDB("employees") { path = Directory.GetCurrentDirectory() };
+        EventsDB events = new EventsDB("events") { path = Directory.GetCurrentDirectory() };
         MyJson myJson = new MyJson();
         
         public MainForm()
         {
             InitializeComponent();
             SystemInfo();
-            if (Check_Databases($"employees", "events", "settings"))
+            if (Check_Databases($"employees", "events"))
             {
                 OnlineMessage();
             }

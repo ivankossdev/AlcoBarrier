@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AlcoBarrier
 {
-    internal class SettingsDB : BaseSQLite
+    public class SettingsDB : BaseSQLite
     {
         public SettingsDB(string NameDataBase) : base(NameDataBase)
         {
@@ -25,9 +25,9 @@ namespace AlcoBarrier
             return $"База данных {NameDataBase} создана";
         }
 
-        public void WriteData(string IpInnerage, string IpAlco)
+        public void WriteData(string IpInnerage)
         {
-            SqlCommand = $"INSERT INTO settings (IpInnerage, IpAlco) VALUES (\"{IpInnerage}\", \"{IpAlco}\");";
+            SqlCommand = $"INSERT INTO settings (IpInnerage, IpAlco) VALUES (\"{IpInnerage}\", \"Test\");";
             Write(SqlCommand);
         }
     }

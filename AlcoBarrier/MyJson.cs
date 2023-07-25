@@ -7,12 +7,13 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Windows.Forms;
 using System.Xml.Linq;
+using System.IO;
 
 namespace AlcoBarrier
 {
     public class MyJson
     {
-        EmloeyesDB employee = new EmloeyesDB("employees");
+        EmloeyesDB employee = new EmloeyesDB("employees") { path = Directory.GetCurrentDirectory() };
         public string CreateLogMessage(string memoryAddr)
         {
             var forecastObject = new JsonObject

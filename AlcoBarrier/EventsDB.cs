@@ -10,6 +10,7 @@ namespace AlcoBarrier
     {
         public EventsDB(string NameDataBase) : base(NameDataBase)
         {
+            
         }
 
         string SqlCommand { get; set; } = string.Empty;

@@ -31,13 +31,13 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AlcoSet));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.InnerSettings = new System.Windows.Forms.TabPage();
-            this.AlcoSettings = new System.Windows.Forms.TabPage();
-            this.label1 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
             this.textBox2 = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.button2 = new System.Windows.Forms.Button();
+            this.buttonInnerOk = new System.Windows.Forms.Button();
+            this.textBoxInnerIP = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.AlcoSettings = new System.Windows.Forms.TabPage();
             this.tabControl1.SuspendLayout();
             this.InnerSettings.SuspendLayout();
             this.SuspendLayout();
@@ -57,8 +57,8 @@
             this.InnerSettings.Controls.Add(this.textBox2);
             this.InnerSettings.Controls.Add(this.label2);
             this.InnerSettings.Controls.Add(this.button2);
-            this.InnerSettings.Controls.Add(this.button1);
-            this.InnerSettings.Controls.Add(this.textBox1);
+            this.InnerSettings.Controls.Add(this.buttonInnerOk);
+            this.InnerSettings.Controls.Add(this.textBoxInnerIP);
             this.InnerSettings.Controls.Add(this.label1);
             this.InnerSettings.Location = new System.Drawing.Point(4, 22);
             this.InnerSettings.Name = "InnerSettings";
@@ -68,49 +68,12 @@
             this.InnerSettings.Text = "Inner Range";
             this.InnerSettings.UseVisualStyleBackColor = true;
             // 
-            // AlcoSettings
+            // textBox2
             // 
-            this.AlcoSettings.Location = new System.Drawing.Point(4, 22);
-            this.AlcoSettings.Name = "AlcoSettings";
-            this.AlcoSettings.Padding = new System.Windows.Forms.Padding(3);
-            this.AlcoSettings.Size = new System.Drawing.Size(432, 400);
-            this.AlcoSettings.TabIndex = 1;
-            this.AlcoSettings.Text = "Alco Tester";
-            this.AlcoSettings.UseVisualStyleBackColor = true;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 9);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(53, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "IP адрес ";
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(65, 6);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(185, 20);
-            this.textBox1.TabIndex = 1;
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(270, 371);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 2;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(351, 371);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 3;
-            this.button2.Text = "button2";
-            this.button2.UseVisualStyleBackColor = true;
+            this.textBox2.Location = new System.Drawing.Point(65, 42);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(185, 20);
+            this.textBox2.TabIndex = 5;
             // 
             // label2
             // 
@@ -121,12 +84,50 @@
             this.label2.TabIndex = 4;
             this.label2.Text = "label2";
             // 
-            // textBox2
+            // button2
             // 
-            this.textBox2.Location = new System.Drawing.Point(65, 42);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(185, 20);
-            this.textBox2.TabIndex = 5;
+            this.button2.Location = new System.Drawing.Point(351, 371);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.TabIndex = 3;
+            this.button2.Text = "button2";
+            this.button2.UseVisualStyleBackColor = true;
+            // 
+            // buttonInnerOk
+            // 
+            this.buttonInnerOk.Location = new System.Drawing.Point(270, 371);
+            this.buttonInnerOk.Name = "buttonInnerOk";
+            this.buttonInnerOk.Size = new System.Drawing.Size(75, 23);
+            this.buttonInnerOk.TabIndex = 2;
+            this.buttonInnerOk.Text = "OK";
+            this.buttonInnerOk.UseVisualStyleBackColor = true;
+            this.buttonInnerOk.Click += new System.EventHandler(this.buttonInnerOk_Click);
+            // 
+            // textBoxInnerIP
+            // 
+            this.textBoxInnerIP.Location = new System.Drawing.Point(65, 6);
+            this.textBoxInnerIP.Name = "textBoxInnerIP";
+            this.textBoxInnerIP.Size = new System.Drawing.Size(185, 20);
+            this.textBoxInnerIP.TabIndex = 1;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(6, 9);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(53, 13);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "IP адрес ";
+            // 
+            // AlcoSettings
+            // 
+            this.AlcoSettings.Location = new System.Drawing.Point(4, 22);
+            this.AlcoSettings.Name = "AlcoSettings";
+            this.AlcoSettings.Padding = new System.Windows.Forms.Padding(3);
+            this.AlcoSettings.Size = new System.Drawing.Size(432, 400);
+            this.AlcoSettings.TabIndex = 1;
+            this.AlcoSettings.Text = "Alco Tester";
+            this.AlcoSettings.UseVisualStyleBackColor = true;
             // 
             // AlcoSet
             // 
@@ -152,8 +153,8 @@
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Button buttonInnerOk;
+        private System.Windows.Forms.TextBox textBoxInnerIP;
         private System.Windows.Forms.Label label1;
     }
 }

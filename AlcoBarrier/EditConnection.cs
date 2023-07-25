@@ -15,15 +15,11 @@ namespace AlcoBarrier
         public EditConnection()
         {
             InitializeComponent();
-            Console.WriteLine(SetDB.NameDataBase);
         }
 
-        SettingsDB SetDB = new SettingsDB("settings");
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            
-            SetDB.WriteData($"{textBoxIR.Text}", $"{textBoxAlco.Text}");
-            Close();
+
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
