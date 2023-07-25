@@ -39,11 +39,10 @@
             this.CardCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.MenuSettings = new System.Windows.Forms.ToolStripMenuItem();
+            this.MenuConnection = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.MenuConnection = new System.Windows.Forms.ToolStripMenuItem();
-            this.MenuEditDataBase = new System.Windows.Forms.ToolStripMenuItem();
-            this.MenuSettings = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -126,6 +125,21 @@
             this.menuStrip1.TabIndex = 10;
             this.menuStrip1.Text = "menuStrip1";
             // 
+            // MenuSettings
+            // 
+            this.MenuSettings.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.MenuConnection});
+            this.MenuSettings.Name = "MenuSettings";
+            this.MenuSettings.Size = new System.Drawing.Size(79, 20);
+            this.MenuSettings.Text = "Настройки";
+            // 
+            // MenuConnection
+            // 
+            this.MenuConnection.Name = "MenuConnection";
+            this.MenuConnection.Size = new System.Drawing.Size(180, 22);
+            this.MenuConnection.Text = "Подключение";
+            this.MenuConnection.Click += new System.EventHandler(this.MenuConnection_Click);
+            // 
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -142,29 +156,6 @@
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(151, 17);
             this.toolStripStatusLabel1.Text = "Нет соедтнения с Innerage";
-            // 
-            // MenuConnection
-            // 
-            this.MenuConnection.Name = "MenuConnection";
-            this.MenuConnection.Size = new System.Drawing.Size(180, 22);
-            this.MenuConnection.Text = "Подключение";
-            this.MenuConnection.Click += new System.EventHandler(this.MenuConnection_Click);
-            // 
-            // MenuEditDataBase
-            // 
-            this.MenuEditDataBase.Name = "MenuEditDataBase";
-            this.MenuEditDataBase.Size = new System.Drawing.Size(180, 22);
-            this.MenuEditDataBase.Text = "Управление БД";
-            this.MenuEditDataBase.Click += new System.EventHandler(this.MenuEditDataBase_Click);
-            // 
-            // MenuSettings
-            // 
-            this.MenuSettings.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.MenuConnection,
-            this.MenuEditDataBase});
-            this.MenuSettings.Name = "MenuSettings";
-            this.MenuSettings.Size = new System.Drawing.Size(79, 20);
-            this.MenuSettings.Text = "Настройки";
             // 
             // MainForm
             // 
@@ -203,7 +194,6 @@
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.ToolStripMenuItem MenuSettings;
         private System.Windows.Forms.ToolStripMenuItem MenuConnection;
-        private System.Windows.Forms.ToolStripMenuItem MenuEditDataBase;
     }
 }
 

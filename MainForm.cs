@@ -27,22 +27,20 @@ namespace AlcoBarrier
         EventsDB events = new EventsDB("events");
         MyJson myJson = new MyJson();
         
-
         public MainForm()
         {
             InitializeComponent();
             SystemInfo();
-            
-            if(check_databases("employees", "events", "settings"))
+            if (Check_Databases($"employees", "events", "settings"))
             {
                 OnlineMessage();
             }
             else
             {
-                timer1.Stop();
                 using (EditDataBases editdatabases = new EditDataBases())
                 {
                     editdatabases.ShowDialog();
+                    Environment.Exit(0);
                 }
             }
         }
@@ -111,13 +109,15 @@ namespace AlcoBarrier
 
         private void MenuConnection_Click(object sender, EventArgs e)
         {
-            using(EditConnection editconnection = new EditConnection())
+            timer1.Stop();
+            using (EditConnection editconnection = new EditConnection())
             {
                 editconnection.ShowDialog();
             }
+            timer1.Start();
         }
 
-        private bool check_databases(params string[] databases)
+        private bool Check_Databases(params string[] databases)
         {
             foreach (string database in databases)
             {

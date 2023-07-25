@@ -22,7 +22,13 @@ namespace AlcoBarrier
                 $"(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, IpInnerage TEXT NOT NULL, IpAlco TEXT NOT NULL);";
             Write(SqlCommand);
 
-            return "База данных настройки создана";
+            return $"База данных {NameDataBase} создана";
+        }
+
+        public void WriteData(string IpInnerage, string IpAlco)
+        {
+            SqlCommand = $"INSERT INTO settings (IpInnerage, IpAlco) VALUES (\"{IpInnerage}\", \"{IpAlco}\");";
+            Write(SqlCommand);
         }
     }
 }
