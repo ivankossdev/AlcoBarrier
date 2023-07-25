@@ -38,13 +38,9 @@
             this.Employe = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CardCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.MenuSettings = new System.Windows.Forms.ToolStripMenuItem();
-            this.MenuConnection = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
-            this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -65,13 +61,13 @@
             this.CardCode});
             this.dataGridView1.Cursor = System.Windows.Forms.Cursors.Default;
             this.dataGridView1.ImeMode = System.Windows.Forms.ImeMode.On;
-            this.dataGridView1.Location = new System.Drawing.Point(15, 27);
+            this.dataGridView1.Location = new System.Drawing.Point(12, 12);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.ReadOnly = true;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopCenter;
             this.dataGridView1.RowsDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView1.Size = new System.Drawing.Size(640, 509);
+            this.dataGridView1.Size = new System.Drawing.Size(643, 524);
             this.dataGridView1.TabIndex = 9;
             this.dataGridView1.RowHeaderMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView1_RowHeaderMouseDoubleClick);
             // 
@@ -111,35 +107,6 @@
             this.timer1.Interval = 5000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // menuStrip1
-            // 
-            this.menuStrip1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.menuStrip1.Dock = System.Windows.Forms.DockStyle.None;
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.MenuSettings});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(87, 24);
-            this.menuStrip1.TabIndex = 10;
-            this.menuStrip1.Text = "menuStrip1";
-            // 
-            // MenuSettings
-            // 
-            this.MenuSettings.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.MenuConnection});
-            this.MenuSettings.Name = "MenuSettings";
-            this.MenuSettings.Size = new System.Drawing.Size(79, 20);
-            this.MenuSettings.Text = "Настройки";
-            // 
-            // MenuConnection
-            // 
-            this.MenuConnection.Name = "MenuConnection";
-            this.MenuConnection.Size = new System.Drawing.Size(180, 22);
-            this.MenuConnection.Text = "Подключение";
-            this.MenuConnection.Click += new System.EventHandler(this.MenuConnection_Click);
-            // 
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -164,16 +131,12 @@
             this.ClientSize = new System.Drawing.Size(667, 561);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.dataGridView1);
-            this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MainMenuStrip = this.menuStrip1;
             this.MinimumSize = new System.Drawing.Size(683, 600);
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "AlcoBarrier";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -189,11 +152,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Promile;
         private System.Windows.Forms.DataGridViewTextBoxColumn Employe;
         private System.Windows.Forms.DataGridViewTextBoxColumn CardCode;
-        private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
-        private System.Windows.Forms.ToolStripMenuItem MenuSettings;
-        private System.Windows.Forms.ToolStripMenuItem MenuConnection;
     }
 }
 

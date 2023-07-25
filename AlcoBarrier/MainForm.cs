@@ -35,14 +35,6 @@ namespace AlcoBarrier
             {
                 OnlineMessage();
             }
-            else
-            {
-                using (EditDataBases editdatabases = new EditDataBases())
-                {
-                    editdatabases.ShowDialog();
-                    Environment.Exit(0);
-                }
-            }
         }
 
         string Result = string.Empty;
@@ -96,25 +88,6 @@ namespace AlcoBarrier
 
             string[] u = test.GetUserParam(CardCode);
             await InnerageHandler.BlockedUser(false, u);
-        }
-
-        private void MenuEditDataBase_Click(object sender, EventArgs e)
-        {
-            using (EditDataBases editdatabases = new EditDataBases())
-            {
-                editdatabases.ShowDialog();
-            }
-                
-        }
-
-        private void MenuConnection_Click(object sender, EventArgs e)
-        {
-            timer1.Stop();
-            using (EditConnection editconnection = new EditConnection())
-            {
-                editconnection.ShowDialog();
-            }
-            timer1.Start();
         }
 
         private bool Check_Databases(params string[] databases)
