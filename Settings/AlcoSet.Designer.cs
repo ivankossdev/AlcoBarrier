@@ -133,7 +133,7 @@
             this.AlcoSettings.Location = new System.Drawing.Point(4, 22);
             this.AlcoSettings.Name = "AlcoSettings";
             this.AlcoSettings.Padding = new System.Windows.Forms.Padding(3);
-            this.AlcoSettings.Size = new System.Drawing.Size(432, 400);
+            this.AlcoSettings.Size = new System.Drawing.Size(432, 258);
             this.AlcoSettings.TabIndex = 1;
             this.AlcoSettings.Text = "Alco Tester";
             this.AlcoSettings.UseVisualStyleBackColor = true;
@@ -169,6 +169,7 @@
             this.textBoxInfo.Location = new System.Drawing.Point(6, 84);
             this.textBoxInfo.Multiline = true;
             this.textBoxInfo.Name = "textBoxInfo";
+            this.textBoxInfo.ReadOnly = true;
             this.textBoxInfo.Size = new System.Drawing.Size(420, 99);
             this.textBoxInfo.TabIndex = 9;
             // 
@@ -179,6 +180,10 @@
             this.ClientSize = new System.Drawing.Size(471, 312);
             this.Controls.Add(this.tabControl1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
+            this.MaximumSize = new System.Drawing.Size(487, 351);
+            this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(487, 351);
             this.Name = "AlcoSet";
             this.Text = "Настройки";
             this.tabControl1.ResumeLayout(false);

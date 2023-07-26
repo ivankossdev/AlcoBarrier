@@ -28,9 +28,6 @@ namespace Settings
 
         private void buttonInnerOk_Click(object sender, EventArgs e)
         {
-            
-            
-            
                 if (textBoxInnerIP.Text != "" && textBoxAuthorization.Text != "" && textBoxApiKey.Text != "")
                 {
                     if (setDb.GetCountId(setDb.InnerTable) <= 0)
