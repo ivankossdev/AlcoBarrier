@@ -24,6 +24,7 @@ namespace Settings
                 InnerTable = "setInner",
                 AlcoTable = "setAlco"
             };
+            check_db();
         }
 
         private void buttonInnerOk_Click(object sender, EventArgs e)
@@ -48,9 +49,17 @@ namespace Settings
             Environment.Exit(0);
         }
 
-        private void buttonCreateDB_Click(object sender, EventArgs e)
+        private void check_db()
         {
-            textBoxInfo.AppendText(setDb.CreateDB()); 
+            if (!File.Exists(setDb.path + "\\settings.db"))
+            {
+                textBoxInfo.AppendText(setDb.CreateDB());
+            }
+        }
+
+        private void ReadParams()
+        {
+            Console.WriteLine("OK");
         }
     }
 }

@@ -77,8 +77,6 @@ C:\Users\RR\source\repos\AlcoBarrier\AlcoBarrier\bin\Debug\System.ValueTuple.xml
 C:\Users\RR\source\repos\AlcoBarrier\AlcoBarrier\obj\Debug\AlcoBarrier.csproj.AssemblyReference.cache
 C:\Users\RR\source\repos\AlcoBarrier\AlcoBarrier\obj\Debug\AlcoBarrier.csproj.SuggestedBindingRedirects.cache
 C:\Users\RR\source\repos\AlcoBarrier\AlcoBarrier\obj\Debug\AlcoBarrier.exe.config
-C:\Users\RR\source\repos\AlcoBarrier\AlcoBarrier\obj\Debug\AlcoBarrier.EditConnection.resources
-C:\Users\RR\source\repos\AlcoBarrier\AlcoBarrier\obj\Debug\AlcoBarrier.EditDataBases.resources
 C:\Users\RR\source\repos\AlcoBarrier\AlcoBarrier\obj\Debug\AlcoBarrier.MainForm.resources
 C:\Users\RR\source\repos\AlcoBarrier\AlcoBarrier\obj\Debug\AlcoBarrier.Properties.Resources.resources
 C:\Users\RR\source\repos\AlcoBarrier\AlcoBarrier\obj\Debug\AlcoBarrier.csproj.GenerateResource.cache

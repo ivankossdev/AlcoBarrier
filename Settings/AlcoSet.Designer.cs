@@ -38,7 +38,6 @@
             this.textBoxInnerIP = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.AlcoSettings = new System.Windows.Forms.TabPage();
-            this.buttonCreateDB = new System.Windows.Forms.Button();
             this.textBoxApiKey = new System.Windows.Forms.TextBox();
             this.labelApiKey = new System.Windows.Forms.Label();
             this.textBoxInfo = new System.Windows.Forms.TextBox();
@@ -61,7 +60,6 @@
             this.InnerSettings.Controls.Add(this.textBoxInfo);
             this.InnerSettings.Controls.Add(this.labelApiKey);
             this.InnerSettings.Controls.Add(this.textBoxApiKey);
-            this.InnerSettings.Controls.Add(this.buttonCreateDB);
             this.InnerSettings.Controls.Add(this.textBoxAuthorization);
             this.InnerSettings.Controls.Add(this.label2);
             this.InnerSettings.Controls.Add(this.buttonCancel);
@@ -138,16 +136,6 @@
             this.AlcoSettings.Text = "Alco Tester";
             this.AlcoSettings.UseVisualStyleBackColor = true;
             // 
-            // buttonCreateDB
-            // 
-            this.buttonCreateDB.Location = new System.Drawing.Point(3, 229);
-            this.buttonCreateDB.Name = "buttonCreateDB";
-            this.buttonCreateDB.Size = new System.Drawing.Size(94, 23);
-            this.buttonCreateDB.TabIndex = 6;
-            this.buttonCreateDB.Text = "Создать БД";
-            this.buttonCreateDB.UseVisualStyleBackColor = true;
-            this.buttonCreateDB.Click += new System.EventHandler(this.buttonCreateDB_Click);
-            // 
             // textBoxApiKey
             // 
             this.textBoxApiKey.Location = new System.Drawing.Point(85, 58);
@@ -170,7 +158,7 @@
             this.textBoxInfo.Multiline = true;
             this.textBoxInfo.Name = "textBoxInfo";
             this.textBoxInfo.ReadOnly = true;
-            this.textBoxInfo.Size = new System.Drawing.Size(420, 99);
+            this.textBoxInfo.Size = new System.Drawing.Size(420, 139);
             this.textBoxInfo.TabIndex = 9;
             // 
             // AlcoSet
@@ -185,6 +173,7 @@
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(487, 351);
             this.Name = "AlcoSet";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Настройки";
             this.tabControl1.ResumeLayout(false);
             this.InnerSettings.ResumeLayout(false);
@@ -204,7 +193,6 @@
         private System.Windows.Forms.Button buttonInnerOk;
         private System.Windows.Forms.TextBox textBoxInnerIP;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button buttonCreateDB;
         private System.Windows.Forms.TextBox textBoxApiKey;
         private System.Windows.Forms.Label labelApiKey;
         private System.Windows.Forms.TextBox textBoxInfo;

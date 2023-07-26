@@ -120,18 +120,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseSQLite.cs" />
-    <Compile Include="EditConnection.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="EditConnection.Designer.cs">
-      <DependentUpon>EditConnection.cs</DependentUpon>
-    </Compile>
-    <Compile Include="EditDataBases.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="EditDataBases.Designer.cs">
-      <DependentUpon>EditDataBases.cs</DependentUpon>
-    </Compile>
     <Compile Include="EventsDB.cs" />
     <Compile Include="RequestAlcoReader.cs" />
     <Compile Include="RequestInner.cs" />
@@ -149,12 +137,6 @@
     <Compile Include="TcpSendMessage.cs" />
     <Compile Include="TcpServer.cs" />
     <Compile Include="XmlHandler.cs" />
-    <EmbeddedResource Include="EditConnection.resx">
-      <DependentUpon>EditConnection.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="EditDataBases.resx">
-      <DependentUpon>EditDataBases.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
