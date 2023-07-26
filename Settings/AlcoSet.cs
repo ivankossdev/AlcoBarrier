@@ -28,10 +28,22 @@ namespace Settings
 
         private void buttonInnerOk_Click(object sender, EventArgs e)
         {
-            if(textBoxInnerIP.Text != "" && textBoxAuthorization.Text != "" && textBoxApiKey.Text != "")
-                setDb.WriteSettingsInner(setDb.InnerTable, textBoxInnerIP.Text, textBoxAuthorization.Text, textBoxApiKey.Text);
-            else
-                textBoxInfo.AppendText("Заполните все поля. \n");
+            
+            
+            
+                if (textBoxInnerIP.Text != "" && textBoxAuthorization.Text != "" && textBoxApiKey.Text != "")
+                {
+                    if (setDb.GetCountId(setDb.InnerTable) <= 0)
+                    {
+                        setDb.WriteSettingsInner(setDb.InnerTable, textBoxInnerIP.Text, textBoxAuthorization.Text, textBoxApiKey.Text);
+                    }
+                    else
+                    {
+                        setDb.ReWriteSettingsInner(setDb.InnerTable, textBoxInnerIP.Text, textBoxAuthorization.Text, textBoxApiKey.Text);
+                    } 
+                }
+                else
+                    textBoxInfo.AppendText("Заполните все поля. \n");
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)

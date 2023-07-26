@@ -21,7 +21,8 @@ namespace AlcoBarrier
         public string CreateDB()
         {
             SqlCommand = $"CREATE TABLE {InnerTable} " +
-                         $"(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, IpInnerage TEXT NOT NULL, authorization TEXT NOT NULL, key TEXT NOT NULL);";
+                         $"(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, IpInnerage TEXT NOT NULL, " +
+                         $"authorization TEXT NOT NULL, key TEXT NOT NULL);";
             Write(SqlCommand);
 
             SqlCommand = $"CREATE TABLE {AlcoTable} " +
@@ -33,8 +34,21 @@ namespace AlcoBarrier
 
         public void WriteSettingsInner(string Table, string IpInnerage, string Auth, string Key)
         {
-            SqlCommand = $"INSERT INTO {Table} (IpInnerage, authorization, key) VALUES (\"{IpInnerage}\", \"{Auth}\", \"{Key}\");";
+            SqlCommand = $"INSERT INTO {Table} (IpInnerage, authorization, key) " +
+                         $"VALUES (\"{IpInnerage.Trim()}\", \"{Auth.Trim()}\", \"{Key.Trim()}\");";
             Write(SqlCommand);
+        }
+        
+        public void ReWriteSettingsInner(string Table, string IpInnerage, string Auth, string Key)
+        {
+            SqlCommand = $"UPDATE {Table} SET IpInnerage = \"{IpInnerage}\", authorization = \"{Auth}\", key = \"{Key}\" WHERE id = 1;";
+            Write(SqlCommand);
+        }
+
+        public int GetCountId(string Table)
+        {
+            SqlCommand = $"SELECT id FROM {Table};";
+            return ReadList(SqlCommand).Count;
         }
 
         public void WriteSettingsAlco(string Table, string IpAddressAlco)
