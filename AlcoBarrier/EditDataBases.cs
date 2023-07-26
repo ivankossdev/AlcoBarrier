@@ -25,8 +25,8 @@ namespace AlcoBarrier
 
         private void buttonCreateSettings_Click(object sender, EventArgs e)
         {
-            string message = CreateDbForButton(new SettingsDB("settings"));
-            textBoxLog.AppendText($"{message} \n");
+            //string message = CreateDbForButton(new SettingsDB("settings"));
+            //textBoxLog.AppendText($"{message} \n");
         }
 
         private void buttonCreateEventsDB_Click(object sender, EventArgs e)

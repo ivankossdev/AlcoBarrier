@@ -14,22 +14,34 @@ namespace Settings
 {
     public partial class AlcoSet : Form
     {
-        
+        SettingsDB setDb;
         public AlcoSet()
         {
-            InitializeComponent();           
+            InitializeComponent();
+            setDb = new SettingsDB("settings")
+            {
+                path = Path.GetFullPath("..\\..\\..\\AlcoBarrier\\bin\\Debug"),
+                InnerTable = "setInner",
+                AlcoTable = "setAlco"
+            };
         }
-        private static string GetPath()
-        {
-            // relise ..\\AlcoBarrier\\bin\\Debug\\setting.db
-            return Path.GetFullPath("..\\..\\..\\AlcoBarrier\\bin\\Debug");
-        }
-        SettingsDB setDb = new SettingsDB("settings") { path = GetPath() };
 
         private void buttonInnerOk_Click(object sender, EventArgs e)
         {
-            setDb.WriteData(textBoxInnerIP.Text);
+            if(textBoxInnerIP.Text != "" && textBoxAuthorization.Text != "" && textBoxApiKey.Text != "")
+                setDb.WriteSettingsInner(setDb.InnerTable, textBoxInnerIP.Text, textBoxAuthorization.Text, textBoxApiKey.Text);
+            else
+                textBoxInfo.AppendText("Заполните все поля. \n");
+        }
 
+        private void buttonCancel_Click(object sender, EventArgs e)
+        {
+            Environment.Exit(0);
+        }
+
+        private void buttonCreateDB_Click(object sender, EventArgs e)
+        {
+            textBoxInfo.AppendText(setDb.CreateDB()); 
         }
     }
 }
