@@ -55,11 +55,15 @@ namespace Settings
             {
                 textBoxInfo.AppendText(setDb.CreateDB());
             }
+            else
+            {
+                ReadParams();
+            }
         }
 
         private void ReadParams()
         {
-            Console.WriteLine("OK");
+            textBoxInfo.AppendText("БД прочитана\n");
         }
     }
 }
