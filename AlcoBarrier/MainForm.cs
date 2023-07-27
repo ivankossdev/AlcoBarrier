@@ -93,11 +93,14 @@ namespace AlcoBarrier
    
         private  void timer1_Tick(object sender, EventArgs e)
         {
-            foreach(string s in events.ReadEvent())
+            foreach(string[] s in events.ReadEventList())
             {
-                Console.WriteLine(s);
+                foreach(string s2 in s)
+                {
+                    Console.WriteLine(s2);
+                }
+                Console.WriteLine("--------");
             }
-
             //timer1.Stop();
         }
 

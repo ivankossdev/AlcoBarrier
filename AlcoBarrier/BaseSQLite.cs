@@ -94,6 +94,7 @@ namespace AlcoBarrier
                         for (int i = 0; i < lenghtArray; i++)
                         {
                             Data += $"{reader.GetString(i)} ";
+
                         }
                         result.Add(Data);
                         Data = string.Empty;
@@ -101,6 +102,45 @@ namespace AlcoBarrier
                 }
                 connection.Close();
             }
+            return result;
+        }
+
+        private protected List<string[]> ReadListArray(string sqlCommand)
+        {
+            List<string[]> result = new List<string[]>();
+
+            using (var connection = new SqliteConnection($"Data Source={path}\\{NameDataBase}.db"))
+            {
+                connection.Open();
+                var command = connection.CreateCommand();
+                command.CommandText = sqlCommand;
+
+                using (var reader = command.ExecuteReader())
+                {
+                    int lenghtArray = reader.FieldCount;
+                    string Data = string.Empty;
+                    while (reader.Read())
+                    {
+
+                        result.Add(ArrayString(reader));
+                        Data = string.Empty;
+                    }
+                }
+                connection.Close();
+            }
+            return result;
+        }
+
+        private string[] ArrayString(SqliteDataReader Data)
+        {
+            int LengthArray = Data.FieldCount;
+            string[] result = new string[LengthArray];
+
+            for(int i = 0; i < LengthArray; i++)
+            {
+                result[i] = Data.GetString(i);
+            }
+
             return result;
         }
     }
