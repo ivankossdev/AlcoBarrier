@@ -53,13 +53,27 @@ namespace AlcoBarrier
 
         public string[] GetSettingString(string Table)
         {
-            SqlCommand = $"SELECT IpInnerage, authorization, key FROM {Table}";
+            if (Table == "setAlco")
+            {
+                SqlCommand = $"SELECT IpAddress FROM {Table}";
+            }
+            else
+            {
+                SqlCommand = $"SELECT IpInnerage, authorization, key FROM {Table}";
+            }
+            
             return Read(SqlCommand);
         }
 
         public void WriteSettingsAlco(string Table, string IpAddressAlco)
         {
             SqlCommand = $"INSERT INTO {Table} (IpAddress) VALUES (\"{IpAddressAlco}\");";
+            Write(SqlCommand);
+        }
+
+        public void ReWriteSettingsAlco(string Table, string IpAddressAlco)
+        {
+            SqlCommand = $"UPDATE {Table} SET IpAddress = \"{IpAddressAlco}\" WHERE id = 1;";
             Write(SqlCommand);
         }
     }

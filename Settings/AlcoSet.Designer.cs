@@ -31,6 +31,9 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AlcoSet));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.InnerSettings = new System.Windows.Forms.TabPage();
+            this.textBoxInnerInfo = new System.Windows.Forms.TextBox();
+            this.labelApiKey = new System.Windows.Forms.Label();
+            this.textBoxApiKey = new System.Windows.Forms.TextBox();
             this.textBoxAuthorization = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.buttonCancel = new System.Windows.Forms.Button();
@@ -38,11 +41,14 @@
             this.textBoxInnerIP = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.AlcoSettings = new System.Windows.Forms.TabPage();
-            this.textBoxApiKey = new System.Windows.Forms.TextBox();
-            this.labelApiKey = new System.Windows.Forms.Label();
-            this.textBoxInfo = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.textBoxAlcoIP = new System.Windows.Forms.TextBox();
+            this.textBoxAlcoInfo = new System.Windows.Forms.TextBox();
+            this.buttonAlcoOk = new System.Windows.Forms.Button();
+            this.buttonAlcoCancel = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.InnerSettings.SuspendLayout();
+            this.AlcoSettings.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -57,7 +63,7 @@
             // 
             // InnerSettings
             // 
-            this.InnerSettings.Controls.Add(this.textBoxInfo);
+            this.InnerSettings.Controls.Add(this.textBoxInnerInfo);
             this.InnerSettings.Controls.Add(this.labelApiKey);
             this.InnerSettings.Controls.Add(this.textBoxApiKey);
             this.InnerSettings.Controls.Add(this.textBoxAuthorization);
@@ -73,6 +79,31 @@
             this.InnerSettings.TabIndex = 0;
             this.InnerSettings.Text = "Inner Range";
             this.InnerSettings.UseVisualStyleBackColor = true;
+            // 
+            // textBoxInnerInfo
+            // 
+            this.textBoxInnerInfo.Location = new System.Drawing.Point(6, 84);
+            this.textBoxInnerInfo.Multiline = true;
+            this.textBoxInnerInfo.Name = "textBoxInnerInfo";
+            this.textBoxInnerInfo.ReadOnly = true;
+            this.textBoxInnerInfo.Size = new System.Drawing.Size(420, 139);
+            this.textBoxInnerInfo.TabIndex = 9;
+            // 
+            // labelApiKey
+            // 
+            this.labelApiKey.AutoSize = true;
+            this.labelApiKey.Location = new System.Drawing.Point(3, 61);
+            this.labelApiKey.Name = "labelApiKey";
+            this.labelApiKey.Size = new System.Drawing.Size(53, 13);
+            this.labelApiKey.TabIndex = 8;
+            this.labelApiKey.Text = "Ключ API";
+            // 
+            // textBoxApiKey
+            // 
+            this.textBoxApiKey.Location = new System.Drawing.Point(85, 58);
+            this.textBoxApiKey.Name = "textBoxApiKey";
+            this.textBoxApiKey.Size = new System.Drawing.Size(185, 20);
+            this.textBoxApiKey.TabIndex = 7;
             // 
             // textBoxAuthorization
             // 
@@ -128,6 +159,11 @@
             // 
             // AlcoSettings
             // 
+            this.AlcoSettings.Controls.Add(this.buttonAlcoCancel);
+            this.AlcoSettings.Controls.Add(this.buttonAlcoOk);
+            this.AlcoSettings.Controls.Add(this.textBoxAlcoInfo);
+            this.AlcoSettings.Controls.Add(this.textBoxAlcoIP);
+            this.AlcoSettings.Controls.Add(this.label3);
             this.AlcoSettings.Location = new System.Drawing.Point(4, 22);
             this.AlcoSettings.Name = "AlcoSettings";
             this.AlcoSettings.Padding = new System.Windows.Forms.Padding(3);
@@ -136,30 +172,49 @@
             this.AlcoSettings.Text = "Alco Tester";
             this.AlcoSettings.UseVisualStyleBackColor = true;
             // 
-            // textBoxApiKey
+            // label3
             // 
-            this.textBoxApiKey.Location = new System.Drawing.Point(85, 58);
-            this.textBoxApiKey.Name = "textBoxApiKey";
-            this.textBoxApiKey.Size = new System.Drawing.Size(185, 20);
-            this.textBoxApiKey.TabIndex = 7;
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(6, 9);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(53, 13);
+            this.label3.TabIndex = 0;
+            this.label3.Text = "IP адрес ";
             // 
-            // labelApiKey
+            // textBoxAlcoIP
             // 
-            this.labelApiKey.AutoSize = true;
-            this.labelApiKey.Location = new System.Drawing.Point(3, 61);
-            this.labelApiKey.Name = "labelApiKey";
-            this.labelApiKey.Size = new System.Drawing.Size(53, 13);
-            this.labelApiKey.TabIndex = 8;
-            this.labelApiKey.Text = "Ключ API";
+            this.textBoxAlcoIP.Location = new System.Drawing.Point(65, 6);
+            this.textBoxAlcoIP.Name = "textBoxAlcoIP";
+            this.textBoxAlcoIP.Size = new System.Drawing.Size(185, 20);
+            this.textBoxAlcoIP.TabIndex = 1;
             // 
-            // textBoxInfo
+            // textBoxAlcoInfo
             // 
-            this.textBoxInfo.Location = new System.Drawing.Point(6, 84);
-            this.textBoxInfo.Multiline = true;
-            this.textBoxInfo.Name = "textBoxInfo";
-            this.textBoxInfo.ReadOnly = true;
-            this.textBoxInfo.Size = new System.Drawing.Size(420, 139);
-            this.textBoxInfo.TabIndex = 9;
+            this.textBoxAlcoInfo.Location = new System.Drawing.Point(9, 32);
+            this.textBoxAlcoInfo.Multiline = true;
+            this.textBoxAlcoInfo.Name = "textBoxAlcoInfo";
+            this.textBoxAlcoInfo.Size = new System.Drawing.Size(417, 191);
+            this.textBoxAlcoInfo.TabIndex = 2;
+            // 
+            // buttonAlcoOk
+            // 
+            this.buttonAlcoOk.Location = new System.Drawing.Point(270, 229);
+            this.buttonAlcoOk.Name = "buttonAlcoOk";
+            this.buttonAlcoOk.Size = new System.Drawing.Size(75, 23);
+            this.buttonAlcoOk.TabIndex = 3;
+            this.buttonAlcoOk.Text = "OK";
+            this.buttonAlcoOk.UseVisualStyleBackColor = true;
+            this.buttonAlcoOk.Click += new System.EventHandler(this.buttonAlcoOk_Click);
+            // 
+            // buttonAlcoCancel
+            // 
+            this.buttonAlcoCancel.Location = new System.Drawing.Point(351, 229);
+            this.buttonAlcoCancel.Name = "buttonAlcoCancel";
+            this.buttonAlcoCancel.Size = new System.Drawing.Size(75, 23);
+            this.buttonAlcoCancel.TabIndex = 4;
+            this.buttonAlcoCancel.Text = "Отмена";
+            this.buttonAlcoCancel.UseVisualStyleBackColor = true;
+            this.buttonAlcoCancel.Click += new System.EventHandler(this.buttonAlcoCancel_Click);
             // 
             // AlcoSet
             // 
@@ -178,6 +233,8 @@
             this.tabControl1.ResumeLayout(false);
             this.InnerSettings.ResumeLayout(false);
             this.InnerSettings.PerformLayout();
+            this.AlcoSettings.ResumeLayout(false);
+            this.AlcoSettings.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -195,7 +252,12 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox textBoxApiKey;
         private System.Windows.Forms.Label labelApiKey;
-        private System.Windows.Forms.TextBox textBoxInfo;
+        private System.Windows.Forms.TextBox textBoxInnerInfo;
+        private System.Windows.Forms.Button buttonAlcoCancel;
+        private System.Windows.Forms.Button buttonAlcoOk;
+        private System.Windows.Forms.TextBox textBoxAlcoInfo;
+        private System.Windows.Forms.TextBox textBoxAlcoIP;
+        private System.Windows.Forms.Label label3;
     }
 }
 

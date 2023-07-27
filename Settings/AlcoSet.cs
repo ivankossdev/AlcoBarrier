@@ -38,13 +38,15 @@ namespace Settings
                     else
                     {
                         setDb.ReWriteSettingsInner(setDb.InnerTable, textBoxInnerIP.Text, textBoxAuthorization.Text, textBoxApiKey.Text);
-                    } 
-                    ClearTextBox();
+                    }
+                    textBoxInnerIP.Clear();
+                    textBoxAuthorization.Clear();
+                    textBoxApiKey.Clear();
                     ReadParams(setDb.InnerTable);
-                    textBoxInfo.AppendText("Настройки сохранены. \n");
+                    textBoxInnerInfo.AppendText("Настройки сохранены. \n");
                 }
                 else
-                    textBoxInfo.AppendText("Заполните все поля. \n");
+                    textBoxInnerInfo.AppendText("Заполните все поля. \n");
 
         }
 
@@ -57,28 +59,57 @@ namespace Settings
         {
             if (!File.Exists(setDb.path + "\\settings.db"))
             {
-                textBoxInfo.AppendText(setDb.CreateDB());
+                textBoxInnerInfo.AppendText(setDb.CreateDB());
             }
             else
             {
                 ReadParams(setDb.InnerTable);
-                textBoxInfo.AppendText("БД прочитана. \n");
+                ReadParams(setDb.AlcoTable);
             }
         }
 
         private void ReadParams(string Table)
         {
-            string[] Params = setDb.GetSettingString(Table);
-            textBoxInnerIP.Text = Params[0];
-            textBoxAuthorization.Text = Params[1];
-            textBoxApiKey.Text = Params[2];
+            string[] Params = { };
+            if (Table == setDb.InnerTable)
+            {
+                Params = setDb.GetSettingString(Table);
+                textBoxInnerIP.Text = Params[0];
+                textBoxAuthorization.Text = Params[1];
+                textBoxApiKey.Text = Params[2];
+                textBoxInnerInfo.AppendText("БД прочитана. \n");
+            }
+            else
+            {
+                textBoxAlcoInfo.AppendText("БД прочитана. \n");
+                Params = setDb.GetSettingString(Table);
+                textBoxAlcoIP.Text = Params[0];
+            }
+
         }
 
-        private void ClearTextBox()
+        private void buttonAlcoOk_Click(object sender, EventArgs e)
         {
-            textBoxInnerIP.Clear();
-            textBoxAuthorization.Clear();
-            textBoxApiKey.Clear();
+            if (textBoxAlcoIP.Text != "" )
+            {
+                if (setDb.GetCountId(setDb.AlcoTable) <= 0)
+                {
+                    setDb.WriteSettingsAlco(setDb.AlcoTable, textBoxAlcoIP.Text);
+                }
+                else
+                {
+                    setDb.ReWriteSettingsAlco(setDb.AlcoTable, textBoxAlcoIP.Text);
+                }
+                // ReadParams(setDb.AlcoTable);
+                textBoxAlcoInfo.AppendText("Настройки сохранены. \n");
+            }
+            else
+                textBoxAlcoInfo.AppendText("Заполнит поле IP адрес. \n");
+        }
+
+        private void buttonAlcoCancel_Click(object sender, EventArgs e)
+        {
+            Environment.Exit(0);
         }
     }
 }
