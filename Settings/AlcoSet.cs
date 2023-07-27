@@ -39,9 +39,13 @@ namespace Settings
                     {
                         setDb.ReWriteSettingsInner(setDb.InnerTable, textBoxInnerIP.Text, textBoxAuthorization.Text, textBoxApiKey.Text);
                     } 
+                    ClearTextBox();
+                    ReadParams(setDb.InnerTable);
+                    textBoxInfo.AppendText("Настройки сохранены. \n");
                 }
                 else
                     textBoxInfo.AppendText("Заполните все поля. \n");
+
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
@@ -57,13 +61,24 @@ namespace Settings
             }
             else
             {
-                ReadParams();
+                ReadParams(setDb.InnerTable);
+                textBoxInfo.AppendText("БД прочитана. \n");
             }
         }
 
-        private void ReadParams()
+        private void ReadParams(string Table)
         {
-            textBoxInfo.AppendText("БД прочитана\n");
+            string[] Params = setDb.GetSettingString(Table);
+            textBoxInnerIP.Text = Params[0];
+            textBoxAuthorization.Text = Params[1];
+            textBoxApiKey.Text = Params[2];
+        }
+
+        private void ClearTextBox()
+        {
+            textBoxInnerIP.Clear();
+            textBoxAuthorization.Clear();
+            textBoxApiKey.Clear();
         }
     }
 }

@@ -51,6 +51,12 @@ namespace AlcoBarrier
             return ReadList(SqlCommand).Count;
         }
 
+        public string[] GetSettingString(string Table)
+        {
+            SqlCommand = $"SELECT IpInnerage, authorization, key FROM {Table}";
+            return Read(SqlCommand);
+        }
+
         public void WriteSettingsAlco(string Table, string IpAddressAlco)
         {
             SqlCommand = $"INSERT INTO {Table} (IpAddress) VALUES (\"{IpAddressAlco}\");";
