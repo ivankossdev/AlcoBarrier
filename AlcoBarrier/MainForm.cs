@@ -50,12 +50,13 @@ namespace AlcoBarrier
                 AlcoTable = "setAlco"
             };
 
-            string[] Params = setDb.GetSettingString(setDb.InnerTable);
-
+            string[] ParamsInner = setDb.GetSettingString(setDb.InnerTable);
+            string[] IpAlcoTester = setDb.GetSettingString(setDb.AlcoTable);
+            Console.WriteLine(IpAlcoTester[0]);
             test = new EmloeyesDB("employees") { path = Directory.GetCurrentDirectory() };
             events = new EventsDB("events") { path = Directory.GetCurrentDirectory() };
-            InnerageHandler = new RequestInner(Params[0], Params[1], Params[2]);
-            AlcoReader = new RequestAlcoReader("192.168.0.125");
+            InnerageHandler = new RequestInner(ParamsInner[0], ParamsInner[1], ParamsInner[2]);
+            AlcoReader = new RequestAlcoReader(IpAlcoTester[0]);
         }
 
         private async void SystemInfo()
