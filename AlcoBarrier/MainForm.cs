@@ -27,7 +27,7 @@ namespace AlcoBarrier
             InitializeComponent();
             InitClass();
             SystemInfo();
-            if (Check_Databases($"employees", "events"))
+            if (Check_Databases("employees", "events", "settings"))
             {
                 OnlineMessage();
             }
@@ -52,7 +52,6 @@ namespace AlcoBarrier
 
             string[] ParamsInner = setDb.GetSettingString(setDb.InnerTable);
             string[] IpAlcoTester = setDb.GetSettingString(setDb.AlcoTable);
-            Console.WriteLine(IpAlcoTester[0]);
             test = new EmloeyesDB("employees") { path = Directory.GetCurrentDirectory() };
             events = new EventsDB("events") { path = Directory.GetCurrentDirectory() };
             InnerageHandler = new RequestInner(ParamsInner[0], ParamsInner[1], ParamsInner[2]);
