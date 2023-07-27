@@ -21,15 +21,11 @@ namespace AlcoBarrier
 {
     public partial class MainForm : Form
     {
-        EmloeyesDB test = new EmloeyesDB("employees") { path = Directory.GetCurrentDirectory() };
-        EventsDB events = new EventsDB("events") { path = Directory.GetCurrentDirectory() };
-        MyJson myJson = new MyJson();
-        RequestInner InnerageHandler = new RequestInner("192.168.0.123", "Basic aW5zdGFsbGVyOmluc3RhbGxlcg==", "q5D2I5B/1Xr4ZlEA5yQuDw==");
-        RequestAlcoReader alcoReader = new RequestAlcoReader("192.168.0.125");
 
         public MainForm()
         {
             InitializeComponent();
+            InitClass();
             SystemInfo();
             if (Check_Databases($"employees", "events"))
             {
@@ -38,6 +34,29 @@ namespace AlcoBarrier
         }
 
         string Result = string.Empty;
+
+        EmloeyesDB test;
+        EventsDB events;
+        MyJson myJson = new MyJson();
+        RequestInner InnerageHandler;
+        RequestAlcoReader AlcoReader;
+
+        private void InitClass()
+        {
+            SettingsDB setDb = new SettingsDB("settings")
+            {
+                path = Directory.GetCurrentDirectory(),
+                InnerTable = "setInner",
+                AlcoTable = "setAlco"
+            };
+
+            string[] Params = setDb.GetSettingString(setDb.InnerTable);
+
+            test = new EmloeyesDB("employees") { path = Directory.GetCurrentDirectory() };
+            events = new EventsDB("events") { path = Directory.GetCurrentDirectory() };
+            InnerageHandler = new RequestInner(Params[0], Params[1], Params[2]);
+            AlcoReader = new RequestAlcoReader("192.168.0.125");
+        }
 
         private async void SystemInfo()
         {
@@ -51,14 +70,14 @@ namespace AlcoBarrier
 
             while(true)
             {
-                Result = await alcoReader.GetRequestCmd(myJson.CreateCmdTypeInfMessage("getLogInf"));
+                Result = await AlcoReader.GetRequestCmd(myJson.CreateCmdTypeInfMessage("getLogInf"));
                 
                 string LastRecord = myJson.GetCountMessage(Result);
 
                 if (OldRecord != LastRecord)
                 {
                     OldRecord = LastRecord;
-                    Result = await alcoReader.GetRequestCmd(myJson.CreateLogMessage(LastRecord));
+                    Result = await AlcoReader.GetRequestCmd(myJson.CreateLogMessage(LastRecord));
                     string[] rows = myJson.GetArrayResult(Result);
                     if (rows[0] != null  && rows[1] != null && rows[2] != null && rows[3] != null && rows[4] != null)
                     {
