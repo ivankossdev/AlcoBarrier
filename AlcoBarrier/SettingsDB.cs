@@ -47,6 +47,7 @@ namespace AlcoBarrier
 
         public int GetCountId(string Table)
         {
+            // !!! Поменять на ReadListArray !!!
             SqlCommand = $"SELECT id FROM {Table};";
             return ReadList(SqlCommand).Count;
         }

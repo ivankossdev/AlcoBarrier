@@ -118,12 +118,9 @@ namespace AlcoBarrier
                 using (var reader = command.ExecuteReader())
                 {
                     int lenghtArray = reader.FieldCount;
-                    string Data = string.Empty;
                     while (reader.Read())
                     {
-
                         result.Add(ArrayString(reader));
-                        Data = string.Empty;
                     }
                 }
                 connection.Close();
