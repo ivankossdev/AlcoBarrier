@@ -21,12 +21,12 @@ namespace AlcoBarrier
 {
     public partial class MainForm : Form
     {
-        RequestInner InnerageHandler = new RequestInner("192.168.0.123");
-        RequestAlcoReader alcoReader = new RequestAlcoReader("192.168.0.125");
         EmloeyesDB test = new EmloeyesDB("employees") { path = Directory.GetCurrentDirectory() };
         EventsDB events = new EventsDB("events") { path = Directory.GetCurrentDirectory() };
         MyJson myJson = new MyJson();
-        
+        RequestInner InnerageHandler = new RequestInner("192.168.0.123", "Basic aW5zdGFsbGVyOmluc3RhbGxlcg==", "q5D2I5B/1Xr4ZlEA5yQuDw==");
+        RequestAlcoReader alcoReader = new RequestAlcoReader("192.168.0.125");
+
         public MainForm()
         {
             InitializeComponent();
