@@ -95,13 +95,13 @@ namespace AlcoBarrier
         {
             foreach(string[] s in events.ReadEventList())
             {
-                foreach(string s2 in s)
-                {
-                    Console.WriteLine(s2);
-                }
-                Console.WriteLine("--------");
+                Console.WriteLine($"{s[3]} - {s[5]} - {s[6]}");
             }
-            //timer1.Stop();
+            Console.WriteLine("-------------------------------");
+            
+            DateTimeHandler.Function();
+
+            timer1.Stop();
         }
 
         private async void dataGridView1_RowHeaderMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)

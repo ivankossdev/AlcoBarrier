@@ -120,6 +120,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseSQLite.cs" />
+    <Compile Include="DateTimeHandler.cs" />
     <Compile Include="EventsDB.cs" />
     <Compile Include="RequestAlcoReader.cs" />
     <Compile Include="RequestInner.cs" />
