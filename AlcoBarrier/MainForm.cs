@@ -40,6 +40,7 @@ namespace AlcoBarrier
         MyJson myJson = new MyJson();
         RequestInner InnerageHandler;
         RequestAlcoReader AlcoReader;
+        SettingsDB setDb;
 
         private void InitClass()
         {
@@ -82,6 +83,12 @@ namespace AlcoBarrier
                     if (rows[0] != null  && rows[1] != null && rows[2] != null && rows[3] != null && rows[4] != null)
                     {
                         dataGridView1.Rows.Add(rows);
+                        /* Вот тут нужно добать значения из настроек */
+                        DateTime d = DateTime.Now;
+                        d = d.AddHours(1);
+                        d = d.AddMinutes(30);
+                        // setDb
+                        await Console.Out.WriteLineAsync($"{DateTime.Now} ------ {d}");
                         string[] data = await Task.Run<string[]>(() => test.GetUserParam(rows[4]));
                         await Task.Run(() => events.WriteEvent(data));
                     }
