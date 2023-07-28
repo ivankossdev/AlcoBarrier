@@ -59,11 +59,11 @@ namespace AlcoBarrier
         {
             if (Table == "setAlco")
             {
-                SqlCommand = $"SELECT IpAddress FROM {Table}";
+                SqlCommand = $"SELECT IpAddress FROM {Table};";
             }
             else
             {
-                SqlCommand = $"SELECT IpInnerage, authorization, key, BlockHour, BlockMinute FROM {Table}";
+                SqlCommand = $"SELECT IpInnerage, authorization, key, BlockHour, BlockMinute FROM {Table};";
             }
             
             return Read(SqlCommand);
@@ -79,6 +79,12 @@ namespace AlcoBarrier
         {
             SqlCommand = $"UPDATE {Table} SET IpAddress = \"{IpAddressAlco}\" WHERE id = 1;";
             Write(SqlCommand);
+        }
+
+        public string[] GetSettingsTime(string Table)
+        {
+            SqlCommand = $"SELECT BlockHour, BlockMinute FROM {Table};";
+            return Read(SqlCommand);
         }
     }
 }

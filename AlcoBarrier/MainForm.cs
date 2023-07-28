@@ -40,7 +40,8 @@ namespace AlcoBarrier
         MyJson myJson = new MyJson();
         RequestInner InnerageHandler;
         RequestAlcoReader AlcoReader;
-        SettingsDB setDb;
+        string SetHour = string.Empty;
+        string SetMinute = string.Empty;
 
         private void InitClass()
         {
@@ -57,6 +58,9 @@ namespace AlcoBarrier
             events = new EventsDB("events") { path = Directory.GetCurrentDirectory() };
             InnerageHandler = new RequestInner(ParamsInner[0], ParamsInner[1], ParamsInner[2]);
             AlcoReader = new RequestAlcoReader(IpAlcoTester[0]);
+            string[] HourMiin = setDb.GetSettingsTime(setDb.InnerTable);
+            SetHour = HourMiin[0];
+            SetMinute = HourMiin[1];
         }
 
         private async void SystemInfo()
@@ -83,19 +87,25 @@ namespace AlcoBarrier
                     if (rows[0] != null  && rows[1] != null && rows[2] != null && rows[3] != null && rows[4] != null)
                     {
                         dataGridView1.Rows.Add(rows);
+
                         /* Вот тут нужно добать значения из настроек */
-                        DateTime d = DateTime.Now;
-                        d = d.AddHours(1);
-                        d = d.AddMinutes(30);
-                        // setDb
-                        await Console.Out.WriteLineAsync($"{DateTime.Now} ------ {d}");
+  
                         string[] data = await Task.Run<string[]>(() => test.GetUserParam(rows[4]));
-                        await Task.Run(() => events.WriteEvent(data));
+                        await Task.Run(() => events.WriteEvent(data, CreateBlockTime(SetHour, SetMinute)));
                     }
                 }
 
                 await Task.Delay(250);
             }
+        }
+
+        private DateTime CreateBlockTime(string H, string M)
+        {
+            DateTime DtModyfy = DateTime.Now;
+            DtModyfy = DtModyfy.AddHours(Int32.Parse(H));
+            DtModyfy = DtModyfy.AddMinutes(Int32.Parse(M));
+
+            return DtModyfy;
         }
    
         private  void timer1_Tick(object sender, EventArgs e)

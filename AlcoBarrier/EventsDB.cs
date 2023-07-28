@@ -22,13 +22,15 @@ namespace AlcoBarrier
             Write(SqlCommand);
         }
 
-        public void WriteEvent(string[] Table)
+        public void WriteEvent(string[] Table, DateTime BlockTime)
         {
             DateTime dateTime = DateTime.Now;
             SqlCommand = $"INSERT INTO events (iduser, code, hex, cardtamplate, date, blockdate) " +
-                $"VALUES (\"{Table[0]}\", \"{Table[1]}\", \"{Table[2]}\", \"{Table[3]}\", \"{dateTime}\", \"{dateTime.AddMinutes(5)}\")";
+                $"VALUES (\"{Table[0]}\", \"{Table[1]}\", \"{Table[2]}\", \"{Table[3]}\", \"{dateTime}\", \"{BlockTime}\")";
             Write(SqlCommand);
         }
+
+
 
         public List<string[]> ReadEventList()
         {
