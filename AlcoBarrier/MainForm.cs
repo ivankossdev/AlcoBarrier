@@ -87,9 +87,6 @@ namespace AlcoBarrier
                     if (rows[0] != null  && rows[1] != null && rows[2] != null && rows[3] != null && rows[4] != null)
                     {
                         dataGridView1.Rows.Add(rows);
-
-                        /* Вот тут нужно добать значения из настроек */
-  
                         string[] data = await Task.Run<string[]>(() => test.GetUserParam(rows[4]));
                         await Task.Run(() => events.WriteEvent(data, CreateBlockTime(SetHour, SetMinute)));
                     }
