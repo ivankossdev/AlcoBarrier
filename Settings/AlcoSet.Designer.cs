@@ -41,14 +41,22 @@
             this.textBoxInnerIP = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.AlcoSettings = new System.Windows.Forms.TabPage();
-            this.label3 = new System.Windows.Forms.Label();
-            this.textBoxAlcoIP = new System.Windows.Forms.TextBox();
-            this.textBoxAlcoInfo = new System.Windows.Forms.TextBox();
-            this.buttonAlcoOk = new System.Windows.Forms.Button();
             this.buttonAlcoCancel = new System.Windows.Forms.Button();
+            this.buttonAlcoOk = new System.Windows.Forms.Button();
+            this.textBoxAlcoInfo = new System.Windows.Forms.TextBox();
+            this.textBoxAlcoIP = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.numericUpDownHours = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownMinuts = new System.Windows.Forms.NumericUpDown();
+            this.labelHours = new System.Windows.Forms.Label();
+            this.labelMinuts = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.InnerSettings.SuspendLayout();
             this.AlcoSettings.SuspendLayout();
+            this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHours)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMinuts)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -63,6 +71,7 @@
             // 
             // InnerSettings
             // 
+            this.InnerSettings.Controls.Add(this.groupBox1);
             this.InnerSettings.Controls.Add(this.textBoxInnerInfo);
             this.InnerSettings.Controls.Add(this.labelApiKey);
             this.InnerSettings.Controls.Add(this.textBoxApiKey);
@@ -82,11 +91,11 @@
             // 
             // textBoxInnerInfo
             // 
-            this.textBoxInnerInfo.Location = new System.Drawing.Point(6, 84);
+            this.textBoxInnerInfo.Location = new System.Drawing.Point(6, 166);
             this.textBoxInnerInfo.Multiline = true;
             this.textBoxInnerInfo.Name = "textBoxInnerInfo";
             this.textBoxInnerInfo.ReadOnly = true;
-            this.textBoxInnerInfo.Size = new System.Drawing.Size(420, 139);
+            this.textBoxInnerInfo.Size = new System.Drawing.Size(420, 57);
             this.textBoxInnerInfo.TabIndex = 9;
             // 
             // labelApiKey
@@ -172,29 +181,15 @@
             this.AlcoSettings.Text = "Alco Tester";
             this.AlcoSettings.UseVisualStyleBackColor = true;
             // 
-            // label3
+            // buttonAlcoCancel
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 9);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(53, 13);
-            this.label3.TabIndex = 0;
-            this.label3.Text = "IP адрес ";
-            // 
-            // textBoxAlcoIP
-            // 
-            this.textBoxAlcoIP.Location = new System.Drawing.Point(65, 6);
-            this.textBoxAlcoIP.Name = "textBoxAlcoIP";
-            this.textBoxAlcoIP.Size = new System.Drawing.Size(185, 20);
-            this.textBoxAlcoIP.TabIndex = 1;
-            // 
-            // textBoxAlcoInfo
-            // 
-            this.textBoxAlcoInfo.Location = new System.Drawing.Point(9, 32);
-            this.textBoxAlcoInfo.Multiline = true;
-            this.textBoxAlcoInfo.Name = "textBoxAlcoInfo";
-            this.textBoxAlcoInfo.Size = new System.Drawing.Size(417, 191);
-            this.textBoxAlcoInfo.TabIndex = 2;
+            this.buttonAlcoCancel.Location = new System.Drawing.Point(351, 229);
+            this.buttonAlcoCancel.Name = "buttonAlcoCancel";
+            this.buttonAlcoCancel.Size = new System.Drawing.Size(75, 23);
+            this.buttonAlcoCancel.TabIndex = 4;
+            this.buttonAlcoCancel.Text = "Отмена";
+            this.buttonAlcoCancel.UseVisualStyleBackColor = true;
+            this.buttonAlcoCancel.Click += new System.EventHandler(this.buttonAlcoCancel_Click);
             // 
             // buttonAlcoOk
             // 
@@ -206,15 +201,79 @@
             this.buttonAlcoOk.UseVisualStyleBackColor = true;
             this.buttonAlcoOk.Click += new System.EventHandler(this.buttonAlcoOk_Click);
             // 
-            // buttonAlcoCancel
+            // textBoxAlcoInfo
             // 
-            this.buttonAlcoCancel.Location = new System.Drawing.Point(351, 229);
-            this.buttonAlcoCancel.Name = "buttonAlcoCancel";
-            this.buttonAlcoCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonAlcoCancel.TabIndex = 4;
-            this.buttonAlcoCancel.Text = "Отмена";
-            this.buttonAlcoCancel.UseVisualStyleBackColor = true;
-            this.buttonAlcoCancel.Click += new System.EventHandler(this.buttonAlcoCancel_Click);
+            this.textBoxAlcoInfo.Location = new System.Drawing.Point(9, 32);
+            this.textBoxAlcoInfo.Multiline = true;
+            this.textBoxAlcoInfo.Name = "textBoxAlcoInfo";
+            this.textBoxAlcoInfo.Size = new System.Drawing.Size(417, 191);
+            this.textBoxAlcoInfo.TabIndex = 2;
+            // 
+            // textBoxAlcoIP
+            // 
+            this.textBoxAlcoIP.Location = new System.Drawing.Point(65, 6);
+            this.textBoxAlcoIP.Name = "textBoxAlcoIP";
+            this.textBoxAlcoIP.Size = new System.Drawing.Size(185, 20);
+            this.textBoxAlcoIP.TabIndex = 1;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(6, 9);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(53, 13);
+            this.label3.TabIndex = 0;
+            this.label3.Text = "IP адрес ";
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.labelMinuts);
+            this.groupBox1.Controls.Add(this.labelHours);
+            this.groupBox1.Controls.Add(this.numericUpDownMinuts);
+            this.groupBox1.Controls.Add(this.numericUpDownHours);
+            this.groupBox1.Location = new System.Drawing.Point(6, 84);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(419, 76);
+            this.groupBox1.TabIndex = 10;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Блокировка пользователей";
+            // 
+            // numericUpDownHours
+            // 
+            this.numericUpDownHours.Location = new System.Drawing.Point(56, 19);
+            this.numericUpDownHours.Name = "numericUpDownHours";
+            this.numericUpDownHours.Size = new System.Drawing.Size(64, 20);
+            this.numericUpDownHours.TabIndex = 0;
+            // 
+            // numericUpDownMinuts
+            // 
+            this.numericUpDownMinuts.Location = new System.Drawing.Point(56, 45);
+            this.numericUpDownMinuts.Name = "numericUpDownMinuts";
+            this.numericUpDownMinuts.Size = new System.Drawing.Size(64, 20);
+            this.numericUpDownMinuts.TabIndex = 1;
+            this.numericUpDownMinuts.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            // 
+            // labelHours
+            // 
+            this.labelHours.AutoSize = true;
+            this.labelHours.Location = new System.Drawing.Point(6, 21);
+            this.labelHours.Name = "labelHours";
+            this.labelHours.Size = new System.Drawing.Size(35, 13);
+            this.labelHours.TabIndex = 2;
+            this.labelHours.Text = "Часы";
+            // 
+            // labelMinuts
+            // 
+            this.labelMinuts.AutoSize = true;
+            this.labelMinuts.Location = new System.Drawing.Point(6, 47);
+            this.labelMinuts.Name = "labelMinuts";
+            this.labelMinuts.Size = new System.Drawing.Size(46, 13);
+            this.labelMinuts.TabIndex = 3;
+            this.labelMinuts.Text = "Минуты";
             // 
             // AlcoSet
             // 
@@ -235,6 +294,10 @@
             this.InnerSettings.PerformLayout();
             this.AlcoSettings.ResumeLayout(false);
             this.AlcoSettings.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHours)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMinuts)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -258,6 +321,11 @@
         private System.Windows.Forms.TextBox textBoxAlcoInfo;
         private System.Windows.Forms.TextBox textBoxAlcoIP;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Label labelMinuts;
+        private System.Windows.Forms.Label labelHours;
+        private System.Windows.Forms.NumericUpDown numericUpDownMinuts;
+        private System.Windows.Forms.NumericUpDown numericUpDownHours;
     }
 }
 
