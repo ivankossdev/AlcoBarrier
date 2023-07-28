@@ -99,13 +99,7 @@ namespace AlcoBarrier
                 {
                     events.DeleteString(s[0]);
                 }
-                else
-                {
-                    Console.WriteLine($"{DateTime.Parse(s[6])} {DateTime.Now}");
-                }
             }
-            Console.WriteLine("-------------------------------");
-
             //timer1.Stop();
         }
 
