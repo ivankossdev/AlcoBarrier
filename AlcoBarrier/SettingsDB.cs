@@ -16,13 +16,14 @@ namespace AlcoBarrier
         }
         public string InnerTable { get; set; }
         public string AlcoTable { get; set; }
+
         string SqlCommand { get; set; } = string.Empty;
 
         public string CreateDB()
         {
             SqlCommand = $"CREATE TABLE {InnerTable} " +
                          $"(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, IpInnerage TEXT NOT NULL, " +
-                         $"authorization TEXT NOT NULL, key TEXT NOT NULL);";
+                         $"authorization TEXT NOT NULL, key TEXT NOT NULL, BlockHour TEXT NOT NULL, BlockMinute TEXT NOT NULL);";
             Write(SqlCommand);
 
             SqlCommand = $"CREATE TABLE {AlcoTable} " +
@@ -32,16 +33,18 @@ namespace AlcoBarrier
             return $"База данных {NameDataBase} создана \n";
         }
 
-        public void WriteSettingsInner(string Table, string IpInnerage, string Auth, string Key)
+        public void WriteSettingsInner(string Table, string IpInnerage, string Auth, string Key, string BlockHour, string BlockMinute)
         {
-            SqlCommand = $"INSERT INTO {Table} (IpInnerage, authorization, key) " +
-                         $"VALUES (\"{IpInnerage.Trim()}\", \"{Auth.Trim()}\", \"{Key.Trim()}\");";
+            SqlCommand = $"INSERT INTO {Table} (IpInnerage, authorization, key, BlockHour, BlockMinute) " +
+                         $"VALUES (\"{IpInnerage.Trim()}\", \"{Auth.Trim()}\", \"{Key.Trim()}\", \"{BlockHour}\", \"{BlockMinute}\");";
             Write(SqlCommand);
         }
         
-        public void ReWriteSettingsInner(string Table, string IpInnerage, string Auth, string Key)
+        public void ReWriteSettingsInner(string Table, string IpInnerage, string Auth, string Key, string BlockHour, string BlockMinute)
         {
-            SqlCommand = $"UPDATE {Table} SET IpInnerage = \"{IpInnerage}\", authorization = \"{Auth}\", key = \"{Key}\" WHERE id = 1;";
+            SqlCommand = $"UPDATE {Table} " +
+                $"SET IpInnerage = \"{IpInnerage}\", authorization = \"{Auth}\", " +
+                $"key = \"{Key}\", BlockHour = \"{BlockHour}\", BlockMinute = \"{BlockMinute}\" WHERE id = 1;";
             Write(SqlCommand);
         }
 
@@ -60,7 +63,7 @@ namespace AlcoBarrier
             }
             else
             {
-                SqlCommand = $"SELECT IpInnerage, authorization, key FROM {Table}";
+                SqlCommand = $"SELECT IpInnerage, authorization, key, BlockHour, BlockMinute FROM {Table}";
             }
             
             return Read(SqlCommand);

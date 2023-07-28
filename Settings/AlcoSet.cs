@@ -33,11 +33,13 @@ namespace Settings
                 {
                     if (setDb.GetCountId(setDb.InnerTable) <= 0)
                     {
-                        setDb.WriteSettingsInner(setDb.InnerTable, textBoxInnerIP.Text, textBoxAuthorization.Text, textBoxApiKey.Text);
+                        setDb.WriteSettingsInner(setDb.InnerTable, textBoxInnerIP.Text, textBoxAuthorization.Text, 
+                            textBoxApiKey.Text, numericUpDownHours.Value.ToString(), numericUpDownMinuts.Value.ToString());
                     }
                     else
                     {
-                        setDb.ReWriteSettingsInner(setDb.InnerTable, textBoxInnerIP.Text, textBoxAuthorization.Text, textBoxApiKey.Text);
+                        setDb.ReWriteSettingsInner(setDb.InnerTable, textBoxInnerIP.Text, textBoxAuthorization.Text, 
+                            textBoxApiKey.Text, numericUpDownHours.Value.ToString(), numericUpDownMinuts.Value.ToString());
                     }
                     textBoxInnerIP.Clear();
                     textBoxAuthorization.Clear();
@@ -77,6 +79,8 @@ namespace Settings
                 textBoxInnerIP.Text = Params[0];
                 textBoxAuthorization.Text = Params[1];
                 textBoxApiKey.Text = Params[2];
+                numericUpDownHours.Value = decimal.Parse(Params[3]);
+                numericUpDownMinuts.Value = decimal.Parse(Params[4]);
                 textBoxInnerInfo.AppendText("БД прочитана. \n");
             }
             else
