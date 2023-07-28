@@ -35,5 +35,11 @@ namespace AlcoBarrier
             SqlCommand = "SELECT * FROM events";
             return ReadListArray(SqlCommand);
         }
+
+        public void DeleteString(string id) 
+        {
+            SqlCommand = $"DELETE FROM events WHERE id = {Int32.Parse(id)}";
+            Write(SqlCommand);
+        }
     }
 }

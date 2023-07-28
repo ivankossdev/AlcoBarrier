@@ -95,13 +95,27 @@ namespace AlcoBarrier
         {
             foreach(string[] s in events.ReadEventList())
             {
-                Console.WriteLine($"{s[3]} - {s[5]} - {s[6]}");
+                if (DateTime.Parse(s[6]) < DateTime.Now)
+                {
+                    events.DeleteString(s[0]);
+                }
+                else
+                {
+                    Console.WriteLine($"{DateTime.Parse(s[6])} {DateTime.Now}");
+                }
             }
             Console.WriteLine("-------------------------------");
-            
-            DateTimeHandler.Function();
 
-            timer1.Stop();
+            //timer1.Stop();
+        }
+
+        private void ConvertDate(string date)
+        {
+            string[] DateArray = date.Split(new char[] { '.', ' ', ':' });
+            foreach (string Date in DateArray)
+            {
+                Console.WriteLine(Date);
+            }
         }
 
         private async void dataGridView1_RowHeaderMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)

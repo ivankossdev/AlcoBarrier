@@ -10,8 +10,8 @@ namespace AlcoBarrier
     {
         public static void Function()
         {
-            string[] formats = { "ddMMyyyyHHmmss", "HHmmss" };
-            string[] dateStrings = { "16082013115216", "115216" };
+            string[] formats = { "ddMMyyyyHHmmss" };
+            string[] dateStrings = { "16082013115216" };
             DateTime parsedDate;
 
             foreach (var dateString in dateStrings)
