@@ -92,6 +92,13 @@ namespace AlcoBarrier
                         dataGridView1.Rows.Add(rows);
                         string[] data = await Task.Run<string[]>(() => test.GetUserParam(rows[4]));
                         await Task.Run(() => events.WriteEvent(data, CreateBlockTime(SetHour, SetMinute)));
+
+                        foreach (string[] s in events.ReadEventList())
+                        {
+                            {
+                                await InnerageHandler.BlockedUser(false, s);
+                            }
+                        }
                     }
                 }
 
@@ -114,12 +121,10 @@ namespace AlcoBarrier
             {
                 if (DateTime.Parse(s[6]) < DateTime.Now)
                 {
-                    //Добавить блокировку 
                     await InnerageHandler.BlockedUser(true, s);
                     events.DeleteString(s[0]);
                 }
             }
-            //timer1.Stop();
         }
 
         private void ConvertDate(string date)
