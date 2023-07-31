@@ -108,14 +108,14 @@ namespace AlcoBarrier
                 {
                     Active = "Unused";
                 }
-                command = $"<User Address=\"{UserData[2]}\">\r\n" +
+                command = $"<User Address=\"{UserData[3]}\">\r\n" +
                           $"<Cards>\r\n" +
-                          $"<Card>\r\n<Name>{UserData[0]}</Name>\r\n" +
+                          $"<Card>\r\n<Name>{UserData[1]}</Name>\r\n" +
                           $"<State>{Active}</State>\r\n" +
-                          $"<CardType>\r\n<Ref Type=\"CardTemplate\" PartitionID=\"0\" ID=\"{UserData[3]}\" />\r\n" +
-                          $"</CardType>\r\n<CardNumber>{UserData[0]}</CardNumber>\r\n<CardNumberNumeric>{UserData[0]}</CardNumberNumeric>\r\n" +
+                          $"<CardType>\r\n<Ref Type=\"CardTemplate\" PartitionID=\"0\" ID=\"{UserData[4]}\" />\r\n" +
+                          $"</CardType>\r\n<CardNumber>{UserData[1]}</CardNumber>\r\n<CardNumberNumeric>{UserData[1]}</CardNumberNumeric>\r\n" +
                           $"<IssueNumber>0</IssueNumber>\r\n" +
-                          $"<CardData>{UserData[1]}</CardData>\r\n" +
+                          $"<CardData>{UserData[2]}</CardData>\r\n" +
                           $"<ExternalCredentials />\r\n<CloudCredentialType>None</CloudCredentialType>\r\n</Card>\r\n</Cards>\r\n</User>";
 
                 await Console.Out.WriteLineAsync(command);
@@ -135,6 +135,8 @@ namespace AlcoBarrier
             {
                 MyResult = $"Message :{e.Message}";
             }
+
+
             await Console.Out.WriteLineAsync(MyResult);
         }
     }
@@ -145,6 +147,14 @@ namespace AlcoBarrier
 // Active
 
 /*
+[0]232
+[1]34542 +
+[2]1A00000025000000EE860000
+[3]U3 +
+[4]TM38 +
+[5]31.07.2023 13:12:22
+[6]31.07.2023 13:13:22
+ * 
  <User Address="U2">
   <Cards>
     <Card>

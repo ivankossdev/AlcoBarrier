@@ -108,12 +108,14 @@ namespace AlcoBarrier
             return DtModyfy;
         }
    
-        private  void timer1_Tick(object sender, EventArgs e)
+        private async void timer1_Tick(object sender, EventArgs e)
         {
             foreach(string[] s in events.ReadEventList())
             {
                 if (DateTime.Parse(s[6]) < DateTime.Now)
                 {
+                    //Добавить блокировку 
+                    await InnerageHandler.BlockedUser(true, s);
                     events.DeleteString(s[0]);
                 }
             }

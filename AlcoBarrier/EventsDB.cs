@@ -30,8 +30,6 @@ namespace AlcoBarrier
             Write(SqlCommand);
         }
 
-
-
         public List<string[]> ReadEventList()
         {
             SqlCommand = "SELECT * FROM events";
