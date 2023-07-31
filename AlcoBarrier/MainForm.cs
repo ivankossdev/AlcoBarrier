@@ -67,6 +67,9 @@ namespace AlcoBarrier
         {
             Result = await InnerageHandler.GetSystemInfo();
             toolStripStatusLabel1.Text = Result;
+
+            Result = await AlcoReader.GetRequestCmd(myJson.CreateInfoMessage());
+            toolStripStatusLabel2.Text = myJson.GetInfoAlcoBarrier(Result);
         }
 
         private async void OnlineMessage()

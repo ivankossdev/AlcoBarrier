@@ -26,6 +26,16 @@ namespace AlcoBarrier
             return forecastObject.ToJsonString();
         }
 
+        public string CreateInfoMessage()
+        {
+            var forecastObject = new JsonObject
+            {
+                ["cmdType"] = "getInf"
+            };
+
+            return forecastObject.ToJsonString();
+        }
+
         public string CreateCmdTypeInfMessage(string command)
         {
             try
@@ -102,6 +112,25 @@ namespace AlcoBarrier
             }
 
             return Message;
+        }
+
+        public string GetInfoAlcoBarrier(string jsonString)
+        {
+            JsonNode jsonNode;
+            string Result = string.Empty;
+            try
+            {
+                jsonNode = JsonNode.Parse(jsonString);
+                if(jsonNode["EthBlock"] != null)
+                {
+                    Result = $"AlcoBarrier Host: {jsonNode["EthBlock"]["HostName"]}";
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            return Result;
         }
 
         private string ConvertCodeCard(string code)
