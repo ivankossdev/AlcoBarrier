@@ -17,7 +17,6 @@ C:\Users\RR\source\repos\AlcoBarrier\Repot\bin\Debug\AlcoBarrier.exe.config
 C:\Users\RR\source\repos\AlcoBarrier\Repot\bin\Debug\Microsoft.Data.Sqlite.xml
 C:\Users\RR\source\repos\AlcoBarrier\Repot\bin\Debug\System.Text.Json.xml
 C:\Users\RR\source\repos\AlcoBarrier\Repot\bin\Debug\System.Memory.xml
-C:\Users\RR\source\repos\AlcoBarrier\Repot\bin\Debug\System.ValueTuple.xml
 C:\Users\RR\source\repos\AlcoBarrier\Repot\bin\Debug\System.Text.Encodings.Web.xml
 C:\Users\RR\source\repos\AlcoBarrier\Repot\bin\Debug\System.Numerics.Vectors.xml
 C:\Users\RR\source\repos\AlcoBarrier\Repot\bin\Debug\System.Threading.Tasks.Extensions.xml
@@ -26,7 +25,6 @@ C:\Users\RR\source\repos\AlcoBarrier\Repot\bin\Debug\System.Buffers.xml
 C:\Users\RR\source\repos\AlcoBarrier\Repot\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
 C:\Users\RR\source\repos\AlcoBarrier\Repot\obj\Debug\Repot.csproj.AssemblyReference.cache
 C:\Users\RR\source\repos\AlcoBarrier\Repot\obj\Debug\Repot.csproj.SuggestedBindingRedirects.cache
-C:\Users\RR\source\repos\AlcoBarrier\Repot\obj\Debug\Repot.exe.config
 C:\Users\RR\source\repos\AlcoBarrier\Repot\obj\Debug\Repot.Form1.resources
 C:\Users\RR\source\repos\AlcoBarrier\Repot\obj\Debug\Repot.Properties.Resources.resources
 C:\Users\RR\source\repos\AlcoBarrier\Repot\obj\Debug\Repot.csproj.GenerateResource.cache
@@ -34,3 +32,6 @@ C:\Users\RR\source\repos\AlcoBarrier\Repot\obj\Debug\Repot.csproj.CoreCompileInp
 C:\Users\RR\source\repos\AlcoBarrier\Repot\obj\Debug\Repot.csproj.CopyComplete
 C:\Users\RR\source\repos\AlcoBarrier\Repot\obj\Debug\Repot.exe
 C:\Users\RR\source\repos\AlcoBarrier\Repot\obj\Debug\Repot.pdb
+C:\Users\RR\source\repos\AlcoBarrier\Repot\bin\Debug\SQLitePCLRaw.batteries_v2.dll
+C:\Users\RR\source\repos\AlcoBarrier\Repot\bin\Debug\SQLitePCLRaw.core.dll
+C:\Users\RR\source\repos\AlcoBarrier\Repot\bin\Debug\SQLitePCLRaw.provider.dynamic_cdecl.dll

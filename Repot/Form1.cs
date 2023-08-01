@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using AlcoBarrier;
 
 namespace Repot
 {
@@ -17,11 +18,21 @@ namespace Repot
             InitializeComponent();
         }
 
-
+        string DateSearch = string.Empty;
 
         private void monthCalendar1_DateSelected(object sender, DateRangeEventArgs e)
         {
-            Console.WriteLine(monthCalendar1.SelectionRange.End.ToString());
+            DateSearch = monthCalendar1.SelectionRange.Start.ToString();
+            
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (DateSearch != string.Empty)
+            {
+                Console.WriteLine(DateSearch);
+            }
+            
         }
     }
 }
