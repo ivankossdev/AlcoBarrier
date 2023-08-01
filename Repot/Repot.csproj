@@ -79,5 +79,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AlcoBarrier\AlcoBarrier.csproj">
+      <Project>{d08e207b-4ca7-479d-acca-c18bf95bbab7}</Project>
+      <Name>AlcoBarrier</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

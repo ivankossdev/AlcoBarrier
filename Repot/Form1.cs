@@ -16,5 +16,12 @@ namespace Repot
         {
             InitializeComponent();
         }
+
+
+
+        private void monthCalendar1_DateSelected(object sender, DateRangeEventArgs e)
+        {
+            Console.WriteLine(monthCalendar1.SelectionRange.End.ToString());
+        }
     }
 }
