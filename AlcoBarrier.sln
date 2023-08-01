@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Settings", "Settings\Settin
 		{D08E207B-4CA7-479D-ACCA-C18BF95BBAB7} = {D08E207B-4CA7-479D-ACCA-C18BF95BBAB7}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repot", "Repot\Repot.csproj", "{7E4DC855-E494-4E00-8CB4-250B0A6823ED}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,6 +26,10 @@ Global
 		{2DC25C2D-D5E7-4538-B268-4A120941F19A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2DC25C2D-D5E7-4538-B268-4A120941F19A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2DC25C2D-D5E7-4538-B268-4A120941F19A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E4DC855-E494-4E00-8CB4-250B0A6823ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E4DC855-E494-4E00-8CB4-250B0A6823ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E4DC855-E494-4E00-8CB4-250B0A6823ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E4DC855-E494-4E00-8CB4-250B0A6823ED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
