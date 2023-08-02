@@ -26,6 +26,13 @@ namespace Repot
             
         }
 
+        /*
+        1. Прочитать память тестера (JSON)
+        2. Записать в БД (SQLite) данные памяти тестера п.1
+        3. Сортировка по выбору даты вывод на таблицу (по нажатию кнопки)
+        4. 
+        5.
+         */
         private void button1_Click(object sender, EventArgs e)
         {
             if (DateSearch != string.Empty)
