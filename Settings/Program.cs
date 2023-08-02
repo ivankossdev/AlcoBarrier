@@ -16,7 +16,7 @@ namespace Settings
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new AlcoSet());
+            Application.Run(new SettingsForm());
         }
     }
 }

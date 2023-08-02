@@ -12,10 +12,10 @@ using AlcoBarrier;
 
 namespace Settings
 {
-    public partial class AlcoSet : Form
+    public partial class SettingsForm : Form
     {
         SettingsDB setDb;
-        public AlcoSet()
+        public SettingsForm()
         {
             InitializeComponent();
             setDb = new SettingsDB("settings")

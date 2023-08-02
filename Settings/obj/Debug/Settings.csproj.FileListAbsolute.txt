@@ -29,10 +29,10 @@ C:\Users\RR\source\repos\AlcoBarrier\Settings\bin\Debug\Microsoft.Bcl.AsyncInter
 C:\Users\RR\source\repos\AlcoBarrier\Settings\bin\Debug\System.Buffers.xml
 C:\Users\RR\source\repos\AlcoBarrier\Settings\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
 C:\Users\RR\source\repos\AlcoBarrier\Settings\obj\Debug\Settings.csproj.CopyComplete
-C:\Users\RR\source\repos\AlcoBarrier\Settings\obj\Debug\Settings.AlcoSet.resources
 C:\Users\RR\source\repos\AlcoBarrier\Settings\bin\Debug\SQLitePCLRaw.batteries_v2.dll
 C:\Users\RR\source\repos\AlcoBarrier\Settings\bin\Debug\SQLitePCLRaw.core.dll
 C:\Users\RR\source\repos\AlcoBarrier\Settings\bin\Debug\SQLitePCLRaw.provider.dynamic_cdecl.dll
 C:\Users\RR\source\repos\AlcoBarrier\Settings\bin\Debug\SQLitePCLRaw.provider.e_sqlite3.dll
 C:\Users\RR\source\repos\AlcoBarrier\Settings\bin\Debug\System.Memory.dll
 C:\Users\RR\source\repos\AlcoBarrier\Settings\bin\Debug\System.Memory.xml
+C:\Users\RR\source\repos\AlcoBarrier\Settings\obj\Debug\Settings.SettingsForm.resources
