@@ -31,6 +31,11 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AlcoSet));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.InnerSettings = new System.Windows.Forms.TabPage();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.labelMinuts = new System.Windows.Forms.Label();
+            this.labelHours = new System.Windows.Forms.Label();
+            this.numericUpDownMinuts = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownHours = new System.Windows.Forms.NumericUpDown();
             this.textBoxInnerInfo = new System.Windows.Forms.TextBox();
             this.labelApiKey = new System.Windows.Forms.Label();
             this.textBoxApiKey = new System.Windows.Forms.TextBox();
@@ -46,17 +51,12 @@
             this.textBoxAlcoInfo = new System.Windows.Forms.TextBox();
             this.textBoxAlcoIP = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.numericUpDownHours = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownMinuts = new System.Windows.Forms.NumericUpDown();
-            this.labelHours = new System.Windows.Forms.Label();
-            this.labelMinuts = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.InnerSettings.SuspendLayout();
-            this.AlcoSettings.SuspendLayout();
             this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHours)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMinuts)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHours)).BeginInit();
+            this.AlcoSettings.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -88,6 +88,56 @@
             this.InnerSettings.TabIndex = 0;
             this.InnerSettings.Text = "Inner Range";
             this.InnerSettings.UseVisualStyleBackColor = true;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.labelMinuts);
+            this.groupBox1.Controls.Add(this.labelHours);
+            this.groupBox1.Controls.Add(this.numericUpDownMinuts);
+            this.groupBox1.Controls.Add(this.numericUpDownHours);
+            this.groupBox1.Location = new System.Drawing.Point(6, 84);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(419, 76);
+            this.groupBox1.TabIndex = 10;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Блокировка пользователей";
+            // 
+            // labelMinuts
+            // 
+            this.labelMinuts.AutoSize = true;
+            this.labelMinuts.Location = new System.Drawing.Point(6, 47);
+            this.labelMinuts.Name = "labelMinuts";
+            this.labelMinuts.Size = new System.Drawing.Size(46, 13);
+            this.labelMinuts.TabIndex = 3;
+            this.labelMinuts.Text = "Минуты";
+            // 
+            // labelHours
+            // 
+            this.labelHours.AutoSize = true;
+            this.labelHours.Location = new System.Drawing.Point(6, 21);
+            this.labelHours.Name = "labelHours";
+            this.labelHours.Size = new System.Drawing.Size(35, 13);
+            this.labelHours.TabIndex = 2;
+            this.labelHours.Text = "Часы";
+            // 
+            // numericUpDownMinuts
+            // 
+            this.numericUpDownMinuts.Location = new System.Drawing.Point(56, 45);
+            this.numericUpDownMinuts.Name = "numericUpDownMinuts";
+            this.numericUpDownMinuts.Size = new System.Drawing.Size(64, 20);
+            this.numericUpDownMinuts.TabIndex = 1;
+            this.numericUpDownMinuts.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            // 
+            // numericUpDownHours
+            // 
+            this.numericUpDownHours.Location = new System.Drawing.Point(56, 19);
+            this.numericUpDownHours.Name = "numericUpDownHours";
+            this.numericUpDownHours.Size = new System.Drawing.Size(64, 20);
+            this.numericUpDownHours.TabIndex = 0;
             // 
             // textBoxInnerInfo
             // 
@@ -225,56 +275,6 @@
             this.label3.TabIndex = 0;
             this.label3.Text = "IP адрес ";
             // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.labelMinuts);
-            this.groupBox1.Controls.Add(this.labelHours);
-            this.groupBox1.Controls.Add(this.numericUpDownMinuts);
-            this.groupBox1.Controls.Add(this.numericUpDownHours);
-            this.groupBox1.Location = new System.Drawing.Point(6, 84);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(419, 76);
-            this.groupBox1.TabIndex = 10;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Блокировка пользователей";
-            // 
-            // numericUpDownHours
-            // 
-            this.numericUpDownHours.Location = new System.Drawing.Point(56, 19);
-            this.numericUpDownHours.Name = "numericUpDownHours";
-            this.numericUpDownHours.Size = new System.Drawing.Size(64, 20);
-            this.numericUpDownHours.TabIndex = 0;
-            // 
-            // numericUpDownMinuts
-            // 
-            this.numericUpDownMinuts.Location = new System.Drawing.Point(56, 45);
-            this.numericUpDownMinuts.Name = "numericUpDownMinuts";
-            this.numericUpDownMinuts.Size = new System.Drawing.Size(64, 20);
-            this.numericUpDownMinuts.TabIndex = 1;
-            this.numericUpDownMinuts.Value = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
-            // 
-            // labelHours
-            // 
-            this.labelHours.AutoSize = true;
-            this.labelHours.Location = new System.Drawing.Point(6, 21);
-            this.labelHours.Name = "labelHours";
-            this.labelHours.Size = new System.Drawing.Size(35, 13);
-            this.labelHours.TabIndex = 2;
-            this.labelHours.Text = "Часы";
-            // 
-            // labelMinuts
-            // 
-            this.labelMinuts.AutoSize = true;
-            this.labelMinuts.Location = new System.Drawing.Point(6, 47);
-            this.labelMinuts.Name = "labelMinuts";
-            this.labelMinuts.Size = new System.Drawing.Size(46, 13);
-            this.labelMinuts.TabIndex = 3;
-            this.labelMinuts.Text = "Минуты";
-            // 
             // AlcoSet
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -292,12 +292,12 @@
             this.tabControl1.ResumeLayout(false);
             this.InnerSettings.ResumeLayout(false);
             this.InnerSettings.PerformLayout();
-            this.AlcoSettings.ResumeLayout(false);
-            this.AlcoSettings.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHours)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMinuts)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHours)).EndInit();
+            this.AlcoSettings.ResumeLayout(false);
+            this.AlcoSettings.PerformLayout();
             this.ResumeLayout(false);
 
         }
