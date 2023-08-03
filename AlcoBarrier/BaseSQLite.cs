@@ -20,7 +20,7 @@ namespace AlcoBarrier
         }
         public string path { get; set; }
 
-        private protected void Write(string sqlCommand)
+        protected void Write(string sqlCommand)
         {
             using (var connection = new SqliteConnection($"Data Source={path}\\{NameDataBase}.db"))
             {
@@ -32,7 +32,7 @@ namespace AlcoBarrier
             }
         }
 
-        private protected void Write(List<string> data)
+        protected void Write(List<string> data)
         {
             using (var connection = new SqliteConnection($"Data Source={path}\\{NameDataBase}.db"))
             {
@@ -47,7 +47,7 @@ namespace AlcoBarrier
             }
         }
 
-        private protected string[] Read(string sqlCommand) 
+        protected string[] Read(string sqlCommand) 
         {
             string[] result = null;
             using (var connection = new SqliteConnection($"Data Source={path}\\{NameDataBase}.db"))
@@ -75,7 +75,7 @@ namespace AlcoBarrier
             return result;
         }
 
-        private protected List<string> ReadList(string sqlCommand)
+        protected List<string> ReadList(string sqlCommand)
         {
             List<string> result = new List<string>();
 
@@ -105,7 +105,7 @@ namespace AlcoBarrier
             return result;
         }
 
-        private protected List<string[]> ReadListArray(string sqlCommand)
+        protected List<string[]> ReadListArray(string sqlCommand)
         {
             List<string[]> result = new List<string[]>();
 

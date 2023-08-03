@@ -82,7 +82,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReportHandler.cs" />
+    <Compile Include="ReportDB.cs" />
     <Compile Include="SetWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -119,13 +119,13 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="report.ico" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\AlcoBarrier\AlcoBarrier.csproj">
       <Project>{d08e207b-4ca7-479d-acca-c18bf95bbab7}</Project>
       <Name>AlcoBarrier</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="report.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
