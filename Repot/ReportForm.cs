@@ -39,7 +39,11 @@ namespace Repot
             {
                 Console.WriteLine(DateSearch);
             }
-            
+        }
+
+        private void toolStripMenuItem3_Click(object sender, EventArgs e)
+        {
+            Console.WriteLine("Read memory");
         }
     }
 }
