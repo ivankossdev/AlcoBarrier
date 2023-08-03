@@ -45,5 +45,11 @@ namespace Repot
         {
             Console.WriteLine("Read memory");
         }
+
+        private void toolAdd_Click(object sender, EventArgs e)
+        {
+            SetWindow setWindow = new SetWindow();
+            setWindow.ShowDialog();
+        }
     }
 }

@@ -83,6 +83,12 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReportHandler.cs" />
+    <Compile Include="SetWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SetWindow.Designer.cs">
+      <DependentUpon>SetWindow.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="ReportForm.resx">
       <DependentUpon>ReportForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -95,6 +101,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="SetWindow.resx">
+      <DependentUpon>SetWindow.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
