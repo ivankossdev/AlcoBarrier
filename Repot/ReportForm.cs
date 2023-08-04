@@ -39,6 +39,8 @@ namespace Repot
 
         /*
         1. Прочитать память тестера (JSON)
+            1.1 $ curl  -H 'Content-Type: application/json' --data '{"cmdType":"getLogInf"}' http://192.168.0.125:443/cmd 
+            1.2 $ curl  -H 'Content-Type: application/json' --data '{"cmdType":"getLog","Position":"toLast", "QTY":"951"}' http://192.168.0.125:443/cmd
         2. Записать в БД (SQLite) данные памяти тестера п.1
         3. Сортировка по выбору даты вывод на таблицу (по нажатию кнопки)
          */
@@ -69,7 +71,7 @@ namespace Repot
 
         private void toolStripMenuItem4_Click(object sender, EventArgs e)
         {
-            Console.WriteLine("Read Memory");
+            Console.WriteLine($"Read Memory {toolStripComboBox1.Items[toolStripComboBox1.SelectedIndex]}");
         }
     }
 }
