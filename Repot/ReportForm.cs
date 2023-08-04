@@ -60,10 +60,16 @@ namespace Repot
 
         private async void toolReadMem_MouseHover(object sender, EventArgs e)
         {
+            toolStripComboBox1.Items.Clear();
             foreach (string[] s in await Task.Run<List<string[]>>(() => reportDB.ReadPoints()))
             {
-                Console.WriteLine($"{s[1]} {s[2]}");
+                toolStripComboBox1.Items.Add($"{s[1]} {s[2]}");
             }
+        }
+
+        private void toolStripMenuItem4_Click(object sender, EventArgs e)
+        {
+            Console.WriteLine("Read Memory");
         }
     }
 }
