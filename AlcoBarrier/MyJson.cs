@@ -69,13 +69,42 @@ namespace AlcoBarrier
             return Result;
         }
 
-        public string GetDataMemory(string jsonString)
+        private string GetQTY(string jsonString)
         {
+
             string Result = string.Empty;
             try
             {
                 JsonNode jsonNode = JsonNode.Parse(jsonString);
-                return jsonNode["Records"][0].ToString();
+                Result = jsonNode["QTY"].ToString();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            return Result;
+        }
+
+        public string CreateAllRecordMessage(string qty)
+        {
+            var forecastObject = new JsonObject
+            {
+                ["cmdType"] = "getLog",
+                ["Position"] = "toLast",
+                ["QTY"] = GetQTY(qty),
+            };
+
+            return forecastObject.ToJsonString();
+        }
+
+        public string GetDataMemory(string qty)
+        {
+
+            string Result = string.Empty;
+            try
+            {
+                JsonNode jsonNode = JsonNode.Parse(CreateAllRecordMessage(qty));
+                return jsonNode.ToString();
             }
             catch (Exception ex)
             {
