@@ -68,7 +68,7 @@ namespace AlcoBarrier
             Result = await InnerageHandler.GetSystemInfo();
             toolStripStatusLabel1.Text = Result;
 
-            Result = await AlcoReader.GetRequestCmd(myJson.CreateInfoMessage());
+            Result = await AlcoReader.GetRequestCmd(myJson.CmdTypeHeader("getInf"));
             toolStripStatusLabel2.Text = myJson.GetInfoAlcoBarrier(Result);
         }
 
@@ -78,7 +78,7 @@ namespace AlcoBarrier
 
             while(true)
             {
-                Result = await AlcoReader.GetRequestCmd(myJson.CreateCmdTypeInfMessage("getLogInf"));
+                Result = await AlcoReader.GetRequestCmd(myJson.CmdTypeHeader("getLogInf"));
                 
                 string LastRecord = myJson.GetCountMessage(Result);
 

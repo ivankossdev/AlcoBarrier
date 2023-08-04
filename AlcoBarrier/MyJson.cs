@@ -26,17 +26,7 @@ namespace AlcoBarrier
             return forecastObject.ToJsonString();
         }
 
-        public string CreateInfoMessage()
-        {
-            var forecastObject = new JsonObject
-            {
-                ["cmdType"] = "getInf"
-            };
-
-            return forecastObject.ToJsonString();
-        }
-
-        public string CreateCmdTypeInfMessage(string command)
+        public string CmdTypeHeader(string command)
         {
             try
             {
@@ -85,7 +75,7 @@ namespace AlcoBarrier
             return Result;
         }
 
-        public string CreateAllRecordMessage(string qty)
+        private string CreateAllRecordMessage(string qty)
         {
             var forecastObject = new JsonObject
             {
