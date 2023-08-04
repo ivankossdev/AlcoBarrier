@@ -43,7 +43,7 @@ namespace AlcoBarrier
             return GetNode(responseBody);
         }
 
-        private string GetNode(string responseBody)
+        protected string GetNode(string responseBody)
         {
             try
             {

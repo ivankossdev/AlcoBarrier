@@ -65,13 +65,18 @@ namespace Repot
             toolStripComboBox1.Items.Clear();
             foreach (string[] s in await Task.Run<List<string[]>>(() => reportDB.ReadPoints()))
             {
-                toolStripComboBox1.Items.Add($"{s[1]} {s[2]}");
+                toolStripComboBox1.Items.Add(s[2]);
             }
         }
 
-        private void toolStripMenuItem4_Click(object sender, EventArgs e)
+        
+        private async void toolStripMenuItem4_Click(object sender, EventArgs e)
         {
-            Console.WriteLine($"Read Memory {toolStripComboBox1.Items[toolStripComboBox1.SelectedIndex]}");
+            string ip = toolStripComboBox1.Items[toolStripComboBox1.SelectedIndex].ToString();
+            Console.WriteLine($"Read Memory {ip}");
+            MyJson myJson = new MyJson();
+            RequestAlcoReader requestAlcoReader = new RequestAlcoReader(ip);
+            await Console.Out.WriteLineAsync(await requestAlcoReader.GetRequestCmd(myJson.CreateInfoMessage()));
         }
     }
 }

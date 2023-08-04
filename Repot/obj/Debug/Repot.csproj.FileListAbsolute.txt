@@ -36,3 +36,6 @@ C:\Users\RR\source\repos\AlcoBarrier\Repot\bin\Debug\SQLitePCLRaw.core.dll
 C:\Users\RR\source\repos\AlcoBarrier\Repot\bin\Debug\SQLitePCLRaw.provider.dynamic_cdecl.dll
 C:\Users\RR\source\repos\AlcoBarrier\Repot\obj\Debug\Repot.ReportForm.resources
 C:\Users\RR\source\repos\AlcoBarrier\Repot\obj\Debug\Repot.SetWindow.resources
+C:\Users\RR\source\repos\AlcoBarrier\Repot\bin\Debug\Newtonsoft.Json.dll
+C:\Users\RR\source\repos\AlcoBarrier\Repot\bin\Debug\Newtonsoft.Json.xml
+C:\Users\RR\source\repos\AlcoBarrier\Repot\obj\Debug\Repot.exe.config
