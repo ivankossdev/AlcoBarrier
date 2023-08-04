@@ -76,7 +76,7 @@ namespace Repot
             Console.WriteLine($"Read Memory {ip}");
             MyJson myJson = new MyJson();
             RequestAlcoReader requestAlcoReader = new RequestAlcoReader(ip);
-            await Console.Out.WriteLineAsync(await requestAlcoReader.GetRequestCmd(myJson.CreateInfoMessage()));
+            await Console.Out.WriteLineAsync(await requestAlcoReader.GetRequestCmd(myJson.CreateCmdTypeInfMessage("getLogInf")));
         }
     }
 }
