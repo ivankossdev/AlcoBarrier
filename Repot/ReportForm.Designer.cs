@@ -126,6 +126,7 @@
             this.toolReadMem.Name = "toolReadMem";
             this.toolReadMem.Size = new System.Drawing.Size(180, 22);
             this.toolReadMem.Text = "Прочитать память";
+            this.toolReadMem.MouseHover += new System.EventHandler(this.toolReadMem_MouseHover);
             // 
             // toolStripComboBox1
             // 

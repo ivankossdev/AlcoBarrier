@@ -42,6 +42,7 @@ namespace Repot
         2. Записать в БД (SQLite) данные памяти тестера п.1
         3. Сортировка по выбору даты вывод на таблицу (по нажатию кнопки)
          */
+
         private void button1_Click(object sender, EventArgs e)
         {
             if (DateSearch != string.Empty)
@@ -55,6 +56,14 @@ namespace Repot
         {
             SetWindow setWindow = new SetWindow();
             setWindow.ShowDialog();
+        }
+
+        private async void toolReadMem_MouseHover(object sender, EventArgs e)
+        {
+            foreach (string[] s in await Task.Run<List<string[]>>(() => reportDB.ReadPoints()))
+            {
+                Console.WriteLine($"{s[1]} {s[2]}");
+            }
         }
     }
 }
