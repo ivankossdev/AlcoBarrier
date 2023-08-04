@@ -16,6 +16,8 @@ namespace Repot
         public SetWindow()
         {
             InitializeComponent();
+
+            ShowCheckPoints(reportDB.ReadPoints());
         }
 
         ReportDB reportDB = new ReportDB("testers")
@@ -29,6 +31,16 @@ namespace Repot
             reportDB.WritePoint(textBoxCheckPoint.Text, textBoxIP.Text);
             textBoxCheckPoint.Clear();
             textBoxIP.Clear();
+            dataGridView1.Rows.Clear();
+            ShowCheckPoints(reportDB.ReadPoints());
+        }
+
+        private void ShowCheckPoints(List<string[]> points)
+        {
+            foreach (string[] s in points)
+            {
+                dataGridView1.Rows.Add(s);
+            }
         }
     }
 }

@@ -21,6 +21,7 @@ namespace Repot
             {
                 reportDB.CreateDB();
             }
+
         }
 
         ReportDB reportDB = new ReportDB("testers")

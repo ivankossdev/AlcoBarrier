@@ -35,12 +35,13 @@
             this.button2 = new System.Windows.Forms.Button();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolAdd = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolReadMem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripComboBox1 = new System.Windows.Forms.ToolStripComboBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.toolStripComboBox1 = new System.Windows.Forms.ToolStripComboBox();
-            this.toolAdd = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -87,7 +88,8 @@
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem1,
-            this.toolStripMenuItem2});
+            this.toolStripMenuItem2,
+            this.toolStripMenuItem3});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(800, 24);
@@ -101,6 +103,13 @@
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
             this.toolStripMenuItem1.Size = new System.Drawing.Size(79, 20);
             this.toolStripMenuItem1.Text = "Настройки";
+            // 
+            // toolAdd
+            // 
+            this.toolAdd.Name = "toolAdd";
+            this.toolAdd.Size = new System.Drawing.Size(180, 22);
+            this.toolAdd.Text = "Добавить";
+            this.toolAdd.Click += new System.EventHandler(this.toolAdd_Click);
             // 
             // toolStripMenuItem2
             // 
@@ -117,6 +126,11 @@
             this.toolReadMem.Name = "toolReadMem";
             this.toolReadMem.Size = new System.Drawing.Size(180, 22);
             this.toolReadMem.Text = "Прочитать память";
+            // 
+            // toolStripComboBox1
+            // 
+            this.toolStripComboBox1.Name = "toolStripComboBox1";
+            this.toolStripComboBox1.Size = new System.Drawing.Size(121, 23);
             // 
             // textBox1
             // 
@@ -135,17 +149,11 @@
             this.label1.TabIndex = 7;
             this.label1.Text = "label1";
             // 
-            // toolStripComboBox1
+            // toolStripMenuItem3
             // 
-            this.toolStripComboBox1.Name = "toolStripComboBox1";
-            this.toolStripComboBox1.Size = new System.Drawing.Size(121, 23);
-            // 
-            // toolAdd
-            // 
-            this.toolAdd.Name = "toolAdd";
-            this.toolAdd.Size = new System.Drawing.Size(180, 22);
-            this.toolAdd.Text = "Добавить";
-            this.toolAdd.Click += new System.EventHandler(this.toolAdd_Click);
+            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(140, 20);
+            this.toolStripMenuItem3.Text = "Импортировать в CSV";
             // 
             // ReportForm
             // 
@@ -186,6 +194,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolReadMem;
         private System.Windows.Forms.ToolStripComboBox toolStripComboBox1;
         private System.Windows.Forms.ToolStripMenuItem toolAdd;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
     }
 }
 

@@ -34,5 +34,11 @@ namespace Repot
             Write(SqlCommand);
         }
 
+        public List<string[]> ReadPoints()
+        {
+            SqlCommand = $"SELECT * FROM {SettingsTable}";
+            return ReadListArray(SqlCommand);
+        }
+
     }
 }

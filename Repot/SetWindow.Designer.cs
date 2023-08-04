@@ -31,39 +31,33 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SetWindow));
             this.textBoxCheckPoint = new System.Windows.Forms.TextBox();
             this.textBoxIP = new System.Windows.Forms.TextBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
             this.buttonAdd = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.checkpoint = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Ip = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.labelPoint = new System.Windows.Forms.Label();
+            this.labelIP = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
             // textBoxCheckPoint
             // 
-            this.textBoxCheckPoint.Location = new System.Drawing.Point(12, 12);
+            this.textBoxCheckPoint.Location = new System.Drawing.Point(12, 34);
             this.textBoxCheckPoint.Name = "textBoxCheckPoint";
-            this.textBoxCheckPoint.Size = new System.Drawing.Size(100, 20);
+            this.textBoxCheckPoint.Size = new System.Drawing.Size(197, 20);
             this.textBoxCheckPoint.TabIndex = 0;
             // 
             // textBoxIP
             // 
-            this.textBoxIP.Location = new System.Drawing.Point(12, 38);
+            this.textBoxIP.Location = new System.Drawing.Point(12, 73);
             this.textBoxIP.Name = "textBoxIP";
-            this.textBoxIP.Size = new System.Drawing.Size(100, 20);
+            this.textBoxIP.Size = new System.Drawing.Size(197, 20);
             this.textBoxIP.TabIndex = 1;
-            // 
-            // textBox3
-            // 
-            this.textBox3.Location = new System.Drawing.Point(12, 64);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(100, 20);
-            this.textBox3.TabIndex = 2;
             // 
             // buttonAdd
             // 
-            this.buttonAdd.Location = new System.Drawing.Point(37, 90);
+            this.buttonAdd.Location = new System.Drawing.Point(134, 99);
             this.buttonAdd.Name = "buttonAdd";
             this.buttonAdd.Size = new System.Drawing.Size(75, 23);
             this.buttonAdd.TabIndex = 3;
@@ -75,15 +69,18 @@
             // 
             this.dataGridView1.AllowUserToAddRows = false;
             this.dataGridView1.AllowUserToDeleteRows = false;
+            this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.id,
             this.checkpoint,
             this.Ip});
-            this.dataGridView1.Location = new System.Drawing.Point(118, 12);
+            this.dataGridView1.Location = new System.Drawing.Point(215, 12);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.ReadOnly = true;
-            this.dataGridView1.Size = new System.Drawing.Size(361, 158);
+            this.dataGridView1.Size = new System.Drawing.Size(475, 243);
             this.dataGridView1.TabIndex = 4;
             // 
             // id
@@ -107,14 +104,33 @@
             this.Ip.Name = "Ip";
             this.Ip.ReadOnly = true;
             // 
+            // labelPoint
+            // 
+            this.labelPoint.AutoSize = true;
+            this.labelPoint.Location = new System.Drawing.Point(13, 18);
+            this.labelPoint.Name = "labelPoint";
+            this.labelPoint.Size = new System.Drawing.Size(90, 13);
+            this.labelPoint.TabIndex = 5;
+            this.labelPoint.Text = "Название двери";
+            // 
+            // labelIP
+            // 
+            this.labelIP.AutoSize = true;
+            this.labelIP.Location = new System.Drawing.Point(13, 57);
+            this.labelIP.Name = "labelIP";
+            this.labelIP.Size = new System.Drawing.Size(117, 13);
+            this.labelIP.TabIndex = 6;
+            this.labelIP.Text = "IP адрес алкотестера";
+            // 
             // SetWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(491, 267);
+            this.ClientSize = new System.Drawing.Size(702, 267);
+            this.Controls.Add(this.labelIP);
+            this.Controls.Add(this.labelPoint);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.buttonAdd);
-            this.Controls.Add(this.textBox3);
             this.Controls.Add(this.textBoxIP);
             this.Controls.Add(this.textBoxCheckPoint);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -131,11 +147,12 @@
 
         private System.Windows.Forms.TextBox textBoxCheckPoint;
         private System.Windows.Forms.TextBox textBoxIP;
-        private System.Windows.Forms.TextBox textBox3;
         private System.Windows.Forms.Button buttonAdd;
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.DataGridViewTextBoxColumn id;
         private System.Windows.Forms.DataGridViewTextBoxColumn checkpoint;
         private System.Windows.Forms.DataGridViewTextBoxColumn Ip;
+        private System.Windows.Forms.Label labelPoint;
+        private System.Windows.Forms.Label labelIP;
     }
 }
