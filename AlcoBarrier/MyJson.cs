@@ -87,7 +87,7 @@ namespace AlcoBarrier
             return forecastObject.ToJsonString();
         }
 
-        public string GetDataMemory(string qty)
+        public string CmdTypeHeaderAllMemory(string qty)
         {
 
             string Result = string.Empty;
@@ -102,6 +102,27 @@ namespace AlcoBarrier
                 Console.WriteLine(ex);
             }
             return Result;
+        }
+
+        public void Records(string data)
+        {
+            JsonNode jsonNode = JsonNode.Parse(data);
+            int count = jsonNode["Records"].AsArray().Count;
+
+            for (int i = 0; i < count; i++)
+            {
+                string Code = jsonNode["Records"][i]["Code"].ToString();
+                if (Code == "4" || Code == "5")
+                {
+                    string CardCode = ConvertCodeCard(jsonNode["Records"][i]["WiegandLSB"].ToString());
+                    Console.WriteLine(jsonNode["Records"][i]["Date"].ToString());
+                    Console.WriteLine(jsonNode["Records"][i]["Time"].ToString());
+                    Console.WriteLine($"{jsonNode["Records"][i]["Result"]} мг/л");
+                    Console.WriteLine(jsonNode["Records"][i]["WiegandLSB"]);
+                    Console.WriteLine(CardCode);
+                    Console.WriteLine();
+                }
+            }
         }
 
         public string[] GetArrayResult(string jsonString)
@@ -159,17 +180,6 @@ namespace AlcoBarrier
 
             //return $"{IntCode >> 16}-{IntCode & 0xFFFF}";
             return $"{IntCode & 0xFFFF}";
-        }
-
-        public void Records(string data)
-        {
-            JsonNode jsonNode = JsonNode.Parse(data);
-            int count = jsonNode["Records"].AsArray().Count;
-
-            for (int i = 0; i < count; i++)
-            {
-                Console.WriteLine($"---{jsonNode["Records"][i]}-----");
-            }
         }
     }
 }

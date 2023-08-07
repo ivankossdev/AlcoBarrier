@@ -74,10 +74,8 @@ namespace Repot
             string ip = toolStripComboBox1.Items[toolStripComboBox1.SelectedIndex].ToString();
             MyJson myJson = new MyJson();
             RequestAlcoReader requestAlcoReader = new RequestAlcoReader(ip);
-            string Result = await requestAlcoReader.GetRequestCmd(myJson.CreateLogMessage("5")); // await requestAlcoReader.GetRequestCmd(myJson.CmdTypeHeader("getLogInf"));
-            myJson.Records(Result);
-            //await Console.Out.WriteLineAsync();
-            //await Console.Out.WriteLineAsync(await requestAlcoReader.GetRequestCmd(myJson.GetDataMemory(Result)));
+            string Result =  await requestAlcoReader.GetRequestCmd(myJson.CmdTypeHeader("getLogInf")); 
+            myJson.Records(await requestAlcoReader.GetRequestCmd(myJson.CmdTypeHeaderAllMemory(Result)));
         }
     }
 }
