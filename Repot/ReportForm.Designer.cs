@@ -43,6 +43,10 @@
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Time = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Result = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CardCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -57,12 +61,20 @@
             // 
             // dataGridView1
             // 
+            this.dataGridView1.AllowUserToAddRows = false;
+            this.dataGridView1.AllowUserToDeleteRows = false;
             this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Date,
+            this.Time,
+            this.Result,
+            this.CardCode});
             this.dataGridView1.Location = new System.Drawing.Point(182, 27);
             this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.ReadOnly = true;
             this.dataGridView1.Size = new System.Drawing.Size(606, 411);
             this.dataGridView1.TabIndex = 2;
             // 
@@ -126,7 +138,7 @@
             this.toolStripComboBox1,
             this.toolStripMenuItem4});
             this.toolReadMem.Name = "toolReadMem";
-            this.toolReadMem.Size = new System.Drawing.Size(180, 22);
+            this.toolReadMem.Size = new System.Drawing.Size(175, 22);
             this.toolReadMem.Text = "Прочитать память";
             this.toolReadMem.MouseHover += new System.EventHandler(this.toolReadMem_MouseHover);
             // 
@@ -164,6 +176,30 @@
             this.label1.Size = new System.Drawing.Size(35, 13);
             this.label1.TabIndex = 7;
             this.label1.Text = "label1";
+            // 
+            // Date
+            // 
+            this.Date.HeaderText = "Дата";
+            this.Date.Name = "Date";
+            this.Date.ReadOnly = true;
+            // 
+            // Time
+            // 
+            this.Time.HeaderText = "Время";
+            this.Time.Name = "Time";
+            this.Time.ReadOnly = true;
+            // 
+            // Result
+            // 
+            this.Result.HeaderText = "Концентрация";
+            this.Result.Name = "Result";
+            this.Result.ReadOnly = true;
+            // 
+            // CardCode
+            // 
+            this.CardCode.HeaderText = "Карточка";
+            this.CardCode.Name = "CardCode";
+            this.CardCode.ReadOnly = true;
             // 
             // ReportForm
             // 
@@ -206,6 +242,10 @@
         private System.Windows.Forms.ToolStripMenuItem toolAdd;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Date;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Time;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Result;
+        private System.Windows.Forms.DataGridViewTextBoxColumn CardCode;
     }
 }
 

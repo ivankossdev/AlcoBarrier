@@ -104,10 +104,12 @@ namespace AlcoBarrier
             return Result;
         }
 
-        public void Records(string data)
+        public List<string[]> RecordsMemoryList(string data)
         {
             JsonNode jsonNode = JsonNode.Parse(data);
             int count = jsonNode["Records"].AsArray().Count;
+
+            List<string[]>Records = new List<string[]>();
 
             for (int i = 0; i < count; i++)
             {
@@ -115,14 +117,23 @@ namespace AlcoBarrier
                 if (Code == "4" || Code == "5")
                 {
                     string CardCode = ConvertCodeCard(jsonNode["Records"][i]["WiegandLSB"].ToString());
-                    Console.WriteLine(jsonNode["Records"][i]["Date"].ToString());
-                    Console.WriteLine(jsonNode["Records"][i]["Time"].ToString());
-                    Console.WriteLine($"{jsonNode["Records"][i]["Result"]} мг/л");
-                    Console.WriteLine(jsonNode["Records"][i]["WiegandLSB"]);
-                    Console.WriteLine(CardCode);
-                    Console.WriteLine();
+                    Records.Add(RecordsArray(jsonNode["Records"][i]["Date"].ToString(), 
+                                jsonNode["Records"][i]["Time"].ToString(), 
+                                $"{jsonNode["Records"][i]["Result"]} мг/л", 
+                                CardCode));
                 }
             }
+            return Records;
+        }
+
+        private string[] RecordsArray(string Date, string Time, string Result, string CardCode)
+        {
+            string[] Rec = new string[]
+            {
+                Date, Time, Result, CardCode
+            };
+
+            return Rec;
         }
 
         public string[] GetArrayResult(string jsonString)
