@@ -10,7 +10,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Settings", "Settings\Settin
 		{D08E207B-4CA7-479D-ACCA-C18BF95BBAB7} = {D08E207B-4CA7-479D-ACCA-C18BF95BBAB7}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repot", "Repot\Repot.csproj", "{7E4DC855-E494-4E00-8CB4-250B0A6823ED}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Report", "Repot\Report.csproj", "{7E4DC855-E494-4E00-8CB4-250B0A6823ED}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

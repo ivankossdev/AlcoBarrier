@@ -94,6 +94,7 @@ namespace AlcoBarrier
             try
             {
                 JsonNode jsonNode = JsonNode.Parse(CreateAllRecordMessage(qty));
+
                 return jsonNode.ToString();
             }
             catch (Exception ex)
@@ -158,6 +159,17 @@ namespace AlcoBarrier
 
             //return $"{IntCode >> 16}-{IntCode & 0xFFFF}";
             return $"{IntCode & 0xFFFF}";
+        }
+
+        public void Records(string data)
+        {
+            JsonNode jsonNode = JsonNode.Parse(data);
+            int count = jsonNode["Records"].AsArray().Count;
+
+            for (int i = 0; i < count; i++)
+            {
+                Console.WriteLine($"---{jsonNode["Records"][i]}-----");
+            }
         }
     }
 }
