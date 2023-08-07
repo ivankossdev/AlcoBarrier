@@ -120,7 +120,7 @@
             // toolAdd
             // 
             this.toolAdd.Name = "toolAdd";
-            this.toolAdd.Size = new System.Drawing.Size(126, 22);
+            this.toolAdd.Size = new System.Drawing.Size(180, 22);
             this.toolAdd.Text = "Добавить";
             this.toolAdd.Click += new System.EventHandler(this.toolAdd_Click);
             // 
@@ -179,24 +179,28 @@
             // 
             // Date
             // 
+            this.Date.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.Date.HeaderText = "Дата";
             this.Date.Name = "Date";
             this.Date.ReadOnly = true;
             // 
             // Time
             // 
+            this.Time.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.Time.HeaderText = "Время";
             this.Time.Name = "Time";
             this.Time.ReadOnly = true;
             // 
             // Result
             // 
+            this.Result.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.Result.HeaderText = "Концентрация";
             this.Result.Name = "Result";
             this.Result.ReadOnly = true;
             // 
             // CardCode
             // 
+            this.CardCode.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.CardCode.HeaderText = "Карточка";
             this.CardCode.Name = "CardCode";
             this.CardCode.ReadOnly = true;
