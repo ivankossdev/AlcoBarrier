@@ -33,11 +33,12 @@
             this.textBoxIP = new System.Windows.Forms.TextBox();
             this.buttonAdd = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.labelPoint = new System.Windows.Forms.Label();
+            this.labelIP = new System.Windows.Forms.Label();
             this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.checkpoint = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Ip = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.labelPoint = new System.Windows.Forms.Label();
-            this.labelIP = new System.Windows.Forms.Label();
+            this.Edit = new System.Windows.Forms.DataGridViewButtonColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -76,12 +77,31 @@
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.id,
             this.checkpoint,
-            this.Ip});
+            this.Ip,
+            this.Edit});
             this.dataGridView1.Location = new System.Drawing.Point(215, 12);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.ReadOnly = true;
             this.dataGridView1.Size = new System.Drawing.Size(475, 243);
             this.dataGridView1.TabIndex = 4;
+            // 
+            // labelPoint
+            // 
+            this.labelPoint.AutoSize = true;
+            this.labelPoint.Location = new System.Drawing.Point(13, 18);
+            this.labelPoint.Name = "labelPoint";
+            this.labelPoint.Size = new System.Drawing.Size(90, 13);
+            this.labelPoint.TabIndex = 5;
+            this.labelPoint.Text = "Название двери";
+            // 
+            // labelIP
+            // 
+            this.labelIP.AutoSize = true;
+            this.labelIP.Location = new System.Drawing.Point(13, 57);
+            this.labelIP.Name = "labelIP";
+            this.labelIP.Size = new System.Drawing.Size(117, 13);
+            this.labelIP.TabIndex = 6;
+            this.labelIP.Text = "IP адрес алкотестера";
             // 
             // id
             // 
@@ -104,23 +124,13 @@
             this.Ip.Name = "Ip";
             this.Ip.ReadOnly = true;
             // 
-            // labelPoint
+            // Edit
             // 
-            this.labelPoint.AutoSize = true;
-            this.labelPoint.Location = new System.Drawing.Point(13, 18);
-            this.labelPoint.Name = "labelPoint";
-            this.labelPoint.Size = new System.Drawing.Size(90, 13);
-            this.labelPoint.TabIndex = 5;
-            this.labelPoint.Text = "Название двери";
-            // 
-            // labelIP
-            // 
-            this.labelIP.AutoSize = true;
-            this.labelIP.Location = new System.Drawing.Point(13, 57);
-            this.labelIP.Name = "labelIP";
-            this.labelIP.Size = new System.Drawing.Size(117, 13);
-            this.labelIP.TabIndex = 6;
-            this.labelIP.Text = "IP адрес алкотестера";
+            this.Edit.HeaderText = "";
+            this.Edit.Name = "Edit";
+            this.Edit.ReadOnly = true;
+            this.Edit.Text = "Редактировать";
+            this.Edit.UseColumnTextForButtonValue = true;
             // 
             // SetWindow
             // 
@@ -149,10 +159,11 @@
         private System.Windows.Forms.TextBox textBoxIP;
         private System.Windows.Forms.Button buttonAdd;
         private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.Label labelPoint;
+        private System.Windows.Forms.Label labelIP;
         private System.Windows.Forms.DataGridViewTextBoxColumn id;
         private System.Windows.Forms.DataGridViewTextBoxColumn checkpoint;
         private System.Windows.Forms.DataGridViewTextBoxColumn Ip;
-        private System.Windows.Forms.Label labelPoint;
-        private System.Windows.Forms.Label labelIP;
+        private System.Windows.Forms.DataGridViewButtonColumn Edit;
     }
 }

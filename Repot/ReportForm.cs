@@ -92,6 +92,7 @@ namespace Repot
             }
             else if (ip == string.Empty)
                 MessageBox.Show("Выбирете IP адрес алкотестера");
+
         }
     }
 }
