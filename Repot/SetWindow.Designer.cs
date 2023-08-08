@@ -35,10 +35,12 @@
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.labelPoint = new System.Windows.Forms.Label();
             this.labelIP = new System.Windows.Forms.Label();
+            this.checkBoxEdit = new System.Windows.Forms.CheckBox();
             this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.checkpoint = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Ip = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Edit = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.Delete = new System.Windows.Forms.DataGridViewButtonColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -78,12 +80,14 @@
             this.id,
             this.checkpoint,
             this.Ip,
-            this.Edit});
+            this.Edit,
+            this.Delete});
             this.dataGridView1.Location = new System.Drawing.Point(215, 12);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.ReadOnly = true;
             this.dataGridView1.Size = new System.Drawing.Size(475, 243);
             this.dataGridView1.TabIndex = 4;
+            this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             // 
             // labelPoint
             // 
@@ -102,6 +106,17 @@
             this.labelIP.Size = new System.Drawing.Size(117, 13);
             this.labelIP.TabIndex = 6;
             this.labelIP.Text = "IP адрес алкотестера";
+            // 
+            // checkBoxEdit
+            // 
+            this.checkBoxEdit.AutoSize = true;
+            this.checkBoxEdit.Location = new System.Drawing.Point(12, 238);
+            this.checkBoxEdit.Name = "checkBoxEdit";
+            this.checkBoxEdit.Size = new System.Drawing.Size(103, 17);
+            this.checkBoxEdit.TabIndex = 7;
+            this.checkBoxEdit.Text = "Редактировать";
+            this.checkBoxEdit.UseVisualStyleBackColor = true;
+            this.checkBoxEdit.CheckedChanged += new System.EventHandler(this.checkBoxEdit_CheckedChanged);
             // 
             // id
             // 
@@ -131,12 +146,23 @@
             this.Edit.ReadOnly = true;
             this.Edit.Text = "Редактировать";
             this.Edit.UseColumnTextForButtonValue = true;
+            this.Edit.Visible = false;
+            // 
+            // Delete
+            // 
+            this.Delete.HeaderText = "";
+            this.Delete.Name = "Delete";
+            this.Delete.ReadOnly = true;
+            this.Delete.Text = "Удалить";
+            this.Delete.UseColumnTextForButtonValue = true;
+            this.Delete.Visible = false;
             // 
             // SetWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(702, 267);
+            this.Controls.Add(this.checkBoxEdit);
             this.Controls.Add(this.labelIP);
             this.Controls.Add(this.labelPoint);
             this.Controls.Add(this.dataGridView1);
@@ -161,9 +187,11 @@
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.Label labelPoint;
         private System.Windows.Forms.Label labelIP;
+        private System.Windows.Forms.CheckBox checkBoxEdit;
         private System.Windows.Forms.DataGridViewTextBoxColumn id;
         private System.Windows.Forms.DataGridViewTextBoxColumn checkpoint;
         private System.Windows.Forms.DataGridViewTextBoxColumn Ip;
         private System.Windows.Forms.DataGridViewButtonColumn Edit;
+        private System.Windows.Forms.DataGridViewButtonColumn Delete;
     }
 }

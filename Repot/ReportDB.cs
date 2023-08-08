@@ -40,5 +40,11 @@ namespace Repot
             return ReadListArray(SqlCommand);
         }
 
+        public void DeleteRow(string id)
+        {
+            SqlCommand = $"DELETE FROM {SettingsTable} WHERE id = {Int32.Parse(id)}";
+            Write(SqlCommand);
+        }
+
     }
 }
