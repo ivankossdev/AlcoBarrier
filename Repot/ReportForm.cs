@@ -81,12 +81,14 @@ namespace Repot
                 RequestAlcoReader requestAlcoReader = new RequestAlcoReader(ip);
                 string Result = await requestAlcoReader.GetRequestCmd(myJson.CmdTypeHeader("getLogInf"));
                 toolStripMenuItem4.Enabled = false;
+                pictureBox1.Visible = true;
                 List<string[]> Memory = myJson.RecordsMemoryList(await requestAlcoReader.GetRequestCmd(myJson.CmdTypeHeaderAllMemory(Result)));
                 foreach (string[] s in Memory)
                 {
                     dataGridView1.Rows.Add(s);
                 }
                 toolStripMenuItem4.Enabled = true;
+                pictureBox1.Visible = false;
             }
             else if (ip == string.Empty)
                 MessageBox.Show("Выбирете IP адрес алкотестера");

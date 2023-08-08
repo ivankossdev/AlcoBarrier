@@ -13,7 +13,7 @@ namespace AlcoBarrier
 {
     public class MyJson
     {
-        EmloeyesDB employee = new EmloeyesDB("employees") { path = Directory.GetCurrentDirectory() };
+       
         public string CreateLogMessage(string memoryAddr)
         {
             var forecastObject = new JsonObject
@@ -136,6 +136,7 @@ namespace AlcoBarrier
             return Rec;
         }
 
+        EmloeyesDB employee = new EmloeyesDB("employees") { path = Directory.GetCurrentDirectory() };
         public string[] GetArrayResult(string jsonString)
         {
             string[] Message = new string[5];
