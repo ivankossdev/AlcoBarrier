@@ -75,18 +75,21 @@ namespace Repot
             dataGridView1.Rows.Clear();
             int index = toolStripComboBox1.SelectedIndex;
             if (index != -1)
-                ip = toolStripComboBox1.Items[toolStripComboBox1.SelectedIndex].ToString();
-            
-            MyJson myJson = new MyJson();
-            RequestAlcoReader requestAlcoReader = new RequestAlcoReader(ip);
-            string Result = await requestAlcoReader.GetRequestCmd(myJson.CmdTypeHeader("getLogInf"));
-            toolStripMenuItem4.Enabled = false;
-            List<string[]> Memory = myJson.RecordsMemoryList(await requestAlcoReader.GetRequestCmd(myJson.CmdTypeHeaderAllMemory(Result)));
-            foreach (string[] s in Memory)
             {
-                dataGridView1.Rows.Add(s);
+                ip = toolStripComboBox1.Items[toolStripComboBox1.SelectedIndex].ToString();
+                MyJson myJson = new MyJson();
+                RequestAlcoReader requestAlcoReader = new RequestAlcoReader(ip);
+                string Result = await requestAlcoReader.GetRequestCmd(myJson.CmdTypeHeader("getLogInf"));
+                toolStripMenuItem4.Enabled = false;
+                List<string[]> Memory = myJson.RecordsMemoryList(await requestAlcoReader.GetRequestCmd(myJson.CmdTypeHeaderAllMemory(Result)));
+                foreach (string[] s in Memory)
+                {
+                    dataGridView1.Rows.Add(s);
+                }
+                toolStripMenuItem4.Enabled = true;
             }
-            toolStripMenuItem4.Enabled = true;
+            else if (ip == string.Empty)
+                MessageBox.Show("Выбирете IP адрес алкотестера");
         }
     }
 }
