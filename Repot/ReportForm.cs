@@ -17,17 +17,17 @@ namespace Repot
         public ReportForm()
         {
             InitializeComponent();
-            if (!File.Exists(reportDB.path + "\\" + reportDB.NameDataBase + ".db"))
+
+            if (!File.Exists(reportDB.Path + "\\" + reportDB.NameDataBase + ".db"))
             {
-                reportDB.CreateDB();
+                MessageBox.Show(reportDB.CreateDB());
             }
 
         }
 
-        AddressDB reportDB = new AddressDB("testers")
+        AddressDB reportDB = new AddressDB("Points")
         {
-            path = Directory.GetCurrentDirectory(),
-            SettingsTable = "alcopoint"
+            Path = Directory.GetCurrentDirectory()
         };
  
         string DateSearch = string.Empty;

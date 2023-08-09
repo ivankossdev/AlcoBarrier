@@ -19,11 +19,11 @@ namespace AlcoBarrier
             NameDataBase = _NameDataBase;
             
         }
-        public string path { get; set; }
+        public string Path { get; set; }
 
         protected void Write(string sqlCommand)
         {
-            using (var connection = new SqliteConnection($"Data Source={path}\\{NameDataBase}.db"))
+            using (var connection = new SqliteConnection($"Data Source={Path}\\{NameDataBase}.db"))
             {
                 connection.Open();
                 var command = connection.CreateCommand();
@@ -35,7 +35,7 @@ namespace AlcoBarrier
 
         protected void Write(List<string> data)
         {
-            using (var connection = new SqliteConnection($"Data Source={path}\\{NameDataBase}.db"))
+            using (var connection = new SqliteConnection($"Data Source={Path}\\{NameDataBase}.db"))
             {
                 connection.Open();
                 foreach (string User in data)
@@ -51,7 +51,7 @@ namespace AlcoBarrier
         protected string[] Read(string sqlCommand) 
         {
             string[] result = null;
-            using (var connection = new SqliteConnection($"Data Source={path}\\{NameDataBase}.db"))
+            using (var connection = new SqliteConnection($"Data Source={Path}\\{NameDataBase}.db"))
             {
                 connection.Open();
                 var command = connection.CreateCommand();
@@ -80,7 +80,7 @@ namespace AlcoBarrier
         {
             List<string> result = new List<string>();
 
-            using (var connection = new SqliteConnection($"Data Source={path}\\{NameDataBase}.db"))
+            using (var connection = new SqliteConnection($"Data Source={Path}\\{NameDataBase}.db"))
             {
                 connection.Open();
                 var command = connection.CreateCommand();
@@ -110,7 +110,7 @@ namespace AlcoBarrier
         {
             List<string[]> result = new List<string[]>();
 
-            using (var connection = new SqliteConnection($"Data Source={path}\\{NameDataBase}.db"))
+            using (var connection = new SqliteConnection($"Data Source={Path}\\{NameDataBase}.db"))
             {
                 connection.Open();
                 var command = connection.CreateCommand();

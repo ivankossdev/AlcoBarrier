@@ -47,15 +47,15 @@ namespace AlcoBarrier
         {
             SettingsDB setDb = new SettingsDB("settings")
             {
-                path = Directory.GetCurrentDirectory(),
+                Path = Directory.GetCurrentDirectory(),
                 InnerTable = "setInner",
                 AlcoTable = "setAlco"
             };
 
             string[] ParamsInner = setDb.GetSettingString(setDb.InnerTable);
             string[] IpAlcoTester = setDb.GetSettingString(setDb.AlcoTable);
-            test = new EmloeyesDB("employees") { path = Directory.GetCurrentDirectory() };
-            events = new EventsDB("events") { path = Directory.GetCurrentDirectory() };
+            test = new EmloeyesDB("employees") { Path = Directory.GetCurrentDirectory() };
+            events = new EventsDB("events") { Path = Directory.GetCurrentDirectory() };
             InnerageHandler = new RequestInner(ParamsInner[0], ParamsInner[1], ParamsInner[2]);
             AlcoReader = new RequestAlcoReader(IpAlcoTester[0]);
             string[] HourMiin = setDb.GetSettingsTime(setDb.InnerTable);

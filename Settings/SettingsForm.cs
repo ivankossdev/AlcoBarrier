@@ -20,7 +20,7 @@ namespace Settings
             InitializeComponent();
             setDb = new SettingsDB("settings")
             {
-                path = Path.GetFullPath("..\\..\\..\\AlcoBarrier\\bin\\Debug"),
+                Path = Path.GetFullPath("..\\..\\..\\AlcoBarrier\\bin\\Debug"),
                 InnerTable = "setInner",
                 AlcoTable = "setAlco"
             };
@@ -59,7 +59,7 @@ namespace Settings
 
         private void check_db()
         {
-            if (!File.Exists(setDb.path + "\\settings.db"))
+            if (!File.Exists(setDb.Path + "\\settings.db"))
             {
                 textBoxInnerInfo.AppendText(setDb.CreateDB());
             }
