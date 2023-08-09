@@ -96,7 +96,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReportDB.cs" />
+    <Compile Include="AddressDB.cs" />
     <Compile Include="SetWindow.cs">
       <SubType>Form</SubType>
     </Compile>

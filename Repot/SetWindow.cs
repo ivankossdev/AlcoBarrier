@@ -20,7 +20,7 @@ namespace Repot
             ShowCheckPoints(reportDB.ReadPoints());
         }
 
-        ReportDB reportDB = new ReportDB("testers")
+        AddressDB reportDB = new AddressDB("testers")
         {
             path = Directory.GetCurrentDirectory(),
             SettingsTable = "alcopoint"

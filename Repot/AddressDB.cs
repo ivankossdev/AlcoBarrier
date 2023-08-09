@@ -8,9 +8,9 @@ using AlcoBarrier;
 
 namespace Repot
 {
-    public class ReportDB : BaseSQLite
+    public class AddressDB : BaseSQLite
     {
-        public ReportDB(string _NameDataBase) : base(_NameDataBase)
+        public AddressDB(string _NameDataBase) : base(_NameDataBase)
         {
 
         }
