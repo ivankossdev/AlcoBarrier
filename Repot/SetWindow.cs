@@ -51,10 +51,9 @@ namespace Repot
             {
                 if (senderGrid.Columns[e.ColumnIndex] is DataGridViewButtonColumn && e.RowIndex >= 0)
                 {
-                    for (int i = 0; i < 3; i++)
-                    {
-                        Console.WriteLine(dataGridView1[i, e.RowIndex].Value.ToString());
-                    }
+                    reportDB.UpdateRow(dataGridView1[1, e.RowIndex].Value.ToString(),
+                                       dataGridView1[2, e.RowIndex].Value.ToString(), 
+                                       dataGridView1[0, e.RowIndex].Value.ToString());
                 }
             }
             else if (e.ColumnIndex == 4)
@@ -72,9 +71,11 @@ namespace Repot
             {
                 dataGridView1.Columns[3].Visible = true;
                 dataGridView1.Columns[4].Visible = true;
+                dataGridView1.ReadOnly = false;
             }
             else
             {
+                dataGridView1.ReadOnly = true;
                 dataGridView1.Columns[3].Visible = false;
                 dataGridView1.Columns[4].Visible = false;
             }

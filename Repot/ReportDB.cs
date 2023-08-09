@@ -46,5 +46,11 @@ namespace Repot
             Write(SqlCommand);
         }
 
+        public void UpdateRow(string accesspoint, string ipaddress, string id)
+        {
+            SqlCommand = $"UPDATE {SettingsTable} " +
+                         $"SET accesspoint = \"{accesspoint}\", ipaddress = \"{ipaddress}\" WHERE id = {Int32.Parse(id)};";
+            Write(SqlCommand);
+        }
     }
 }
