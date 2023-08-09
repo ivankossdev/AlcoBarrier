@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace AlcoBarrier
 {
-    abstract public class BaseSQLite
+    public abstract class BaseSQLite
     {
-        public readonly string NameDataBase  = string.Empty;
+        public readonly string NameDataBase = string.Empty;
         
 
         public BaseSQLite(string _NameDataBase)

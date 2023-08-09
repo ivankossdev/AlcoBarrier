@@ -70,29 +70,38 @@ namespace Repot
         }
 
         string ip = string.Empty;
-        private async void toolStripMenuItem4_Click(object sender, EventArgs e)
+        private void toolStripMenuItem4_Click(object sender, EventArgs e)
         {
             dataGridView1.Rows.Clear();
             int index = toolStripComboBox1.SelectedIndex;
+
             if (index != -1)
             {
                 ip = toolStripComboBox1.Items[toolStripComboBox1.SelectedIndex].ToString();
-                MyJson myJson = new MyJson();
-                RequestAlcoReader requestAlcoReader = new RequestAlcoReader(ip);
-                string Result = await requestAlcoReader.GetRequestCmd(myJson.CmdTypeHeader("getLogInf"));
-                toolStripMenuItem4.Enabled = false;
-                pictureBox1.Visible = true;
-                List<string[]> Memory = myJson.RecordsMemoryList(await requestAlcoReader.GetRequestCmd(myJson.CmdTypeHeaderAllMemory(Result)));
-                foreach (string[] s in Memory)
-                {
-                    dataGridView1.Rows.Add(s);
-                }
-                toolStripMenuItem4.Enabled = true;
-                pictureBox1.Visible = false;
+                PrintRows(ip);
             }
             else if (ip == string.Empty)
                 MessageBox.Show("Выбирете IP адрес алкотестера");
+            else
+                PrintRows(ip);
 
+        }
+
+        private async void PrintRows(string ip)
+        {
+            
+            MyJson myJson = new MyJson();
+            RequestAlcoReader requestAlcoReader = new RequestAlcoReader(ip);
+            string Result = await requestAlcoReader.GetRequestCmd(myJson.CmdTypeHeader("getLogInf"));
+            toolStripMenuItem4.Enabled = false;
+            pictureBox1.Visible = true;
+            List<string[]> Memory = myJson.RecordsMemoryList(await requestAlcoReader.GetRequestCmd(myJson.CmdTypeHeaderAllMemory(Result)));
+            foreach (string[] s in Memory)
+            {
+                dataGridView1.Rows.Add(s);
+            }
+            toolStripMenuItem4.Enabled = true;
+            pictureBox1.Visible = false;
         }
     }
 }
