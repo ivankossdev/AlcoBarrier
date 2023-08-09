@@ -18,7 +18,7 @@ namespace Repot
         public string SettingsTable { get; set; }
         string SqlCommand { get; set; } = string.Empty;
 
-        public string CreateDB()
+        public override string CreateDB()
         {
             SqlCommand = $"CREATE TABLE {SettingsTable} (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, accesspoint TEXT NOT NULL, " +
                 $"ipaddress TEXT NOT NULL);";
@@ -27,14 +27,14 @@ namespace Repot
             return $"База данных {NameDataBase} создана \n";
         }
 
-        public void WritePoint(string point, string ip)
+        public void WriteRow(string point, string ip)
         {
             SqlCommand = $"INSERT INTO {SettingsTable} (accesspoint, ipaddress) " +
                          $"VALUES (\"{point}\", \"{ip}\")";
             Write(SqlCommand);
         }
 
-        public List<string[]> ReadPoints()
+        public List<string[]> ReadRows()
         {
             SqlCommand = $"SELECT * FROM {SettingsTable}";
             return ReadListArray(SqlCommand);

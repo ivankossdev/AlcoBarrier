@@ -63,7 +63,7 @@ namespace Repot
         private async void toolReadMem_MouseHover(object sender, EventArgs e)
         {
             toolStripComboBox1.Items.Clear();
-            foreach (string[] s in await Task.Run<List<string[]>>(() => reportDB.ReadPoints()))
+            foreach (string[] s in await Task.Run<List<string[]>>(() => reportDB.ReadRows()))
             {
                 toolStripComboBox1.Items.Add(s[2]);
             }
@@ -89,7 +89,6 @@ namespace Repot
 
         private async void PrintRows(string ip)
         {
-            
             MyJson myJson = new MyJson();
             RequestAlcoReader requestAlcoReader = new RequestAlcoReader(ip);
             string Result = await requestAlcoReader.GetRequestCmd(myJson.CmdTypeHeader("getLogInf"));

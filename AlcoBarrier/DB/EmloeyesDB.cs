@@ -12,9 +12,9 @@ namespace AlcoBarrier
     {
         public EmloeyesDB(string NameDataBase) : base(NameDataBase) {  }
         
-        public void CreateDB(string Table)
+        public override string CreateDB()
         {
-            string SqlCommand = $"CREATE TABLE {Table} " +
+            string SqlCommand = $"CREATE TABLE employees " +
                 $"(idkey INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
                 $"name TEXT NOT NULL, " +
                 $"iduser TEXT NOT NULL, " +
@@ -23,6 +23,8 @@ namespace AlcoBarrier
                 $"id TEXT NOT NULL, " +
                 $"CardTemplate TEXT NOT NULL);";
             Write(SqlCommand);
+
+            return $"База данных {NameDataBase} создана \n";
         }
 
         public string GetNameCard(string code)

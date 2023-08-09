@@ -19,7 +19,7 @@ namespace AlcoBarrier
 
         string SqlCommand { get; set; } = string.Empty;
 
-        public string CreateDB()
+        public override string CreateDB()
         {
             SqlCommand = $"CREATE TABLE {InnerTable} " +
                          $"(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, IpInnerage TEXT NOT NULL, " +

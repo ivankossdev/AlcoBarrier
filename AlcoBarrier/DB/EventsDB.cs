@@ -14,12 +14,14 @@ namespace AlcoBarrier
         }
 
         string SqlCommand { get; set; } = string.Empty;
-        public void CreateDB()
+        public override string CreateDB()
         {
             SqlCommand = $"CREATE TABLE events " +
                 $"(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, iduser TEXT NOT NULL, code TEXT NOT NULL, " +
                 $"hex TEXT NOT NULL, cardtamplate TEXT NOT NULL, date TEXT NOT NULL, blockdate TEXT NOT NULL);";
             Write(SqlCommand);
+
+            return $"База данных {NameDataBase} создана \n";
         }
 
         public void WriteEvent(string[] Table, DateTime BlockTime)

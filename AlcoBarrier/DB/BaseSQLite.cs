@@ -11,7 +11,8 @@ namespace AlcoBarrier
     public abstract class BaseSQLite
     {
         public readonly string NameDataBase = string.Empty;
-        
+
+        public abstract string CreateDB();
 
         public BaseSQLite(string _NameDataBase)
         {
