@@ -20,9 +20,7 @@ namespace Settings
             InitializeComponent();
             setDb = new SettingsDB("settings")
             {
-                Path = Path.GetFullPath("..\\..\\..\\AlcoBarrier\\bin\\Debug"),
-                InnerTable = "setInner",
-                AlcoTable = "setAlco"
+                Path = Path.GetFullPath("..\\..\\..\\AlcoBarrier\\bin\\Debug")
             };
             check_db();
         }

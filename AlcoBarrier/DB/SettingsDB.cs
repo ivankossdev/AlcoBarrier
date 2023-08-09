@@ -14,8 +14,8 @@ namespace AlcoBarrier
         {
 
         }
-        public string InnerTable { get; set; }
-        public string AlcoTable { get; set; }
+        public string InnerTable { get; } = "setInner";
+        public string AlcoTable { get; } = "setAlco";
 
         string SqlCommand { get; set; } = string.Empty;
 
@@ -57,7 +57,7 @@ namespace AlcoBarrier
 
         public string[] GetSettingString(string Table)
         {
-            if (Table == "setAlco")
+            if (Table == AlcoTable)
             {
                 SqlCommand = $"SELECT IpAddress FROM {Table};";
             }

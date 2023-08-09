@@ -47,9 +47,7 @@ namespace AlcoBarrier
         {
             SettingsDB setDb = new SettingsDB("settings")
             {
-                Path = Directory.GetCurrentDirectory(),
-                InnerTable = "setInner",
-                AlcoTable = "setAlco"
+                Path = Directory.GetCurrentDirectory()
             };
 
             string[] ParamsInner = setDb.GetSettingString(setDb.InnerTable);
@@ -58,9 +56,9 @@ namespace AlcoBarrier
             events = new EventsDB("events") { Path = Directory.GetCurrentDirectory() };
             InnerageHandler = new RequestInner(ParamsInner[0], ParamsInner[1], ParamsInner[2]);
             AlcoReader = new RequestAlcoReader(IpAlcoTester[0]);
-            string[] HourMiin = setDb.GetSettingsTime(setDb.InnerTable);
-            SetHour = HourMiin[0];
-            SetMinute = HourMiin[1];
+            string[] HourMin = setDb.GetSettingsTime(setDb.InnerTable);
+            SetHour = HourMin[0];
+            SetMinute = HourMin[1];
         }
 
         private async void SystemInfo()
