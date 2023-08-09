@@ -119,25 +119,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseSQLite.cs" />
+    <Compile Include="DB\BaseSQLite.cs" />
     <Compile Include="DateTimeHandler.cs" />
-    <Compile Include="EventsDB.cs" />
-    <Compile Include="RequestAlcoReader.cs" />
-    <Compile Include="RequestInner.cs" />
+    <Compile Include="DB\EventsDB.cs" />
+    <Compile Include="Requests\RequestAlcoReader.cs" />
+    <Compile Include="Requests\RequestInner.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="MyJson.cs" />
+    <Compile Include="Headers\MyJson.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="EmloeyesDB.cs" />
-    <Compile Include="SettingsDB.cs" />
-    <Compile Include="TcpSendMessage.cs" />
-    <Compile Include="TcpServer.cs" />
-    <Compile Include="XmlHandler.cs" />
+    <Compile Include="DB\EmloeyesDB.cs" />
+    <Compile Include="DB\SettingsDB.cs" />
+    <Compile Include="TCP\TcpSendMessage.cs" />
+    <Compile Include="TCP\TcpServer.cs" />
+    <Compile Include="Headers\XmlHandler.cs" />
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
