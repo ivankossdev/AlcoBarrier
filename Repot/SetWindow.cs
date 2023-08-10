@@ -20,10 +20,7 @@ namespace Repot
             ShowCheckPoints(reportDB.ReadRows());
         }
 
-        AddressDB reportDB = new AddressDB("Points")
-        {
-            Path = Directory.GetCurrentDirectory()
-        };
+        AddressDB reportDB = new AddressDB("Points");
 
         private void buttonAdd_Click(object sender, EventArgs e)
         {

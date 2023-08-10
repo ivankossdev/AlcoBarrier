@@ -18,18 +18,23 @@ namespace Repot
         {
             InitializeComponent();
 
-            if (!File.Exists(reportDB.Path + "\\" + reportDB.NameDataBase + ".db"))
+            if (!File.Exists(addressDB.Path + "\\" + addressDB.NameDataBase + ".db"))
+            {
+                MessageBox.Show(addressDB.CreateDB());
+            }
+            else if (!File.Exists(reportDB.Path + "\\" + reportDB.NameDataBase + ".db"))
             {
                 MessageBox.Show(reportDB.CreateDB());
             }
 
         }
 
-        AddressDB reportDB = new AddressDB("Points")
-        {
-            Path = Directory.GetCurrentDirectory()
-        };
- 
+
+
+        AddressDB addressDB = new AddressDB("Points");
+
+        ReportDB reportDB = new ReportDB("Report");
+
         string DateSearch = string.Empty;
 
         private void monthCalendar1_DateSelected(object sender, DateRangeEventArgs e)
@@ -63,7 +68,7 @@ namespace Repot
         private async void toolReadMem_MouseHover(object sender, EventArgs e)
         {
             toolStripComboBox1.Items.Clear();
-            foreach (string[] s in await Task.Run<List<string[]>>(() => reportDB.ReadRows()))
+            foreach (string[] s in await Task.Run<List<string[]>>(() => addressDB.ReadRows()))
             {
                 toolStripComboBox1.Items.Add(s[2]);
             }

@@ -19,7 +19,7 @@ namespace AlcoBarrier
             NameDataBase = _NameDataBase;
             
         }
-        public string Path { get; set; }
+        public string Path { get; set; } = Directory.GetCurrentDirectory();
 
         protected void Write(string sqlCommand)
         {

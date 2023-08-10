@@ -136,7 +136,7 @@ namespace AlcoBarrier
             return Rec;
         }
 
-        EmloeyesDB employee = new EmloeyesDB("employees") { Path = Directory.GetCurrentDirectory() };
+        EmloeyesDB employee = new EmloeyesDB("employees");
         public string[] GetArrayResult(string jsonString)
         {
             string[] Message = new string[5];
