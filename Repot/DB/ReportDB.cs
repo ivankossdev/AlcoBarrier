@@ -17,9 +17,12 @@ namespace Repot
         string SqlCommand { get; set; } = string.Empty;
         public override string CreateDB()
         {
-            SqlCommand = $"CREATE TABLE report (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT);";
+            SqlCommand = $"CREATE TABLE report (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+                         $"date TEXT NOT NULL, time TEXT NOT NULL, promille TEXT NOT NULL, numcard TEXT NOT NULL);";
             Write(SqlCommand);
             return $"База данных {NameDataBase} создана \n";
         }
+
+
     }
 }

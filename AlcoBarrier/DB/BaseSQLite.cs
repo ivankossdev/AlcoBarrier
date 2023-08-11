@@ -12,6 +12,8 @@ namespace AlcoBarrier
     {
         public string NameDataBase { get; }
 
+        public char[] TrimChars { get; } = { ';', '>', '<', '\'', '\\', '{', '}', ':', '-', ' ', '%', '$' };
+
         public abstract string CreateDB();
 
         public BaseSQLite(string _NameDataBase)

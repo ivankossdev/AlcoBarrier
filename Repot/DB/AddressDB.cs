@@ -27,8 +27,10 @@ namespace Repot
 
         public void WriteRow(string point, string ip)
         {
+            //point = point.TrimEnd('-');
+            //ip = ip.TrimEnd('-');
             SqlCommand = $"INSERT INTO alcopoint (accesspoint, ipaddress) " +
-                         $"VALUES (\"{point}\", \"{ip}\")";
+                         $"VALUES (\"{point.Trim(TrimChars)}\", \"{ip.Trim(TrimChars)}\")";
             Write(SqlCommand);
         }
 
@@ -47,7 +49,8 @@ namespace Repot
         public void UpdateRow(string accesspoint, string ipaddress, string id)
         {
             SqlCommand = $"UPDATE alcopoint " +
-                         $"SET accesspoint = \"{accesspoint}\", ipaddress = \"{ipaddress}\" WHERE id = {Int32.Parse(id)};";
+                         $"SET accesspoint = \"{accesspoint.Trim(TrimChars)}\", " +
+                         $"ipaddress = \"{ipaddress.Trim(TrimChars)}\" WHERE id = {Int32.Parse(id)};";
             Write(SqlCommand);
         }
     }

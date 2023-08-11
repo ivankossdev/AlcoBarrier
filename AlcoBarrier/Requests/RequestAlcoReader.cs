@@ -28,12 +28,14 @@ namespace AlcoBarrier
             try
             {
                 byte[] messageToBytes = Encoding.UTF8.GetBytes(request);
-                var content = new ByteArrayContent(messageToBytes);
 
-                HttpResponseMessage response = await client.PostAsync($"http://{IpAddress}:443/cmd", content);
+                using(var content = new ByteArrayContent(messageToBytes))
+                {
+                    HttpResponseMessage response = await client.PostAsync($"http://{IpAddress}:443/cmd", content);
 
-                response.EnsureSuccessStatusCode();
-                responseBody = await response.Content.ReadAsStringAsync();
+                    response.EnsureSuccessStatusCode();
+                    responseBody = await response.Content.ReadAsStringAsync();
+                }
             }
             catch (Exception e)
             {

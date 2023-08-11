@@ -29,8 +29,6 @@ namespace Repot
 
         }
 
-
-
         AddressDB addressDB = new AddressDB("Points");
 
         ReportDB reportDB = new ReportDB("Report");
@@ -41,14 +39,6 @@ namespace Repot
         {
             DateSearch = monthCalendar1.SelectionRange.Start.ToString();
         }
-
-        /*
-        1. Прочитать память тестера (JSON)
-            1.1 $ curl  -H 'Content-Type: application/json' --data '{"cmdType":"getLogInf"}' http://192.168.0.125:443/cmd +++++
-            1.2 $ curl  -H 'Content-Type: application/json' --data '{"cmdType":"getLog","Position":"toLast", "QTY":"951"}' http://192.168.0.125:443/cmd ++++
-        2. Записать в БД (SQLite) данные памяти тестера п.1
-        3. Сортировка по выбору даты вывод на таблицу (по нажатию кнопки)
-         */
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -106,6 +96,7 @@ namespace Repot
             }
             toolStripMenuItem4.Enabled = true;
             pictureBox1.Visible = false;
+            Memory.Clear();
         }
     }
 }

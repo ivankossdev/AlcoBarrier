@@ -51,6 +51,8 @@ namespace Repot
                                        dataGridView1[2, e.RowIndex].Value.ToString(), 
                                        dataGridView1[0, e.RowIndex].Value.ToString());
                 }
+                dataGridView1.Rows.Clear();
+                ShowCheckPoints(reportDB.ReadRows());
             }
             else if (e.ColumnIndex == 4)
             {
