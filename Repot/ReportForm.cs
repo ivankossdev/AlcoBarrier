@@ -29,6 +29,18 @@ namespace Repot
 
         }
 
+        /*
+            Старт программы. 
+                1. Чтение базы данных.
+                2. Если нет записей ничего не делаем.
+                3. Если записи есть выводим их в таблицу.
+
+            Сортировка записей.
+                1. На форме каелндаря выбираем дату.
+                2. Передаем дату функции сортировки.
+                3. Функция сортировки отдает данные в таблицу.
+         */
+
         AddressDB addressDB = new AddressDB("Points");
 
         ReportDB reportDB = new ReportDB("Report");
@@ -96,7 +108,7 @@ namespace Repot
             toolStripMenuItem4.Enabled = true;
             pictureBox1.Visible = false;
             await Task.Run(() => reportDB.WriteRows(Memory));
-            await Console.Out.WriteLineAsync("OK");
+            MessageBox.Show("Данные прочитаны.");
             Memory.Clear();
         }
     }

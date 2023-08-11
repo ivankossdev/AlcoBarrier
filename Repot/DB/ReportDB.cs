@@ -25,11 +25,15 @@ namespace Repot
 
         public void WriteRows(List<string[]> Memory)
         {
-           
             foreach (string[] Row in Memory)
             {
                 Write($"INSERT INTO report (date, time, promille, numcard) VALUES (\"{Row[0]}\", \"{Row[1]}\", \"{Row[2]}\", \"{Row[3]}\")");
             }
+        }
+
+        public void ReadRows()
+        {
+
         }
     }
 }
