@@ -40,10 +40,10 @@ namespace AlcoBarrier
             using (var connection = new SqliteConnection($"Data Source={Path}\\{NameDataBase}.db"))
             {
                 connection.Open();
-                foreach (string User in data)
+                foreach (string _data in data)
                 {
                     var command = connection.CreateCommand();
-                    command.CommandText = User;
+                    command.CommandText = _data;
                     command.ExecuteNonQuery();
                 }
                 connection.Close();

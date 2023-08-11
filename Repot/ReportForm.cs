@@ -48,7 +48,6 @@ namespace Repot
             }
         }
 
-
         private void toolAdd_Click(object sender, EventArgs e)
         {
             SetWindow setWindow = new SetWindow();
@@ -90,12 +89,14 @@ namespace Repot
             toolStripMenuItem4.Enabled = false;
             pictureBox1.Visible = true;
             List<string[]> Memory = myJson.RecordsMemoryList(await requestAlcoReader.GetRequestCmd(myJson.CmdTypeHeaderAllMemory(Result)));
-            foreach (string[] s in Memory)
+            foreach (string[] memory in Memory)
             {
-                dataGridView1.Rows.Add(s);
+                dataGridView1.Rows.Add(memory);
             }
             toolStripMenuItem4.Enabled = true;
             pictureBox1.Visible = false;
+            await Task.Run(() => reportDB.WriteRows(Memory));
+            await Console.Out.WriteLineAsync("OK");
             Memory.Clear();
         }
     }

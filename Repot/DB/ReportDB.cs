@@ -18,11 +18,18 @@ namespace Repot
         public override string CreateDB()
         {
             SqlCommand = $"CREATE TABLE report (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
-                         $"date TEXT NOT NULL, time TEXT NOT NULL, promille TEXT NOT NULL, numcard TEXT NOT NULL);";
+                $"date TEXT NOT NULL, time TEXT NOT NULL, promille TEXT NOT NULL, numcard TEXT NOT NULL);";
             Write(SqlCommand);
             return $"База данных {NameDataBase} создана \n";
         }
 
-
+        public void WriteRows(List<string[]> Memory)
+        {
+           
+            foreach (string[] Row in Memory)
+            {
+                Write($"INSERT INTO report (date, time, promille, numcard) VALUES (\"{Row[0]}\", \"{Row[1]}\", \"{Row[2]}\", \"{Row[3]}\")");
+            }
+        }
     }
 }
