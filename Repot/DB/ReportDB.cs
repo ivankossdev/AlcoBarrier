@@ -36,7 +36,7 @@ namespace Repot
             return ReadListArray($"SELECT date, time, promille, numcard FROM report;");
         }
 
-        public List<string[]> SortByDate(DateTime date)
+        public List<string[]> SortByDate(string date)
         {
             return ReadListArray($"SELECT date, time, promille, numcard FROM report WHERE date = \"{date}\"");
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,10 +18,9 @@ namespace AlcoBarrier
             foreach (var dateString in dateStrings)
             {
                 if (DateTime.TryParseExact(dateString, formats, null,
-                                           System.Globalization.DateTimeStyles.AssumeUniversal |
-                                           System.Globalization.DateTimeStyles.AdjustToUniversal,
+                                           DateTimeStyles.None,
                                            out parsedDate))
-                    Console.WriteLine($"{dateString} --> {parsedDate:g}");
+                    Console.WriteLine($"{dateString} --> {parsedDate:d}");
                 else
                     Console.WriteLine($"Cannot convert {dateString}");
             }

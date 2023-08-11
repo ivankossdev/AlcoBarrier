@@ -31,30 +31,17 @@ namespace Repot
 
         }
 
-        /*
-            Старт программы. 
-                1. Чтение базы данных. ++ 
-                2. Если нет записей ничего не делаем. ++ 
-                3. Если записи есть выводим их в таблицу. ++
-
-            Сортировка записей.
-                1. На форме каелндаря выбираем дату. ++
-                2. Передаем дату функции сортировки. 
-                3. Функция сортировки отдает данные в таблицу.
-
-         */
-
         AddressDB addressDB = new AddressDB("Points");
 
         ReportDB reportDB = new ReportDB("Report");
 
-        string DateSearch = string.Empty;
+        DateTime DateSearch;
 
         private async void PrintFromDataBase(Task<List<string[]>> data)
         {
             toolStripMenuItem4.Enabled = false;
             pictureBox1.Visible = true;
-
+            dataGridView1.Rows.Clear();
             foreach (var item in await data)
             {
                 dataGridView1.Rows.Add(item);
@@ -66,18 +53,7 @@ namespace Repot
 
         private void monthCalendar1_DateSelected(object sender, DateRangeEventArgs e)
         {
-            DateSearch = monthCalendar1.SelectionRange.Start.ToString();
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            
-            if (DateSearch != string.Empty)
-            {
-                dataGridView1.Rows.Clear();
-                PrintFromDataBase(Task.Run<List<string[]>>(() => reportDB.ReadRows()));
-                Console.WriteLine(DateSearch);
-            }
+            DateSearch = monthCalendar1.SelectionRange.Start;
         }
 
         private void toolAdd_Click(object sender, EventArgs e)
@@ -130,6 +106,20 @@ namespace Repot
             await Task.Run(() => reportDB.WriteRows(Memory));
             MessageBox.Show("Данные прочитаны.");
             Memory.Clear();
+        }
+
+        private void buttonSortByDate_Click(object sender, EventArgs e)
+        {
+            if (DateSearch != DateTime.MinValue)
+            {
+                string date = $"{DateSearch:u}".Split(' ')[0];
+                PrintFromDataBase(Task.Run<List<string[]>>(() => reportDB.SortByDate(date)));
+            }
+        }
+
+        private void buttonAllRecords_Click(object sender, EventArgs e)
+        {
+            PrintFromDataBase(Task.Run<List<string[]>>(() => reportDB.ReadRows()));
         }
     }
 }

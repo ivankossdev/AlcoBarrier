@@ -35,8 +35,8 @@
             this.Time = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Result = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CardCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
+            this.buttonSortByDate = new System.Windows.Forms.Button();
+            this.buttonAllRecords = new System.Windows.Forms.Button();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolAdd = new System.Windows.Forms.ToolStripMenuItem();
@@ -45,8 +45,6 @@
             this.toolStripComboBox1 = new System.Windows.Forms.ToolStripComboBox();
             this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.menuStrip1.SuspendLayout();
@@ -108,24 +106,25 @@
             this.CardCode.Name = "CardCode";
             this.CardCode.ReadOnly = true;
             // 
-            // button1
+            // buttonSortByDate
             // 
-            this.button1.Location = new System.Drawing.Point(12, 234);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 3;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.buttonSortByDate.Location = new System.Drawing.Point(12, 195);
+            this.buttonSortByDate.Name = "buttonSortByDate";
+            this.buttonSortByDate.Size = new System.Drawing.Size(164, 23);
+            this.buttonSortByDate.TabIndex = 3;
+            this.buttonSortByDate.Text = "Сортировка по дате";
+            this.buttonSortByDate.UseVisualStyleBackColor = true;
+            this.buttonSortByDate.Click += new System.EventHandler(this.buttonSortByDate_Click);
             // 
-            // button2
+            // buttonAllRecords
             // 
-            this.button2.Location = new System.Drawing.Point(101, 234);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 4;
-            this.button2.Text = "button2";
-            this.button2.UseVisualStyleBackColor = true;
+            this.buttonAllRecords.Location = new System.Drawing.Point(12, 224);
+            this.buttonAllRecords.Name = "buttonAllRecords";
+            this.buttonAllRecords.Size = new System.Drawing.Size(164, 23);
+            this.buttonAllRecords.TabIndex = 4;
+            this.buttonAllRecords.Text = "Показать все записи";
+            this.buttonAllRecords.UseVisualStyleBackColor = true;
+            this.buttonAllRecords.Click += new System.EventHandler(this.buttonAllRecords_Click);
             // 
             // menuStrip1
             // 
@@ -150,7 +149,7 @@
             // toolAdd
             // 
             this.toolAdd.Name = "toolAdd";
-            this.toolAdd.Size = new System.Drawing.Size(180, 22);
+            this.toolAdd.Size = new System.Drawing.Size(126, 22);
             this.toolAdd.Text = "Добавить";
             this.toolAdd.Click += new System.EventHandler(this.toolAdd_Click);
             // 
@@ -168,7 +167,7 @@
             this.toolStripComboBox1,
             this.toolStripMenuItem4});
             this.toolReadMem.Name = "toolReadMem";
-            this.toolReadMem.Size = new System.Drawing.Size(180, 22);
+            this.toolReadMem.Size = new System.Drawing.Size(175, 22);
             this.toolReadMem.Text = "Прочитать память";
             this.toolReadMem.MouseHover += new System.EventHandler(this.toolReadMem_MouseHover);
             // 
@@ -190,23 +189,6 @@
             this.toolStripMenuItem3.Size = new System.Drawing.Size(140, 20);
             this.toolStripMenuItem3.Text = "Импортировать в CSV";
             // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(12, 208);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(164, 20);
-            this.textBox1.TabIndex = 6;
-            this.textBox1.Tag = "";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 192);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(35, 13);
-            this.label1.TabIndex = 7;
-            this.label1.Text = "label1";
-            // 
             // pictureBox1
             // 
             this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -227,10 +209,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.pictureBox1);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.buttonAllRecords);
+            this.Controls.Add(this.buttonSortByDate);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.monthCalendar1);
             this.Controls.Add(this.menuStrip1);
@@ -252,13 +232,11 @@
 
         private System.Windows.Forms.MonthCalendar monthCalendar1;
         private System.Windows.Forms.DataGridView dataGridView1;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button buttonSortByDate;
+        private System.Windows.Forms.Button buttonAllRecords;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ToolStripMenuItem toolReadMem;
         private System.Windows.Forms.ToolStripComboBox toolStripComboBox1;
         private System.Windows.Forms.ToolStripMenuItem toolAdd;
