@@ -27,13 +27,13 @@ namespace Repot
         {
             foreach (string[] Row in Memory)
             {
-                Write($"INSERT INTO report (date, time, promille, numcard) VALUES (\"{Row[0]}\", \"{Row[1]}\", \"{Row[2]}\", \"{Row[3]}\")");
+                Write($"INSERT INTO report (date, time, promille, numcard) VALUES (\"{Row[0]}\", \"{Row[1]}\", \"{Row[2]}\", \"{Row[3]}\");");
             }
         }
 
-        public void ReadRows()
+        public List<string[]> ReadRows()
         {
-
+            return ReadListArray($"SELECT * FROM report;");
         }
     }
 }

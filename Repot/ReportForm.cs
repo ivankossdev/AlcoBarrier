@@ -27,6 +27,8 @@ namespace Repot
                 MessageBox.Show(reportDB.CreateDB());
             }
 
+            PrintFromDataBase();
+
         }
 
         /*
@@ -46,6 +48,15 @@ namespace Repot
         ReportDB reportDB = new ReportDB("Report");
 
         string DateSearch = string.Empty;
+
+        private async void PrintFromDataBase()
+        {
+            
+            foreach (var item in await Task.Run<List<string[]>>(() => reportDB.ReadRows()))
+            {
+                dataGridView1.Rows.Add(item);
+            }
+        }
 
         private void monthCalendar1_DateSelected(object sender, DateRangeEventArgs e)
         {
