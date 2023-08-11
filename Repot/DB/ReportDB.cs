@@ -33,7 +33,7 @@ namespace Repot
 
         public List<string[]> ReadRows()
         {
-            return ReadListArray($"SELECT * FROM report;");
+            return ReadListArray($"SELECT date, time, promille, numcard FROM report;");
         }
     }
 }

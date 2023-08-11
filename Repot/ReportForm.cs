@@ -33,9 +33,9 @@ namespace Repot
 
         /*
             Старт программы. 
-                1. Чтение базы данных.
-                2. Если нет записей ничего не делаем.
-                3. Если записи есть выводим их в таблицу.
+                1. Чтение базы данных. ++ 
+                2. Если нет записей ничего не делаем. ++ 
+                3. Если записи есть выводим их в таблицу. ++
 
             Сортировка записей.
                 1. На форме каелндаря выбираем дату.
@@ -51,7 +51,6 @@ namespace Repot
 
         private async void PrintFromDataBase()
         {
-            
             foreach (var item in await Task.Run<List<string[]>>(() => reportDB.ReadRows()))
             {
                 dataGridView1.Rows.Add(item);
