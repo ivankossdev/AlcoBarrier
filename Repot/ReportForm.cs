@@ -27,7 +27,7 @@ namespace Repot
                 MessageBox.Show(reportDB.CreateDB());
             }
 
-            PrintFromDataBase();
+            PrintFromDataBase(Task.Run<List<string[]>>(() => reportDB.ReadRows()));
 
         }
 
@@ -38,9 +38,10 @@ namespace Repot
                 3. Если записи есть выводим их в таблицу. ++
 
             Сортировка записей.
-                1. На форме каелндаря выбираем дату.
-                2. Передаем дату функции сортировки.
+                1. На форме каелндаря выбираем дату. ++
+                2. Передаем дату функции сортировки. 
                 3. Функция сортировки отдает данные в таблицу.
+
          */
 
         AddressDB addressDB = new AddressDB("Points");
@@ -49,12 +50,18 @@ namespace Repot
 
         string DateSearch = string.Empty;
 
-        private async void PrintFromDataBase()
+        private async void PrintFromDataBase(Task<List<string[]>> data)
         {
-            foreach (var item in await Task.Run<List<string[]>>(() => reportDB.ReadRows()))
+            toolStripMenuItem4.Enabled = false;
+            pictureBox1.Visible = true;
+
+            foreach (var item in await data)
             {
                 dataGridView1.Rows.Add(item);
             }
+
+            toolStripMenuItem4.Enabled = true;
+            pictureBox1.Visible = false;
         }
 
         private void monthCalendar1_DateSelected(object sender, DateRangeEventArgs e)
@@ -64,8 +71,11 @@ namespace Repot
 
         private void button1_Click(object sender, EventArgs e)
         {
+            
             if (DateSearch != string.Empty)
             {
+                dataGridView1.Rows.Clear();
+                PrintFromDataBase(Task.Run<List<string[]>>(() => reportDB.ReadRows()));
                 Console.WriteLine(DateSearch);
             }
         }
