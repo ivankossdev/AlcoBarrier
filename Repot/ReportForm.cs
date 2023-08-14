@@ -80,13 +80,18 @@ namespace Repot
             if (index != -1)
             {
                 ip = toolStripComboBox1.Items[toolStripComboBox1.SelectedIndex].ToString();
+                reportDB.DeleteTable();
+                reportDB.CreateDB();
                 PrintRows(ip);
             }
             else if (ip == string.Empty)
                 MessageBox.Show("Выбирете IP адрес алкотестера");
             else
+            {
+                reportDB.DeleteTable();
+                reportDB.CreateDB();
                 PrintRows(ip);
-
+            }
         }
 
         private async void PrintRows(string ip)
@@ -120,6 +125,12 @@ namespace Repot
         private void buttonAllRecords_Click(object sender, EventArgs e)
         {
             PrintFromDataBase(Task.Run<List<string[]>>(() => reportDB.ReadRows()));
+        }
+
+        private void buttonSort_Click(object sender, EventArgs e)
+        {
+            Console.WriteLine(textBoxFirstName.Text);
+            textBoxFirstName.Clear();
         }
     }
 }

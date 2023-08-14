@@ -46,9 +46,14 @@
             this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.textBoxFirstName = new System.Windows.Forms.TextBox();
+            this.labelFirsName = new System.Windows.Forms.Label();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.buttonSort = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // monthCalendar1
@@ -167,7 +172,7 @@
             this.toolStripComboBox1,
             this.toolStripMenuItem4});
             this.toolReadMem.Name = "toolReadMem";
-            this.toolReadMem.Size = new System.Drawing.Size(175, 22);
+            this.toolReadMem.Size = new System.Drawing.Size(180, 22);
             this.toolReadMem.Text = "Прочитать память";
             this.toolReadMem.MouseHover += new System.EventHandler(this.toolReadMem_MouseHover);
             // 
@@ -203,11 +208,50 @@
             this.pictureBox1.TabStop = false;
             this.pictureBox1.Visible = false;
             // 
+            // textBoxFirstName
+            // 
+            this.textBoxFirstName.Location = new System.Drawing.Point(6, 32);
+            this.textBoxFirstName.Name = "textBoxFirstName";
+            this.textBoxFirstName.Size = new System.Drawing.Size(152, 20);
+            this.textBoxFirstName.TabIndex = 9;
+            // 
+            // labelFirsName
+            // 
+            this.labelFirsName.AutoSize = true;
+            this.labelFirsName.Location = new System.Drawing.Point(6, 16);
+            this.labelFirsName.Name = "labelFirsName";
+            this.labelFirsName.Size = new System.Drawing.Size(59, 13);
+            this.labelFirsName.TabIndex = 10;
+            this.labelFirsName.Text = "Фамилия ";
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.buttonSort);
+            this.groupBox1.Controls.Add(this.labelFirsName);
+            this.groupBox1.Controls.Add(this.textBoxFirstName);
+            this.groupBox1.Location = new System.Drawing.Point(12, 253);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(164, 185);
+            this.groupBox1.TabIndex = 11;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Сортировка по параметрам";
+            // 
+            // buttonSort
+            // 
+            this.buttonSort.Location = new System.Drawing.Point(76, 58);
+            this.buttonSort.Name = "buttonSort";
+            this.buttonSort.Size = new System.Drawing.Size(82, 23);
+            this.buttonSort.TabIndex = 11;
+            this.buttonSort.Text = "Сортировать";
+            this.buttonSort.UseVisualStyleBackColor = true;
+            this.buttonSort.Click += new System.EventHandler(this.buttonSort_Click);
+            // 
             // ReportForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.buttonAllRecords);
             this.Controls.Add(this.buttonSortByDate);
@@ -223,6 +267,8 @@
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -247,6 +293,10 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Result;
         private System.Windows.Forms.DataGridViewTextBoxColumn CardCode;
         private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.TextBox textBoxFirstName;
+        private System.Windows.Forms.Label labelFirsName;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Button buttonSort;
     }
 }
 

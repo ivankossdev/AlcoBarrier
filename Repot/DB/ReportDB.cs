@@ -23,6 +23,12 @@ namespace Repot
             return $"База данных {NameDataBase} создана \n";
         }
 
+        public void DeleteTable()
+        {
+            SqlCommand = "DROP TABLE IF EXISTS report";
+            Write(SqlCommand);
+        }
+
         public void WriteRows(List<string[]> Memory)
         {
             foreach (string[] Row in Memory)
