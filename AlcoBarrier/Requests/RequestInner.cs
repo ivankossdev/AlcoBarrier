@@ -16,7 +16,7 @@ using System.Xml.Linq;
 
 namespace AlcoBarrier
 {
-    class RequestInner
+    public class RequestInner
     {
         private HttpClient client;
         private XmlHandler xmlHandler;

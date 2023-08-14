@@ -43,6 +43,12 @@ namespace AlcoBarrier
         string SetHour = string.Empty;
         string SetMinute = string.Empty;
 
+        /* 
+        1. Сделать логику записи событий в бд по проходу
+        2. Сделать синхронизацию бд иннера по времени или запросу
+        3. Сделать выгрузку событий бд в бд отчета. 
+         */
+
         private void InitClass()
         {
             SettingsDB setDb = new SettingsDB("settings")

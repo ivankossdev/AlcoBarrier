@@ -158,8 +158,8 @@
             // toolAdd
             // 
             this.toolAdd.Name = "toolAdd";
-            this.toolAdd.Size = new System.Drawing.Size(192, 22);
-            this.toolAdd.Text = "Добавить Алкотестер";
+            this.toolAdd.Size = new System.Drawing.Size(180, 22);
+            this.toolAdd.Text = "Алкотестер";
             this.toolAdd.Click += new System.EventHandler(this.toolAdd_Click);
             // 
             // toolStripMenuItem5
@@ -168,7 +168,7 @@
             this.toolStripAddInnerServer,
             this.toolStripSynchroServer});
             this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            this.toolStripMenuItem5.Size = new System.Drawing.Size(192, 22);
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItem5.Text = "Inner сервер";
             // 
             // toolStripAddInnerServer

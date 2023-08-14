@@ -150,9 +150,15 @@ namespace Repot
             innerSetting.ShowDialog();
         }
 
-        private void toolStripSynchroServer_Click(object sender, EventArgs e)
+        RequestInner requestInner;
+        private async void toolStripSynchroServer_Click(object sender, EventArgs e)
         {
-
+            string[] settings = await Task.Run(() => addressDB.GetInnerSettings()); 
+            requestInner = new RequestInner(settings[0], settings[1], settings[2]);
+            foreach (var user in await requestInner.GetAllUsers())
+            {
+                await Console.Out.WriteLineAsync(user);
+            }
         }
     }
 }
