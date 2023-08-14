@@ -18,7 +18,7 @@ namespace Repot
         public override string CreateDB()
         {
             SqlCommand = $"CREATE TABLE report (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
-                $"date TEXT NOT NULL, time TEXT NOT NULL, promille TEXT NOT NULL, numcard TEXT NOT NULL);";
+                $"date TEXT NOT NULL, time TEXT NOT NULL, promille TEXT NOT NULL, numcard TEXT NOT NULL, fio TEXT);";
             Write(SqlCommand);
             return $"База данных {NameDataBase} создана \n";
         }
@@ -33,18 +33,23 @@ namespace Repot
         {
             foreach (string[] Row in Memory)
             {
-                Write($"INSERT INTO report (date, time, promille, numcard) VALUES (\"{Row[0]}\", \"{Row[1]}\", \"{Row[2]}\", \"{Row[3]}\");");
+                Write($"INSERT INTO report (date, time, promille, numcard, fio) VALUES (\"{Row[0]}\", \"{Row[1]}\", \"{Row[2]}\", \"{Row[3]}\", \" \");");
             }
+        }
+
+        public void WriteFIO(string fio, string numcard)
+        {
+            Write($"UPDATE report SET fio = \"{fio}\" WHERE numcard = \"{numcard}\";");
         }
 
         public List<string[]> ReadRows()
         {
-            return ReadListArray($"SELECT date, time, promille, numcard FROM report;");
+            return ReadListArray($"SELECT date, time, promille, numcard, fio FROM report;");
         }
 
         public List<string[]> SortByDate(string date)
         {
-            return ReadListArray($"SELECT date, time, promille, numcard FROM report WHERE date = \"{date}\"");
+            return ReadListArray($"SELECT date, time, promille, numcard, fio FROM report WHERE date = \"{date}\"");
         }
 
         public List<string[]> SortByNumCard(string NumCard)

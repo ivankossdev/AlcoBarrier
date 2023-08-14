@@ -53,6 +53,7 @@
             this.labelFirsName = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.buttonSort = new System.Windows.Forms.Button();
+            this.fio = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -79,7 +80,8 @@
             this.Date,
             this.Time,
             this.Result,
-            this.CardCode});
+            this.CardCode,
+            this.fio});
             this.dataGridView1.Location = new System.Drawing.Point(182, 27);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.ReadOnly = true;
@@ -158,7 +160,7 @@
             // toolAdd
             // 
             this.toolAdd.Name = "toolAdd";
-            this.toolAdd.Size = new System.Drawing.Size(180, 22);
+            this.toolAdd.Size = new System.Drawing.Size(142, 22);
             this.toolAdd.Text = "Алкотестер";
             this.toolAdd.Click += new System.EventHandler(this.toolAdd_Click);
             // 
@@ -168,7 +170,7 @@
             this.toolStripAddInnerServer,
             this.toolStripSynchroServer});
             this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            this.toolStripMenuItem5.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(142, 22);
             this.toolStripMenuItem5.Text = "Inner сервер";
             // 
             // toolStripAddInnerServer
@@ -227,9 +229,9 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(182, 27);
+            this.pictureBox1.Location = new System.Drawing.Point(182, 49);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(606, 411);
+            this.pictureBox1.Size = new System.Drawing.Size(606, 389);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 8;
             this.pictureBox1.TabStop = false;
@@ -272,6 +274,12 @@
             this.buttonSort.Text = "Сортировать";
             this.buttonSort.UseVisualStyleBackColor = true;
             this.buttonSort.Click += new System.EventHandler(this.buttonSort_Click);
+            // 
+            // fio
+            // 
+            this.fio.HeaderText = "ФИО";
+            this.fio.Name = "fio";
+            this.fio.ReadOnly = true;
             // 
             // ReportForm
             // 
@@ -327,6 +335,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem5;
         private System.Windows.Forms.ToolStripMenuItem toolStripAddInnerServer;
         private System.Windows.Forms.ToolStripMenuItem toolStripSynchroServer;
+        private System.Windows.Forms.DataGridViewTextBoxColumn fio;
     }
 }
 
