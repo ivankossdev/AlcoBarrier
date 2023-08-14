@@ -73,7 +73,7 @@ namespace AlcoBarrier
             return xmlHandler.GetUsersString(MyResult);
         }
 
-        async public Task<List<string>> GetDictUsers()
+        async public Task<List<string[]>> GetDictUsers()
         {
             string MyResult;
             try

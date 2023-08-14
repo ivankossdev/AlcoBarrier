@@ -157,7 +157,11 @@ namespace Repot
             requestInner = new RequestInner(settings[0], settings[1], settings[2]);
             foreach (var user in await requestInner.GetDictUsers())
             {
-                await Console.Out.WriteLineAsync(user);
+                foreach(var item in user)
+                {
+                    await Console.Out.WriteLineAsync(item);
+                }
+                await Console.Out.WriteLineAsync("------------------------");
             }
         }
     }

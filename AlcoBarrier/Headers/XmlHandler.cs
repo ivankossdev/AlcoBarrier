@@ -100,9 +100,9 @@ namespace AlcoBarrier
             return Info;
         }
 
-        public List<string> GetUsersArray(string xml)
+        public List<string[]> GetUsersArray(string xml)
         {
-            List<string> Users = new List<string>();
+            List<string[]> Users = new List<string[]>();
 
             XmlNodeList users = innerage.GetElementsByTagName("Rows");
             innerage.LoadXml(xml);
@@ -152,13 +152,26 @@ namespace AlcoBarrier
                             }
                         }
                     }
-                    Users.Add($"{Name}&{Address}&{CardCode}&{CardData}&{Id}&{CardTemplate}");
+                    Users.Add(CreateArray(Name, Address, CardCode, CardData, Id, CardTemplate));
+
                     Name = string.Empty; Address = string.Empty; CardCode = string.Empty; CardData = string.Empty;
                     CardTemplate = string.Empty;
                 }
             }
-
             return Users;
+        }
+
+        private string[] CreateArray(string Name, string Address, string CardCode, string CardData, string Id, string CardTemplate)
+        {
+            string[] strings = { 
+                Name, 
+                Address, 
+                CardCode,
+                CardData,
+                Id,
+                CardTemplate
+            };
+            return strings;
         }
     }
 }
