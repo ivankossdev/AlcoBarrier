@@ -46,5 +46,15 @@ namespace Repot
         {
             return ReadListArray($"SELECT date, time, promille, numcard FROM report WHERE date = \"{date}\"");
         }
+
+        public List<string[]> SortByNumCard(string NumCard)
+        {
+            return ReadListArray($"SELECT date, time, promille, numcard FROM report WHERE numcard LIKE \"%{NumCard}%\"");
+        }
+
+        public List<string[]> SortByNumCardAndDate(string NumCard, string Date)
+        {
+            return ReadListArray($"SELECT date, time, promille, numcard FROM report WHERE numcard LIKE \"%{NumCard}%\" AND date = \"{Date}\"");
+        }
     }
 }

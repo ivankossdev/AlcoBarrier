@@ -129,7 +129,18 @@ namespace Repot
 
         private void buttonSort_Click(object sender, EventArgs e)
         {
-            Console.WriteLine(textBoxFirstName.Text);
+            string FirstName = textBoxFirstName.Text;
+
+            if (DateSearch != DateTime.MinValue && FirstName != string.Empty)
+            {
+                string date = $"{DateSearch:u}".Split(' ')[0];
+                PrintFromDataBase(Task.Run<List<string[]>>(() => reportDB.SortByNumCardAndDate(FirstName, date)));
+            }
+            else if (textBoxFirstName.Text != string.Empty)
+            {
+                
+                PrintFromDataBase(Task.Run<List<string[]>>(() => reportDB.SortByNumCard(FirstName)));
+            }
             textBoxFirstName.Clear();
         }
     }
