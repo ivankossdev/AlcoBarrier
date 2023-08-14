@@ -38,5 +38,15 @@ namespace AlcoBarrier
             string[] res = Read($"SELECT code, hex, iduser, CardTemplate  FROM user WHERE code LIKE \"%{code}%\"");
             return res;
         }
+        public void WriteRow(string[] emp) 
+        {
+            Write($"INSERT INTO employees (name, iduser, code, hex, id, CardTemplate) " +
+                $"VALUES (\"{emp[0]}\", \"{emp[1]}\", \"{emp[2]}\", \"{emp[3]}\", \"{emp[4]}\", \"{emp[5]}\");");
+        }
+
+        public void DeleteTable()
+        {
+            Write("DROP TABLE IF EXISTS employees");
+        }
     }
 }

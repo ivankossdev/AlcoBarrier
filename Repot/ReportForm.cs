@@ -26,6 +26,10 @@ namespace Repot
             {
                 MessageBox.Show(reportDB.CreateDB());
             }
+            else if (!File.Exists(emloeyesDB.Path + "\\" + reportDB.NameDataBase + ".db"))
+            {
+                MessageBox.Show(emloeyesDB.CreateDB());
+            }
 
             PrintFromDataBase(Task.Run<List<string[]>>(() => reportDB.ReadRows()));
 
@@ -34,6 +38,8 @@ namespace Repot
         AddressDB addressDB = new AddressDB("Points");
 
         ReportDB reportDB = new ReportDB("Report");
+
+        EmloeyesDB emloeyesDB = new EmloeyesDB("employees");
 
         DateTime DateSearch;
 
@@ -153,15 +159,13 @@ namespace Repot
         RequestInner requestInner;
         private async void toolStripSynchroServer_Click(object sender, EventArgs e)
         {
+            await Task.Run(() => emloeyesDB.DeleteTable());
+            await Task.Run(() => emloeyesDB.CreateDB());
             string[] settings = await Task.Run(() => addressDB.GetInnerSettings()); 
             requestInner = new RequestInner(settings[0], settings[1], settings[2]);
             foreach (var user in await requestInner.GetDictUsers())
             {
-                foreach(var item in user)
-                {
-                    await Console.Out.WriteLineAsync(item);
-                }
-                await Console.Out.WriteLineAsync("------------------------");
+                await Task.Run(() => emloeyesDB.WriteRow(user)); 
             }
         }
     }
