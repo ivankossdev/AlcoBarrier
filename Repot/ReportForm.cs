@@ -155,7 +155,7 @@ namespace Repot
         {
             string[] settings = await Task.Run(() => addressDB.GetInnerSettings()); 
             requestInner = new RequestInner(settings[0], settings[1], settings[2]);
-            foreach (var user in await requestInner.GetAllUsers())
+            foreach (var user in await requestInner.GetDictUsers())
             {
                 await Console.Out.WriteLineAsync(user);
             }
