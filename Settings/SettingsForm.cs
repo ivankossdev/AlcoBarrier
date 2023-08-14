@@ -20,7 +20,9 @@ namespace Settings
             InitializeComponent();
             setDb = new SettingsDB("settings")
             {
+                #if DEBUG
                 Path = Path.GetFullPath("..\\..\\..\\AlcoBarrier\\bin\\Debug")
+                #endif
             };
             check_db();
         }

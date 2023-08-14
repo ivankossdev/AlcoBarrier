@@ -89,6 +89,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DB\ReportDB.cs" />
+    <Compile Include="InnerSetting.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="InnerSetting.Designer.cs">
+      <DependentUpon>InnerSetting.cs</DependentUpon>
+    </Compile>
     <Compile Include="ReportForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -104,6 +110,9 @@
     <Compile Include="SetWindow.Designer.cs">
       <DependentUpon>SetWindow.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="InnerSetting.resx">
+      <DependentUpon>InnerSetting.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ReportForm.resx">
       <DependentUpon>ReportForm.cs</DependentUpon>
     </EmbeddedResource>

@@ -40,6 +40,9 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolAdd = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripAddInnerServer = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSynchroServer = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolReadMem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripComboBox1 = new System.Windows.Forms.ToolStripComboBox();
@@ -146,7 +149,8 @@
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolAdd});
+            this.toolAdd,
+            this.toolStripMenuItem5});
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
             this.toolStripMenuItem1.Size = new System.Drawing.Size(79, 20);
             this.toolStripMenuItem1.Text = "Настройки";
@@ -154,9 +158,32 @@
             // toolAdd
             // 
             this.toolAdd.Name = "toolAdd";
-            this.toolAdd.Size = new System.Drawing.Size(126, 22);
-            this.toolAdd.Text = "Добавить";
+            this.toolAdd.Size = new System.Drawing.Size(192, 22);
+            this.toolAdd.Text = "Добавить Алкотестер";
             this.toolAdd.Click += new System.EventHandler(this.toolAdd_Click);
+            // 
+            // toolStripMenuItem5
+            // 
+            this.toolStripMenuItem5.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripAddInnerServer,
+            this.toolStripSynchroServer});
+            this.toolStripMenuItem5.Name = "toolStripMenuItem5";
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(192, 22);
+            this.toolStripMenuItem5.Text = "Inner сервер";
+            // 
+            // toolStripAddInnerServer
+            // 
+            this.toolStripAddInnerServer.Name = "toolStripAddInnerServer";
+            this.toolStripAddInnerServer.Size = new System.Drawing.Size(215, 22);
+            this.toolStripAddInnerServer.Text = "Насиройки подключения";
+            this.toolStripAddInnerServer.Click += new System.EventHandler(this.toolStripAddInnerServer_Click);
+            // 
+            // toolStripSynchroServer
+            // 
+            this.toolStripSynchroServer.Name = "toolStripSynchroServer";
+            this.toolStripSynchroServer.Size = new System.Drawing.Size(215, 22);
+            this.toolStripSynchroServer.Text = "Синхронизировать";
+            this.toolStripSynchroServer.Click += new System.EventHandler(this.toolStripSynchroServer_Click);
             // 
             // toolStripMenuItem2
             // 
@@ -172,7 +199,7 @@
             this.toolStripComboBox1,
             this.toolStripMenuItem4});
             this.toolReadMem.Name = "toolReadMem";
-            this.toolReadMem.Size = new System.Drawing.Size(180, 22);
+            this.toolReadMem.Size = new System.Drawing.Size(175, 22);
             this.toolReadMem.Text = "Прочитать память";
             this.toolReadMem.MouseHover += new System.EventHandler(this.toolReadMem_MouseHover);
             // 
@@ -297,6 +324,9 @@
         private System.Windows.Forms.Label labelFirsName;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button buttonSort;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem5;
+        private System.Windows.Forms.ToolStripMenuItem toolStripAddInnerServer;
+        private System.Windows.Forms.ToolStripMenuItem toolStripSynchroServer;
     }
 }
 

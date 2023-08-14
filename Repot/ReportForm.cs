@@ -143,5 +143,16 @@ namespace Repot
             }
             textBoxFirstName.Clear();
         }
+
+        InnerSetting innerSetting = new InnerSetting();
+        private void toolStripAddInnerServer_Click(object sender, EventArgs e)
+        {
+            innerSetting.ShowDialog();
+        }
+
+        private void toolStripSynchroServer_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
