@@ -6,9 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using AlcoBarrier;
 
-namespace Repot
+namespace AlcoBarrier
 {
-    internal class ReportDB : BaseSQLite
+    public class ReportDB : BaseSQLite
     {
         public ReportDB(string _NameDataBase) : base(_NameDataBase)
         {
