@@ -165,8 +165,9 @@ namespace Repot
 
         private void toolStripMenuItem3_Click(object sender, EventArgs e)
         {
+            DataGridHandler dataGridHandler = new DataGridHandler();
             saveFileDialog1.ShowDialog();
-            CSVHandler.Writer(saveFileDialog1.FileName);
+            CSVHandler.Writer(saveFileDialog1.FileName, dataGridHandler.GetData(dataGridView1));
         }
     }
 }

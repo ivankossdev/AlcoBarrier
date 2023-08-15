@@ -9,8 +9,6 @@ namespace Repot
 {
     internal class ModelDB
     {
-        public int id { get; set; }
-
         [Name("Дата")]
         public string date { get; set; }
 
