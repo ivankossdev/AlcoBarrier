@@ -228,6 +228,7 @@
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
             this.toolStripMenuItem3.Size = new System.Drawing.Size(140, 20);
             this.toolStripMenuItem3.Text = "Импортировать в CSV";
+            this.toolStripMenuItem3.Click += new System.EventHandler(this.toolStripMenuItem3_Click);
             // 
             // pictureBox1
             // 

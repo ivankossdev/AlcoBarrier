@@ -162,5 +162,11 @@ namespace Repot
                 await Task.Run(() => emloeyesDB.WriteRow(user)); 
             }
         }
+
+        private void toolStripMenuItem3_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Экспорт начат");
+            CSVHandler.Writer();
+        }
     }
 }

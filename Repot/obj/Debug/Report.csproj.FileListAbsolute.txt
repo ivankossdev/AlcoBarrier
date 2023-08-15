@@ -29,8 +29,6 @@ C:\Users\RR\source\repos\AlcoBarrier\Repot\bin\Debug\System.Text.Encodings.Web.x
 C:\Users\RR\source\repos\AlcoBarrier\Repot\bin\Debug\System.Threading.Tasks.Extensions.xml
 C:\Users\RR\source\repos\AlcoBarrier\Repot\bin\Debug\Microsoft.Bcl.AsyncInterfaces.xml
 C:\Users\RR\source\repos\AlcoBarrier\Repot\obj\Debug\Report.csproj.AssemblyReference.cache
-C:\Users\RR\source\repos\AlcoBarrier\Repot\obj\Debug\Report.csproj.SuggestedBindingRedirects.cache
-C:\Users\RR\source\repos\AlcoBarrier\Repot\obj\Debug\Repot.exe.config
 C:\Users\RR\source\repos\AlcoBarrier\Repot\obj\Debug\Repot.ReportForm.resources
 C:\Users\RR\source\repos\AlcoBarrier\Repot\obj\Debug\Repot.Properties.Resources.resources
 C:\Users\RR\source\repos\AlcoBarrier\Repot\obj\Debug\Repot.SetWindow.resources
@@ -41,3 +39,7 @@ C:\Users\RR\source\repos\AlcoBarrier\Repot\obj\Debug\Repot.exe
 C:\Users\RR\source\repos\AlcoBarrier\Repot\obj\Debug\Repot.pdb
 C:\Users\RR\source\repos\AlcoBarrier\Repot\obj\Debug\Repot.InnerSetting.resources
 C:\Users\RR\source\repos\AlcoBarrier\Repot\obj\Debug\Repot.SynchroForm.resources
+C:\Users\RR\source\repos\AlcoBarrier\Repot\bin\Debug\CsvHelper.dll
+C:\Users\RR\source\repos\AlcoBarrier\Repot\bin\Debug\Microsoft.Bcl.HashCode.dll
+C:\Users\RR\source\repos\AlcoBarrier\Repot\bin\Debug\CsvHelper.xml
+C:\Users\RR\source\repos\AlcoBarrier\Repot\bin\Debug\Microsoft.Bcl.HashCode.xml
