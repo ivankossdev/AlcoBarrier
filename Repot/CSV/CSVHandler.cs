@@ -22,7 +22,7 @@ namespace Repot
                
                for(int i = 0; i < 10; i++)
                 {   
-                    records.Add(new ModelDB { id = $"Строка {i}", val = $"Значение {i}" });
+                    records.Add(new ModelDB { id = i, date = $"Значение {i}", time = "Время 12.00", promille = "0.00", numcard = "1111", fio = "Card 1" });
                 }
                 var config = new CsvConfiguration(CultureInfo.GetCultureInfo("ru-Ru"))
                 {

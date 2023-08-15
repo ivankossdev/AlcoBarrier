@@ -9,9 +9,21 @@ namespace Repot
 {
     internal class ModelDB
     {
-        [Name("индефикатор")]
-        public string id { get; set; }
-        [Name("Значение")]
-        public string val { get; set; }
+        public int id { get; set; }
+
+        [Name("Дата")]
+        public string date { get; set; }
+
+        [Name("Время")]
+        public string time { get; set; }
+
+        [Name("Промилли")]
+        public string promille { get; set; }
+
+        [Name("Номер карты")]
+        public string numcard { get; set; }
+
+        [Name("ФИО")]
+        public string fio { get; set; }
     }
 }
