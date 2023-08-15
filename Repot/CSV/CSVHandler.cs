@@ -13,11 +13,11 @@ namespace Repot
 {
     internal static class CSVHandler
     {
-        public static void Writer()
+        public static void Writer(string Path)
         {
             var records = new List<ModelDB>();
 
-            using (var writer = new StreamWriter($"{Directory.GetCurrentDirectory()}\\file.csv", false, Encoding.GetEncoding("windows-1251")))
+            using (var writer = new StreamWriter(Path, false, Encoding.GetEncoding("windows-1251")))
             {
                
                for(int i = 0; i < 10; i++)
@@ -37,6 +37,4 @@ namespace Repot
 
         }
     }
-
-
 }

@@ -54,6 +54,7 @@
             this.labelNumCard = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.buttonSort = new System.Windows.Forms.Button();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -282,6 +283,11 @@
             this.buttonSort.UseVisualStyleBackColor = true;
             this.buttonSort.Click += new System.EventHandler(this.buttonSort_Click);
             // 
+            // saveFileDialog1
+            // 
+            this.saveFileDialog1.FileName = "Отчет";
+            this.saveFileDialog1.Filter = "csv files(*.csv)|*.csv|All files(*.*)|*.*";
+            // 
             // ReportForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -337,6 +343,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripAddInnerServer;
         private System.Windows.Forms.ToolStripMenuItem toolStripSynchroServer;
         private System.Windows.Forms.DataGridViewTextBoxColumn fio;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
     }
 }
 

@@ -165,8 +165,8 @@ namespace Repot
 
         private void toolStripMenuItem3_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Экспорт начат");
-            CSVHandler.Writer();
+            saveFileDialog1.ShowDialog();
+            CSVHandler.Writer(saveFileDialog1.FileName);
         }
     }
 }
