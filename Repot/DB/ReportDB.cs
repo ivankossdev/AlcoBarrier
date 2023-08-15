@@ -29,11 +29,13 @@ namespace Repot
             Write(SqlCommand);
         }
 
+        EmloeyesDB emloeyesDB = new EmloeyesDB("employees"); 
         public void WriteRows(List<string[]> Memory)
         {
             foreach (string[] Row in Memory)
-            {
-                Write($"INSERT INTO report (date, time, promille, numcard, fio) VALUES (\"{Row[0]}\", \"{Row[1]}\", \"{Row[2]}\", \"{Row[3]}\", \" \");");
+            {   
+                Write($"INSERT INTO report (date, time, promille, numcard, fio) " +
+                    $"VALUES (\"{Row[0]}\", \"{Row[1]}\", \"{Row[2]}\", \"{Row[3]}\", \" {emloeyesDB.GetNameCard(Row[3])}\");");
             }
         }
 

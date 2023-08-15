@@ -22,6 +22,8 @@ namespace Settings
             {
                 #if DEBUG
                 Path = Path.GetFullPath("..\\..\\..\\AlcoBarrier\\bin\\Debug")
+                #else
+                Path = Path.GetFullPath("..\\AlcoBarrier\\bin\\Release")
                 #endif
             };
             check_db();
