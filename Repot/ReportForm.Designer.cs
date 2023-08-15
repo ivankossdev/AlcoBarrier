@@ -35,6 +35,7 @@
             this.Time = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Result = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CardCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.fio = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.buttonSortByDate = new System.Windows.Forms.Button();
             this.buttonAllRecords = new System.Windows.Forms.Button();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
@@ -49,11 +50,10 @@
             this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.textBoxFirstName = new System.Windows.Forms.TextBox();
-            this.labelFirsName = new System.Windows.Forms.Label();
+            this.textBoxNumCard = new System.Windows.Forms.TextBox();
+            this.labelNumCard = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.buttonSort = new System.Windows.Forms.Button();
-            this.fio = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -115,6 +115,12 @@
             this.CardCode.HeaderText = "Карточка";
             this.CardCode.Name = "CardCode";
             this.CardCode.ReadOnly = true;
+            // 
+            // fio
+            // 
+            this.fio.HeaderText = "ФИО";
+            this.fio.Name = "fio";
+            this.fio.ReadOnly = true;
             // 
             // buttonSortByDate
             // 
@@ -237,27 +243,27 @@
             this.pictureBox1.TabStop = false;
             this.pictureBox1.Visible = false;
             // 
-            // textBoxFirstName
+            // textBoxNumCard
             // 
-            this.textBoxFirstName.Location = new System.Drawing.Point(6, 32);
-            this.textBoxFirstName.Name = "textBoxFirstName";
-            this.textBoxFirstName.Size = new System.Drawing.Size(152, 20);
-            this.textBoxFirstName.TabIndex = 9;
+            this.textBoxNumCard.Location = new System.Drawing.Point(6, 32);
+            this.textBoxNumCard.Name = "textBoxNumCard";
+            this.textBoxNumCard.Size = new System.Drawing.Size(152, 20);
+            this.textBoxNumCard.TabIndex = 9;
             // 
-            // labelFirsName
+            // labelNumCard
             // 
-            this.labelFirsName.AutoSize = true;
-            this.labelFirsName.Location = new System.Drawing.Point(6, 16);
-            this.labelFirsName.Name = "labelFirsName";
-            this.labelFirsName.Size = new System.Drawing.Size(59, 13);
-            this.labelFirsName.TabIndex = 10;
-            this.labelFirsName.Text = "Фамилия ";
+            this.labelNumCard.AutoSize = true;
+            this.labelNumCard.Location = new System.Drawing.Point(6, 16);
+            this.labelNumCard.Name = "labelNumCard";
+            this.labelNumCard.Size = new System.Drawing.Size(75, 13);
+            this.labelNumCard.TabIndex = 10;
+            this.labelNumCard.Text = "Номер карты";
             // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.buttonSort);
-            this.groupBox1.Controls.Add(this.labelFirsName);
-            this.groupBox1.Controls.Add(this.textBoxFirstName);
+            this.groupBox1.Controls.Add(this.labelNumCard);
+            this.groupBox1.Controls.Add(this.textBoxNumCard);
             this.groupBox1.Location = new System.Drawing.Point(12, 253);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(164, 185);
@@ -274,12 +280,6 @@
             this.buttonSort.Text = "Сортировать";
             this.buttonSort.UseVisualStyleBackColor = true;
             this.buttonSort.Click += new System.EventHandler(this.buttonSort_Click);
-            // 
-            // fio
-            // 
-            this.fio.HeaderText = "ФИО";
-            this.fio.Name = "fio";
-            this.fio.ReadOnly = true;
             // 
             // ReportForm
             // 
@@ -328,8 +328,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Result;
         private System.Windows.Forms.DataGridViewTextBoxColumn CardCode;
         private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.TextBox textBoxFirstName;
-        private System.Windows.Forms.Label labelFirsName;
+        private System.Windows.Forms.TextBox textBoxNumCard;
+        private System.Windows.Forms.Label labelNumCard;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button buttonSort;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem5;

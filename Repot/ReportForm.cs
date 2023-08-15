@@ -135,19 +135,19 @@ namespace Repot
 
         private void buttonSort_Click(object sender, EventArgs e)
         {
-            string FirstName = textBoxFirstName.Text;
+            string FirstName = textBoxNumCard.Text;
 
             if (DateSearch != DateTime.MinValue && FirstName != string.Empty)
             {
                 string date = $"{DateSearch:u}".Split(' ')[0];
                 PrintFromDataBase(Task.Run<List<string[]>>(() => reportDB.SortByNumCardAndDate(FirstName, date)));
             }
-            else if (textBoxFirstName.Text != string.Empty)
+            else if (textBoxNumCard.Text != string.Empty)
             {
                 
                 PrintFromDataBase(Task.Run<List<string[]>>(() => reportDB.SortByNumCard(FirstName)));
             }
-            textBoxFirstName.Clear();
+            textBoxNumCard.Clear();
         }
 
         InnerSetting innerSetting = new InnerSetting();

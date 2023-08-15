@@ -54,12 +54,12 @@ namespace Repot
 
         public List<string[]> SortByNumCard(string NumCard)
         {
-            return ReadListArray($"SELECT date, time, promille, numcard FROM report WHERE numcard LIKE \"%{NumCard}%\"");
+            return ReadListArray($"SELECT date, time, promille, numcard, fio FROM report WHERE numcard LIKE \"%{NumCard}%\"");
         }
 
         public List<string[]> SortByNumCardAndDate(string NumCard, string Date)
         {
-            return ReadListArray($"SELECT date, time, promille, numcard FROM report WHERE numcard LIKE \"%{NumCard}%\" AND date = \"{Date}\"");
+            return ReadListArray($"SELECT date, time, promille, numcard, fio FROM report WHERE numcard LIKE \"%{NumCard}%\" AND date = \"{Date}\"");
         }
     }
 }
