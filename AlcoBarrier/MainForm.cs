@@ -35,7 +35,7 @@ namespace AlcoBarrier
 
         string Result = string.Empty;
 
-        EmloeyesDB test;
+        EmloeyesDB emploeyesDB;
         EventsDB events;
         MyJson myJson = new MyJson();
         RequestInner InnerageHandler;
@@ -58,7 +58,7 @@ namespace AlcoBarrier
 
             string[] ParamsInner = setDb.GetSettingString(setDb.InnerTable);
             string[] IpAlcoTester = setDb.GetSettingString(setDb.AlcoTable);
-            test = new EmloeyesDB("employees");
+            emploeyesDB = new EmloeyesDB("employees");
             events = new EventsDB("events");
             InnerageHandler = new RequestInner(ParamsInner[0], ParamsInner[1], ParamsInner[2]);
             AlcoReader = new RequestAlcoReader(IpAlcoTester[0]);
@@ -94,7 +94,7 @@ namespace AlcoBarrier
                     if (rows[0] != null  && rows[1] != null && rows[2] != null && rows[3] != null && rows[4] != null)
                     {
                         dataGridView1.Rows.Add(rows);
-                        string[] data = await Task.Run<string[]>(() => test.GetUserParam(rows[4]));
+                        string[] data = await Task.Run<string[]>(() => emploeyesDB.GetUserParam(rows[4]));
                         await Task.Run(() => events.WriteEvent(data, CreateBlockTime(SetHour, SetMinute)));
 
                         foreach (string[] s in events.ReadEventList())
@@ -138,14 +138,6 @@ namespace AlcoBarrier
             {
                 Console.WriteLine(Date);
             }
-        }
-
-        private async void dataGridView1_RowHeaderMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
-        {
-            string CardCode = dataGridView1[4, e.RowIndex].Value.ToString();
-
-            string[] u = test.GetUserParam(CardCode);
-            await InnerageHandler.BlockedUser(false, u);
         }
 
         private bool Check_Databases(params string[] databases)

@@ -108,6 +108,7 @@ namespace Repot
             toolStripMenuItem4.Enabled = false;
             pictureBox1.Visible = true;
             List<string[]> Memory = myJson.RecordsMemoryList(await requestAlcoReader.GetRequestCmd(myJson.CmdTypeHeaderAllMemory(Result)));
+            
             foreach (string[] memory in Memory)
             {
                 dataGridView1.Rows.Add(memory);
@@ -144,7 +145,6 @@ namespace Repot
             }
             else if (textBoxNumCard.Text != string.Empty)
             {
-                
                 PrintFromDataBase(Task.Run<List<string[]>>(() => reportDB.SortByNumCard(FirstName)));
             }
             textBoxNumCard.Clear();

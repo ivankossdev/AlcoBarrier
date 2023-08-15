@@ -29,13 +29,13 @@ namespace AlcoBarrier
 
         public string GetNameCard(string code)
         {
-            string[] res = Read($"SELECT name FROM user WHERE code LIKE \"%{code}%\"");
+            string[] res = Read($"SELECT name FROM employees WHERE code LIKE \"%{code}%\"");
             return res[0];
         }
 
         public string[] GetUserParam(string code)
         {
-            string[] res = Read($"SELECT code, hex, iduser, CardTemplate  FROM user WHERE code LIKE \"%{code}%\"");
+            string[] res = Read($"SELECT code, hex, iduser, CardTemplate  FROM employees WHERE code LIKE \"%{code}%\"");
             return res;
         }
         public void WriteRow(string[] emp) 
