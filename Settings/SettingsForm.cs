@@ -113,7 +113,7 @@ namespace Settings
             Environment.Exit(0);
         }
 
-        EmloeyesDB emloeyesDB = new EmloeyesDB("employees") 
+        EmloeyesDB emploeyesDB = new EmloeyesDB("employees") 
         {
             #if DEBUG
             Path = Path.GetFullPath("..\\..\\..\\AlcoBarrier\\bin\\Debug")
@@ -125,13 +125,13 @@ namespace Settings
         private async void buttonSynchro_Click(object sender, EventArgs e)
         {
             buttonSynchro.Enabled = false;
-            await Task.Run(() => emloeyesDB.DeleteTable());
-            await Task.Run(() => emloeyesDB.CreateDB());
+            await Task.Run(() => emploeyesDB.DeleteTable());
+            await Task.Run(() => emploeyesDB.CreateDB());
             string[] setting = setDb.GetSettingString(setDb.InnerTable);
             requestInner = new RequestInner(setting[0], setting[1], setting[2]);
             foreach (var user in await requestInner.GetDictUsers())
             {
-                await Task.Run(() => emloeyesDB.WriteRow(user));
+                await Task.Run(() => emploeyesDB.WriteRow(user));
             }
             buttonSynchro.Enabled = true;
         }

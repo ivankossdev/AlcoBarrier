@@ -30,6 +30,7 @@ namespace AlcoBarrier
             if (Check_Databases("employees", "events", "settings", "loguser"))
             {
                 OnlineMessage();
+                SychroInnerDB();
             }
             
         }
@@ -40,16 +41,10 @@ namespace AlcoBarrier
         EventsDB events;
         LogUsersDB logUsersDB;
         MyJson myJson = new MyJson();
-        RequestInner InnerageHandler;
+        RequestInner requestInner;
         RequestAlcoReader AlcoReader;
         string SetHour = string.Empty;
         string SetMinute = string.Empty;
-
-        /* 
-        1. Сделать логику записи событий в бд по проходу ++
-        2. Сделать синхронизацию бд иннера по времени или запросу
-        3. Сделать выгрузку событий бд в бд отчета. 
-         */
 
         /// <summary>
         /// Иницыализация классов
@@ -66,7 +61,7 @@ namespace AlcoBarrier
             emploeyesDB = new EmloeyesDB("employees");
             events = new EventsDB("events");
             logUsersDB = new LogUsersDB("loguser");
-            InnerageHandler = new RequestInner(ParamsInner[0], ParamsInner[1], ParamsInner[2]);
+            requestInner = new RequestInner(ParamsInner[0], ParamsInner[1], ParamsInner[2]);
             AlcoReader = new RequestAlcoReader(IpAlcoTester[0]);
             string[] HourMin = setDb.GetSettingsTime(setDb.InnerTable);
             SetHour = HourMin[0];
@@ -74,13 +69,12 @@ namespace AlcoBarrier
         }
 
         /// <summary>
-        /// 01
         /// Показывает системную информацию при подключении
         /// к алкотестеру и иннеру
         /// </summary>
         private async void SystemInfo()
         {
-            Result = await InnerageHandler.GetSystemInfo();
+            Result = await requestInner.GetSystemInfo();
             toolStripStatusLabel1.Text = Result;
 
             Result = await AlcoReader.GetRequestCmd(myJson.CmdTypeHeader("getInf"));
@@ -88,7 +82,6 @@ namespace AlcoBarrier
         }
 
         /// <summary>
-        /// 02
         /// Выводит в таблицу данные алкотестера и пользователя
         /// </summary>
         private async void OnlineMessage()
@@ -116,7 +109,7 @@ namespace AlcoBarrier
                         foreach (string[] s in events.ReadEventList())
                         {
                             {
-                                await InnerageHandler.BlockedUser(false, s);
+                                await requestInner.BlockedUser(false, s);
                             }
                         }
                     }
@@ -127,7 +120,6 @@ namespace AlcoBarrier
         }
 
         /// <summary>
-        /// 03 
         /// Задает время через сколько будет заблокирован пользователь после прохода
         /// </summary>
         /// <param name="H"></param>
@@ -143,7 +135,6 @@ namespace AlcoBarrier
         }
 
         /// <summary>
-        /// 04
         /// Проверяет когда нужно заблокировать пользователя
         /// </summary>
         /// <param name="sender"></param>
@@ -154,7 +145,7 @@ namespace AlcoBarrier
             {
                 if (DateTime.Parse(s[6]) < DateTime.Now)
                 {
-                    await InnerageHandler.BlockedUser(true, s);
+                    await requestInner.BlockedUser(true, s);
                     events.DeleteString(s[0]);
                 }
             }
@@ -170,7 +161,6 @@ namespace AlcoBarrier
         }
 
         /// <summary>
-        /// 05
         /// Проверяет наличае базы данных 
         /// </summary>
         /// <param name="databases"></param>
@@ -186,6 +176,21 @@ namespace AlcoBarrier
                 }
             }
             return true;
+        }
+
+        /// <summary>
+        /// Синхронизирует БД бользователей иннера с БД employees.db
+        /// </summary>
+        private async void SychroInnerDB()
+        {
+            
+            await Task.Run(() => emploeyesDB.DeleteTable());
+            await Task.Run(() => emploeyesDB.CreateDB());
+            foreach (var user in await requestInner.GetDictUsers())
+            {
+                await Task.Run(() => emploeyesDB.WriteRow(user));
+            }
+            
         }
     }
 }
