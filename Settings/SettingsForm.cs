@@ -43,10 +43,6 @@ namespace Settings
                         setDb.ReWriteSettingsInner(setDb.InnerTable, textBoxInnerIP.Text, textBoxAuthorization.Text, 
                             textBoxApiKey.Text, numericUpDownHours.Value.ToString(), numericUpDownMinuts.Value.ToString());
                     }
-                    textBoxInnerIP.Clear();
-                    textBoxAuthorization.Clear();
-                    textBoxApiKey.Clear();
-                    ReadParams(setDb.InnerTable);
                     textBoxInnerInfo.AppendText("Настройки сохранены. \n");
                 }
                 else
@@ -106,7 +102,6 @@ namespace Settings
                 {
                     setDb.ReWriteSettingsAlco(setDb.AlcoTable, textBoxAlcoIP.Text);
                 }
-                // ReadParams(setDb.AlcoTable);
                 textBoxAlcoInfo.AppendText("Настройки сохранены. \n");
             }
             else
@@ -116,6 +111,27 @@ namespace Settings
         private void buttonAlcoCancel_Click(object sender, EventArgs e)
         {
             Environment.Exit(0);
+        }
+
+        EmloeyesDB emloeyesDB = new EmloeyesDB("employees") 
+        {
+            #if DEBUG
+            Path = Path.GetFullPath("..\\..\\..\\AlcoBarrier\\bin\\Debug")
+            #else
+            Path = Path.GetFullPath("..\\AlcoBarrier\\bin\\Release")
+            #endif
+        };
+        RequestInner requestInner;
+        private async void buttonSynchro_Click(object sender, EventArgs e)
+        {
+            await Task.Run(() => emloeyesDB.DeleteTable());
+            await Task.Run(() => emloeyesDB.CreateDB());
+            string[] setting = setDb.GetSettingString(setDb.InnerTable);
+            requestInner = new RequestInner(setting[0], setting[1], setting[2]);
+            foreach (var user in await requestInner.GetDictUsers())
+            {
+                await Task.Run(() => emloeyesDB.WriteRow(user));
+            }
         }
     }
 }

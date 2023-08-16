@@ -124,12 +124,6 @@
     <Compile Include="SetWindow.Designer.cs">
       <DependentUpon>SetWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="SynchroForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="SynchroForm.Designer.cs">
-      <DependentUpon>SynchroForm.cs</DependentUpon>
-    </Compile>
     <EmbeddedResource Include="InnerSetting.resx">
       <DependentUpon>InnerSetting.cs</DependentUpon>
     </EmbeddedResource>
@@ -148,9 +142,6 @@
     </Compile>
     <EmbeddedResource Include="SetWindow.resx">
       <DependentUpon>SetWindow.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="SynchroForm.resx">
-      <DependentUpon>SynchroForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

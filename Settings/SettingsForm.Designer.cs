@@ -51,6 +51,7 @@
             this.textBoxAlcoInfo = new System.Windows.Forms.TextBox();
             this.textBoxAlcoIP = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
+            this.buttonSynchro = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.InnerSettings.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -71,6 +72,7 @@
             // 
             // InnerSettings
             // 
+            this.InnerSettings.Controls.Add(this.buttonSynchro);
             this.InnerSettings.Controls.Add(this.groupBox1);
             this.InnerSettings.Controls.Add(this.textBoxInnerInfo);
             this.InnerSettings.Controls.Add(this.labelApiKey);
@@ -275,7 +277,17 @@
             this.label3.TabIndex = 0;
             this.label3.Text = "IP адрес ";
             // 
-            // AlcoSet
+            // buttonSynchro
+            // 
+            this.buttonSynchro.Location = new System.Drawing.Point(276, 6);
+            this.buttonSynchro.Name = "buttonSynchro";
+            this.buttonSynchro.Size = new System.Drawing.Size(149, 72);
+            this.buttonSynchro.TabIndex = 11;
+            this.buttonSynchro.Text = "Синхронизировать БД ";
+            this.buttonSynchro.UseVisualStyleBackColor = true;
+            this.buttonSynchro.Click += new System.EventHandler(this.buttonSynchro_Click);
+            // 
+            // SettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -286,7 +298,7 @@
             this.MaximumSize = new System.Drawing.Size(487, 351);
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(487, 351);
-            this.Name = "AlcoSet";
+            this.Name = "SettingsForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Настройки";
             this.tabControl1.ResumeLayout(false);
@@ -326,6 +338,7 @@
         private System.Windows.Forms.Label labelHours;
         private System.Windows.Forms.NumericUpDown numericUpDownMinuts;
         private System.Windows.Forms.NumericUpDown numericUpDownHours;
+        private System.Windows.Forms.Button buttonSynchro;
     }
 }
 

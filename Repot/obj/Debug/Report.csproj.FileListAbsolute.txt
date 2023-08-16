@@ -38,7 +38,6 @@ C:\Users\RR\source\repos\AlcoBarrier\Repot\obj\Debug\Report.csproj.CopyComplete
 C:\Users\RR\source\repos\AlcoBarrier\Repot\obj\Debug\Repot.exe
 C:\Users\RR\source\repos\AlcoBarrier\Repot\obj\Debug\Repot.pdb
 C:\Users\RR\source\repos\AlcoBarrier\Repot\obj\Debug\Repot.InnerSetting.resources
-C:\Users\RR\source\repos\AlcoBarrier\Repot\obj\Debug\Repot.SynchroForm.resources
 C:\Users\RR\source\repos\AlcoBarrier\Repot\bin\Debug\CsvHelper.dll
 C:\Users\RR\source\repos\AlcoBarrier\Repot\bin\Debug\Microsoft.Bcl.HashCode.dll
 C:\Users\RR\source\repos\AlcoBarrier\Repot\bin\Debug\CsvHelper.xml
