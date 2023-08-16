@@ -27,16 +27,18 @@ namespace AlcoBarrier
             InitializeComponent();
             InitClass();
             SystemInfo();
-            if (Check_Databases("employees", "events", "settings"))
+            if (Check_Databases("employees", "events", "settings", "loguser"))
             {
                 OnlineMessage();
             }
+            
         }
 
         string Result = string.Empty;
 
         EmloeyesDB emploeyesDB;
         EventsDB events;
+        LogUsersDB logUsersDB;
         MyJson myJson = new MyJson();
         RequestInner InnerageHandler;
         RequestAlcoReader AlcoReader;
@@ -44,7 +46,7 @@ namespace AlcoBarrier
         string SetMinute = string.Empty;
 
         /* 
-        1. Сделать логику записи событий в бд по проходу
+        1. Сделать логику записи событий в бд по проходу 
         2. Сделать синхронизацию бд иннера по времени или запросу
         3. Сделать выгрузку событий бд в бд отчета. 
          */
@@ -63,6 +65,7 @@ namespace AlcoBarrier
             string[] IpAlcoTester = setDb.GetSettingString(setDb.AlcoTable);
             emploeyesDB = new EmloeyesDB("employees");
             events = new EventsDB("events");
+            logUsersDB = new LogUsersDB("loguser");
             InnerageHandler = new RequestInner(ParamsInner[0], ParamsInner[1], ParamsInner[2]);
             AlcoReader = new RequestAlcoReader(IpAlcoTester[0]);
             string[] HourMin = setDb.GetSettingsTime(setDb.InnerTable);
@@ -106,6 +109,7 @@ namespace AlcoBarrier
                     if (rows[0] != null  && rows[1] != null && rows[2] != null && rows[3] != null && rows[4] != null)
                     {
                         dataGridView1.Rows.Add(rows);
+                        await Task.Run(() => logUsersDB.WriteRow(rows));
                         string[] data = await Task.Run<string[]>(() => emploeyesDB.GetUserParam(rows[4]));
                         await Task.Run(() => events.WriteEvent(data, CreateBlockTime(SetHour, SetMinute)));
 

@@ -1,0 +1,33 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace AlcoBarrier
+{
+    internal class LogUsersDB : BaseSQLite
+    {
+        public LogUsersDB(string _NameDataBase) : base(_NameDataBase)
+        {
+        }
+
+        public override string CreateDB()
+        {
+            string SqlCommand = $"CREATE TABLE loguser (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+                $"date TEXT NOT NULL, " +
+                $"time NEXT NOT NULL, " +
+                $"promille TEXT NOT NULL, " +
+                $"user TEXT," +
+                $"cardnum TEXT NOT NULL);";
+            Write(SqlCommand);
+            return $"База данных {NameDataBase} создана \n";
+        }
+
+        public void WriteRow(string[] rows)
+        {
+            Write($"INSERT INTO loguser (date, time, promille, user, cardnum) " +
+                  $"VALUES (\"{rows[0]}\", \"{rows[1]}\",  \"{rows[2]}\",  \"{rows[3]}\",  \"{rows[4]}\");");
+        }
+    }
+}

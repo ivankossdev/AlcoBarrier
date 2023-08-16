@@ -123,6 +123,7 @@
     <Compile Include="DateTimeHandler.cs" />
     <Compile Include="DB\EventsDB.cs" />
     <Compile Include="DB\ReportDB.cs" />
+    <Compile Include="LogUsersDB.cs" />
     <Compile Include="Requests\RequestAlcoReader.cs" />
     <Compile Include="Requests\RequestInner.cs" />
     <Compile Include="MainForm.cs">
