@@ -124,6 +124,7 @@ namespace Settings
         RequestInner requestInner;
         private async void buttonSynchro_Click(object sender, EventArgs e)
         {
+            buttonSynchro.Enabled = false;
             await Task.Run(() => emloeyesDB.DeleteTable());
             await Task.Run(() => emloeyesDB.CreateDB());
             string[] setting = setDb.GetSettingString(setDb.InnerTable);
@@ -132,6 +133,7 @@ namespace Settings
             {
                 await Task.Run(() => emloeyesDB.WriteRow(user));
             }
+            buttonSynchro.Enabled = true;
         }
     }
 }
