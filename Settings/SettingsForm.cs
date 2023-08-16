@@ -79,11 +79,11 @@ namespace Settings
                 textBoxApiKey.Text = Params[2];
                 numericUpDownHours.Value = decimal.Parse(Params[3]);
                 numericUpDownMinuts.Value = decimal.Parse(Params[4]);
-                textBoxInnerInfo.AppendText("БД прочитана. \n");
+                textBoxInnerInfo.AppendText("Настроки прочитаны. \n");
             }
             else
             {
-                textBoxAlcoInfo.AppendText("БД прочитана. \n");
+                textBoxAlcoInfo.AppendText("Настройки прочитаны. \n");
                 Params = setDb.GetSettingString(Table);
                 textBoxAlcoIP.Text = Params[0];
             }
@@ -105,7 +105,7 @@ namespace Settings
                 textBoxAlcoInfo.AppendText("Настройки сохранены. \n");
             }
             else
-                textBoxAlcoInfo.AppendText("Заполнит поле IP адрес. \n");
+                textBoxAlcoInfo.AppendText("Заполните поле IP адрес. \n");
         }
 
         private void buttonAlcoCancel_Click(object sender, EventArgs e)

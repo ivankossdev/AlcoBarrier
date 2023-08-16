@@ -29,8 +29,6 @@ C:\Users\RR\source\repos\AlcoBarrier\Repot\bin\Release\System.Text.Encodings.Web
 C:\Users\RR\source\repos\AlcoBarrier\Repot\bin\Release\System.Threading.Tasks.Extensions.xml
 C:\Users\RR\source\repos\AlcoBarrier\Repot\bin\Release\Microsoft.Bcl.AsyncInterfaces.xml
 C:\Users\RR\source\repos\AlcoBarrier\Repot\obj\Release\Report.csproj.AssemblyReference.cache
-C:\Users\RR\source\repos\AlcoBarrier\Repot\obj\Release\Report.csproj.SuggestedBindingRedirects.cache
-C:\Users\RR\source\repos\AlcoBarrier\Repot\obj\Release\Repot.exe.config
 C:\Users\RR\source\repos\AlcoBarrier\Repot\obj\Release\Repot.ReportForm.resources
 C:\Users\RR\source\repos\AlcoBarrier\Repot\obj\Release\Repot.Properties.Resources.resources
 C:\Users\RR\source\repos\AlcoBarrier\Repot\obj\Release\Repot.SetWindow.resources
@@ -39,3 +37,8 @@ C:\Users\RR\source\repos\AlcoBarrier\Repot\obj\Release\Report.csproj.CoreCompile
 C:\Users\RR\source\repos\AlcoBarrier\Repot\obj\Release\Report.csproj.CopyComplete
 C:\Users\RR\source\repos\AlcoBarrier\Repot\obj\Release\Repot.exe
 C:\Users\RR\source\repos\AlcoBarrier\Repot\obj\Release\Repot.pdb
+C:\Users\RR\source\repos\AlcoBarrier\Repot\bin\Release\CsvHelper.dll
+C:\Users\RR\source\repos\AlcoBarrier\Repot\bin\Release\Microsoft.Bcl.HashCode.dll
+C:\Users\RR\source\repos\AlcoBarrier\Repot\bin\Release\CsvHelper.xml
+C:\Users\RR\source\repos\AlcoBarrier\Repot\bin\Release\Microsoft.Bcl.HashCode.xml
+C:\Users\RR\source\repos\AlcoBarrier\Repot\obj\Release\Repot.InnerSetting.resources

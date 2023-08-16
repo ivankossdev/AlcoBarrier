@@ -34,7 +34,6 @@ namespace AlcoBarrier
                 {
                     ["cmdType"] = command
                 };
-
                 return forecastObject.ToJsonString();
             }
             catch (Exception ex)
@@ -89,7 +88,6 @@ namespace AlcoBarrier
 
         public string CmdTypeHeaderAllMemory(string qty)
         {
-
             string Result = string.Empty;
             try
             {
