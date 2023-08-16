@@ -49,6 +49,9 @@ namespace AlcoBarrier
         3. Сделать выгрузку событий бд в бд отчета. 
          */
 
+        /// <summary>
+        /// Иницыализация классов
+        /// </summary>
         private void InitClass()
         {
             SettingsDB setDb = new SettingsDB("settings")
@@ -67,6 +70,11 @@ namespace AlcoBarrier
             SetMinute = HourMin[1];
         }
 
+        /// <summary>
+        /// 01
+        /// Показывает системную информацию при подключении
+        /// к алкотестеру и иннеру
+        /// </summary>
         private async void SystemInfo()
         {
             Result = await InnerageHandler.GetSystemInfo();
@@ -76,6 +84,10 @@ namespace AlcoBarrier
             toolStripStatusLabel2.Text = myJson.GetInfoAlcoBarrier(Result);
         }
 
+        /// <summary>
+        /// 02
+        /// Выводит в таблицу данные алкотестера и пользователя
+        /// </summary>
         private async void OnlineMessage()
         {
             string OldRecord = string.Empty;
@@ -110,6 +122,13 @@ namespace AlcoBarrier
             }
         }
 
+        /// <summary>
+        /// 03 
+        /// Задает время через сколько будет заблокирован пользователь после прохода
+        /// </summary>
+        /// <param name="H"></param>
+        /// <param name="M"></param>
+        /// <returns></returns>
         private DateTime CreateBlockTime(string H, string M)
         {
             DateTime DtModyfy = DateTime.Now;
@@ -118,7 +137,13 @@ namespace AlcoBarrier
 
             return DtModyfy;
         }
-   
+
+        /// <summary>
+        /// 04
+        /// Проверяет когда нужно заблокировать пользователя
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private async void timer1_Tick(object sender, EventArgs e)
         {
             foreach(string[] s in events.ReadEventList())
@@ -140,6 +165,12 @@ namespace AlcoBarrier
             }
         }
 
+        /// <summary>
+        /// 05
+        /// Проверяет наличае базы данных 
+        /// </summary>
+        /// <param name="databases"></param>
+        /// <returns></returns>
         private bool Check_Databases(params string[] databases)
         {
             foreach (string database in databases)
