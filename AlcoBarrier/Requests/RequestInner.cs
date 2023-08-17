@@ -118,7 +118,7 @@ namespace AlcoBarrier
                           $"<CardData>{UserData[2]}</CardData>\r\n" +
                           $"<ExternalCredentials />\r\n<CloudCredentialType>None</CloudCredentialType>\r\n</Card>\r\n</Cards>\r\n</User>";
 
-                await Console.Out.WriteLineAsync(command);
+                //await Console.Out.WriteLineAsync(command);
 
                 byte[] messageToBytes = Encoding.UTF8.GetBytes(command);
                 var content = new ByteArrayContent(messageToBytes);

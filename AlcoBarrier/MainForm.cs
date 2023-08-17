@@ -32,7 +32,6 @@ namespace AlcoBarrier
                 OnlineMessage();
                 SychroInnerDB();
             }
-            
         }
 
         string Result = string.Empty;
@@ -189,8 +188,7 @@ namespace AlcoBarrier
             foreach (var user in await requestInner.GetDictUsers())
             {
                 await Task.Run(() => emploeyesDB.WriteRow(user));
-            }
-            
+            } 
         }
     }
 }
