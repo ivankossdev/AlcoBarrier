@@ -55,6 +55,7 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.buttonSort = new System.Windows.Forms.Button();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.ReadDB = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -197,7 +198,8 @@
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolReadMem});
+            this.toolReadMem,
+            this.ReadDB});
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
             this.toolStripMenuItem2.Size = new System.Drawing.Size(82, 20);
             this.toolStripMenuItem2.Text = "Алкотестер";
@@ -208,7 +210,7 @@
             this.toolStripComboBox1,
             this.toolStripMenuItem4});
             this.toolReadMem.Name = "toolReadMem";
-            this.toolReadMem.Size = new System.Drawing.Size(175, 22);
+            this.toolReadMem.Size = new System.Drawing.Size(180, 22);
             this.toolReadMem.Text = "Прочитать память";
             this.toolReadMem.MouseHover += new System.EventHandler(this.toolReadMem_MouseHover);
             // 
@@ -288,6 +290,13 @@
             this.saveFileDialog1.FileName = "Отчет";
             this.saveFileDialog1.Filter = "csv files(*.csv)|*.csv|All files(*.*)|*.*";
             // 
+            // ReadDB
+            // 
+            this.ReadDB.Name = "ReadDB";
+            this.ReadDB.Size = new System.Drawing.Size(180, 22);
+            this.ReadDB.Text = "Прочитать БД";
+            this.ReadDB.Click += new System.EventHandler(this.ReadDB_Click);
+            // 
             // ReportForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -344,6 +353,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripSynchroServer;
         private System.Windows.Forms.DataGridViewTextBoxColumn fio;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.ToolStripMenuItem ReadDB;
     }
 }
 

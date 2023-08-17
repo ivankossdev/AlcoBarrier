@@ -171,5 +171,18 @@ namespace Repot
             saveFileDialog1.ShowDialog();
             CSVHandler.Writer(saveFileDialog1.FileName, dataGridHandler.GetData(dataGridView1));
         }
+
+        LogUsersDB logUsersDB = new LogUsersDB("loguser")
+        {
+            #if DEBUG
+            Path = Path.GetFullPath("..\\..\\..\\AlcoBarrier\\bin\\Debug")
+            #else
+            Path = Path.GetFullPath("..\\AlcoBarrier\\bin\\Release")
+            #endif
+        };
+        private void ReadDB_Click(object sender, EventArgs e)
+        {
+            PrintDataAlcoMemory(Task.Run<List<string[]>>(() => logUsersDB.ReadRows()));
+        }
     }
 }

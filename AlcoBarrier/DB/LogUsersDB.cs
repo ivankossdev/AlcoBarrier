@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AlcoBarrier
 {
-    internal class LogUsersDB : BaseSQLite
+    public class LogUsersDB : BaseSQLite
     {
         public LogUsersDB(string _NameDataBase) : base(_NameDataBase)
         {
@@ -28,6 +28,11 @@ namespace AlcoBarrier
         {
             Write($"INSERT INTO loguser (date, time, promille, user, cardnum) " +
                   $"VALUES (\"{rows[0]}\", \"{rows[1]}\",  \"{rows[2]}\",  \"{rows[3]}\",  \"{rows[4]}\");");
+        }
+
+        public List<string[]> ReadRows()
+        {
+            return ReadListArray($"SELECT date, time, promille, cardnum, user FROM loguser;");
         }
     }
 }
