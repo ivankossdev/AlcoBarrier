@@ -43,9 +43,17 @@ namespace Repot
 
         DateTime DateSearch;
 
+        bool state = true;
+
         private async void PrintDataAlcoMemory(Task<List<string[]>> data)
         {
-            toolStripMenuItem4.Enabled = false;
+            if (state)
+                labelDBInfo.Text = "Память алкотестера";
+            else
+                labelDBInfo.Text = "База данных";
+
+
+            ReadAlcoMemory.Enabled = false;
             pictureBox1.Visible = true;
             dataGridView1.Rows.Clear();
             foreach (var item in await data)
@@ -53,7 +61,7 @@ namespace Repot
                 dataGridView1.Rows.Add(item);
             }
 
-            toolStripMenuItem4.Enabled = true;
+            ReadAlcoMemory.Enabled = true;
             pictureBox1.Visible = false;
         }
 
@@ -78,10 +86,13 @@ namespace Repot
         }
 
         string ip = string.Empty;
-        private void toolStripMenuItem4_Click(object sender, EventArgs e)
+
+        private void ReadAlcoMemory_Click(object sender, EventArgs e)
         {
             dataGridView1.Rows.Clear();
             int index = toolStripComboBox1.SelectedIndex;
+
+            state = true;
 
             if (index != -1)
             {
@@ -100,18 +111,33 @@ namespace Repot
             }
         }
 
+        LogUsersDB logUsersDB = new LogUsersDB("loguser")
+        {
+            #if DEBUG
+            Path = Path.GetFullPath("..\\..\\..\\AlcoBarrier\\bin\\Debug")
+            #else
+            Path = Path.GetFullPath("..\\AlcoBarrier\\bin\\Release")
+            #endif
+        };
+
+        private void ReadDB_Click(object sender, EventArgs e)
+        {
+            state = false;
+            PrintDataAlcoMemory(Task.Run<List<string[]>>(() => logUsersDB.ReadRows()));
+        }
+
         private async void GetDataAlcoMemory(string ip)
         {
             MyJson myJson = new MyJson();
             RequestAlcoReader requestAlcoReader = new RequestAlcoReader(ip);
             string Result = await requestAlcoReader.GetRequestCmd(myJson.CmdTypeHeader("getLogInf"));
-            toolStripMenuItem4.Enabled = false;
+            ReadAlcoMemory.Enabled = false;
             pictureBox1.Visible = true;
-            toolStripMenuItem3.Enabled = false;
+            CSVimport.Enabled = false;
             List<string[]> Memory = myJson.RecordsMemoryList(await requestAlcoReader.GetRequestCmd(myJson.CmdTypeHeaderAllMemory(Result)));
             await Task.Run(() => reportDB.WriteRows(Memory));
             MessageBox.Show("Данные прочитаны.");
-            toolStripMenuItem3.Enabled = true;
+            CSVimport.Enabled = true;
             PrintDataAlcoMemory(Task.Run<List<string[]>>(() => reportDB.ReadRows()));
             Memory.Clear();
         }
@@ -121,13 +147,19 @@ namespace Repot
             if (DateSearch != DateTime.MinValue)
             {
                 string date = $"{DateSearch:u}".Split(' ')[0];
-                PrintDataAlcoMemory(Task.Run<List<string[]>>(() => reportDB.SortByDate(date)));
+                if (state)
+                    PrintDataAlcoMemory(Task.Run<List<string[]>>(() => reportDB.SortByDate(date)));
+                else
+                    PrintDataAlcoMemory(Task.Run<List<string[]>>(() => logUsersDB.SortByDate(date)));
             }
         }
 
-        private void buttonAllRecords_Click(object sender, EventArgs e)
+        private void buttonResetSort_Click(object sender, EventArgs e)
         {
-            PrintDataAlcoMemory(Task.Run<List<string[]>>(() => reportDB.ReadRows()));
+            if (state)
+                PrintDataAlcoMemory(Task.Run<List<string[]>>(() => reportDB.ReadRows()));
+            else
+                PrintDataAlcoMemory(Task.Run<List<string[]>>(() => logUsersDB.ReadRows()));
         }
 
         private void buttonSort_Click(object sender, EventArgs e)
@@ -137,11 +169,17 @@ namespace Repot
             if (DateSearch != DateTime.MinValue && FirstName != string.Empty)
             {
                 string date = $"{DateSearch:u}".Split(' ')[0];
-                PrintDataAlcoMemory(Task.Run<List<string[]>>(() => reportDB.SortByNumCardAndDate(FirstName, date)));
+                if (state)
+                    PrintDataAlcoMemory(Task.Run<List<string[]>>(() => reportDB.SortByNumCardAndDate(FirstName, date)));
+                else
+                    PrintDataAlcoMemory(Task.Run<List<string[]>>(() => logUsersDB.SortByNumCardAndDate(FirstName, date)));
             }
             else if (textBoxNumCard.Text != string.Empty)
             {
-                PrintDataAlcoMemory(Task.Run<List<string[]>>(() => reportDB.SortByNumCard(FirstName)));
+                if (state)
+                    PrintDataAlcoMemory(Task.Run<List<string[]>>(() => reportDB.SortByNumCard(FirstName)));
+                else
+                    PrintDataAlcoMemory(Task.Run<List<string[]>>(() => logUsersDB.SortByNumCard(FirstName)));
             }
             textBoxNumCard.Clear();
         }
@@ -165,24 +203,13 @@ namespace Repot
             }
         }
 
-        private void toolStripMenuItem3_Click(object sender, EventArgs e)
+        private void CSVimport_Click(object sender, EventArgs e)
         {
             DataGridHandler dataGridHandler = new DataGridHandler();
             saveFileDialog1.ShowDialog();
             CSVHandler.Writer(saveFileDialog1.FileName, dataGridHandler.GetData(dataGridView1));
         }
 
-        LogUsersDB logUsersDB = new LogUsersDB("loguser")
-        {
-            #if DEBUG
-            Path = Path.GetFullPath("..\\..\\..\\AlcoBarrier\\bin\\Debug")
-            #else
-            Path = Path.GetFullPath("..\\AlcoBarrier\\bin\\Release")
-            #endif
-        };
-        private void ReadDB_Click(object sender, EventArgs e)
-        {
-            PrintDataAlcoMemory(Task.Run<List<string[]>>(() => logUsersDB.ReadRows()));
-        }
+
     }
 }

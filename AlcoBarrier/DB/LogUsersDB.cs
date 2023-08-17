@@ -34,5 +34,21 @@ namespace AlcoBarrier
         {
             return ReadListArray($"SELECT date, time, promille, cardnum, user FROM loguser;");
         }
+
+        public List<string[]> SortByDate(string date)
+        {
+            return ReadListArray($"SELECT date, time, promille, cardnum, user FROM loguser WHERE date = \"{date}\"");
+        }
+
+        public List<string[]> SortByNumCardAndDate(string NumCard, string Date)
+        {
+            return ReadListArray($"SELECT date, time, promille, cardnum, user FROM loguser WHERE cardnum LIKE \"%{NumCard}%\" AND date = \"{Date}\"");
+        }
+
+        public List<string[]> SortByNumCard(string NumCard)
+        {
+            return ReadListArray($"SELECT date, time, promille, cardnum, user FROM loguser WHERE cardnum LIKE \"%{NumCard}%\"");
+        }
+
     }
 }
