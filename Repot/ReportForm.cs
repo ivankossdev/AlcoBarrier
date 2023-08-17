@@ -31,7 +31,7 @@ namespace Repot
                 MessageBox.Show(emloeyesDB.CreateDB());
             }
 
-            PrintFromDataBase(Task.Run<List<string[]>>(() => reportDB.ReadRows()));
+            PrintDataAlcoMemory(Task.Run<List<string[]>>(() => reportDB.ReadRows()));
 
         }
 
@@ -43,7 +43,7 @@ namespace Repot
 
         DateTime DateSearch;
 
-        private async void PrintFromDataBase(Task<List<string[]>> data)
+        private async void PrintDataAlcoMemory(Task<List<string[]>> data)
         {
             toolStripMenuItem4.Enabled = false;
             pictureBox1.Visible = true;
@@ -88,7 +88,7 @@ namespace Repot
                 ip = toolStripComboBox1.Items[toolStripComboBox1.SelectedIndex].ToString();
                 reportDB.DeleteTable();
                 reportDB.CreateDB();
-                PrintRows(ip);
+                GetDataAlcoMemory(ip);
             }
             else if (ip == string.Empty)
                 MessageBox.Show("Выбирете IP адрес алкотестера");
@@ -96,11 +96,11 @@ namespace Repot
             {
                 reportDB.DeleteTable();
                 reportDB.CreateDB();
-                PrintRows(ip);
+                GetDataAlcoMemory(ip);
             }
         }
 
-        private async void PrintRows(string ip)
+        private async void GetDataAlcoMemory(string ip)
         {
             MyJson myJson = new MyJson();
             RequestAlcoReader requestAlcoReader = new RequestAlcoReader(ip);
@@ -112,7 +112,7 @@ namespace Repot
             await Task.Run(() => reportDB.WriteRows(Memory));
             MessageBox.Show("Данные прочитаны.");
             toolStripMenuItem3.Enabled = true;
-            PrintFromDataBase(Task.Run<List<string[]>>(() => reportDB.ReadRows()));
+            PrintDataAlcoMemory(Task.Run<List<string[]>>(() => reportDB.ReadRows()));
             Memory.Clear();
         }
 
@@ -121,13 +121,13 @@ namespace Repot
             if (DateSearch != DateTime.MinValue)
             {
                 string date = $"{DateSearch:u}".Split(' ')[0];
-                PrintFromDataBase(Task.Run<List<string[]>>(() => reportDB.SortByDate(date)));
+                PrintDataAlcoMemory(Task.Run<List<string[]>>(() => reportDB.SortByDate(date)));
             }
         }
 
         private void buttonAllRecords_Click(object sender, EventArgs e)
         {
-            PrintFromDataBase(Task.Run<List<string[]>>(() => reportDB.ReadRows()));
+            PrintDataAlcoMemory(Task.Run<List<string[]>>(() => reportDB.ReadRows()));
         }
 
         private void buttonSort_Click(object sender, EventArgs e)
@@ -137,11 +137,11 @@ namespace Repot
             if (DateSearch != DateTime.MinValue && FirstName != string.Empty)
             {
                 string date = $"{DateSearch:u}".Split(' ')[0];
-                PrintFromDataBase(Task.Run<List<string[]>>(() => reportDB.SortByNumCardAndDate(FirstName, date)));
+                PrintDataAlcoMemory(Task.Run<List<string[]>>(() => reportDB.SortByNumCardAndDate(FirstName, date)));
             }
             else if (textBoxNumCard.Text != string.Empty)
             {
-                PrintFromDataBase(Task.Run<List<string[]>>(() => reportDB.SortByNumCard(FirstName)));
+                PrintDataAlcoMemory(Task.Run<List<string[]>>(() => reportDB.SortByNumCard(FirstName)));
             }
             textBoxNumCard.Clear();
         }
