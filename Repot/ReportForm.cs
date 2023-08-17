@@ -107,9 +107,11 @@ namespace Repot
             string Result = await requestAlcoReader.GetRequestCmd(myJson.CmdTypeHeader("getLogInf"));
             toolStripMenuItem4.Enabled = false;
             pictureBox1.Visible = true;
+            toolStripMenuItem3.Enabled = false;
             List<string[]> Memory = myJson.RecordsMemoryList(await requestAlcoReader.GetRequestCmd(myJson.CmdTypeHeaderAllMemory(Result)));
             await Task.Run(() => reportDB.WriteRows(Memory));
             MessageBox.Show("Данные прочитаны.");
+            toolStripMenuItem3.Enabled = true;
             PrintFromDataBase(Task.Run<List<string[]>>(() => reportDB.ReadRows()));
             Memory.Clear();
         }
