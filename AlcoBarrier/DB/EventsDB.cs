@@ -16,6 +16,8 @@ namespace AlcoBarrier
         string SqlCommand { get; set; } = string.Empty;
         public override string CreateDB()
         {
+            // TODO (этап 3): имя колонки "cardtamplate" — опечатка (cardtemplate).
+            // Оставлено как есть, чтобы не ломать существующую БД. Переименование = отдельная миграция.
             SqlCommand = $"CREATE TABLE events " +
                 $"(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, iduser TEXT NOT NULL, code TEXT NOT NULL, " +
                 $"hex TEXT NOT NULL, cardtamplate TEXT NOT NULL, date TEXT NOT NULL, blockdate TEXT NOT NULL);";
@@ -27,9 +29,9 @@ namespace AlcoBarrier
         public void WriteEvent(string[] Table, DateTime BlockTime)
         {
             DateTime dateTime = DateTime.Now;
-            // ИЗМЕНЕНО (этап 2): параметризованный INSERT.
-            // ВНИМАНИЕ: для date/blockdate сохранён прежний .ToString() (CurrentCulture),
-            // чтобы формат хранения и DateTime.Parse в MainForm не изменились.
+            // (этап 2) параметризованный INSERT.
+            // (этап 3) Table приходит из EmloeyesDB.GetUserParam в порядке
+            // (iduser, code, hex, CardTemplate) — теперь совпадает с порядком колонок.
             Write(
                 "INSERT INTO events (iduser, code, hex, cardtamplate, date, blockdate) " +
                 "VALUES (@iduser, @code, @hex, @cardtamplate, @date, @blockdate)",
@@ -43,14 +45,23 @@ namespace AlcoBarrier
 
         public List<string[]> ReadEventList()
         {
-            SqlCommand = "SELECT * FROM events";
+            // ИЗМЕНЕНО (этап 3): явный список колонок в порядке, ожидаемом RequestInner.BlockedUser
+            // и MainForm:
+            //   [0]=id           -> EventsDB.DeleteString(s[0])
+            //   [1]=code         -> <Name>, <CardNumber>, <CardNumberNumeric>
+            //   [2]=hex          -> <CardData>
+            //   [3]=iduser       -> <User Address="...">
+            //   [4]=cardtamplate -> <Ref ... ID="...">
+            //   [5]=date
+            //   [6]=blockdate    -> MainForm.timer1_Tick (DateTime.Parse(s[6]))
+            // Раньше был SELECT * (id, iduser, code, hex, ...) — поля уходили перепутанными.
+            SqlCommand = "SELECT id, code, hex, iduser, cardtamplate, date, blockdate FROM events";
             return ReadListArray(SqlCommand);
         }
 
         public void DeleteString(string id)
         {
-            // ИЗМЕНЕНО (этап 2): DELETE через параметр.
-            // Int32.Parse оставлен намеренно — чтобы тип исключения на невалидном id не менялся.
+            // (этап 2) параметризованный DELETE; Int32.Parse сохранён.
             int parsedId = Int32.Parse(id);
             Write("DELETE FROM events WHERE id = @id", ("@id", parsedId));
         }

@@ -33,8 +33,7 @@ namespace AlcoBarrier
             return $"База данных {NameDataBase} создана \n";
         }
 
-        // ДОБАВЛЕНО (этап 2): вайтлист имён таблиц. Имена таблиц нельзя параметризовать,
-        // поэтому разрешаем только две известные.
+        // (этап 2) вайтлист имён таблиц.
         private void ValidateTable(string table)
         {
             if (table != InnerTable && table != AlcoTable)
@@ -44,7 +43,7 @@ namespace AlcoBarrier
         public void WriteSettingsInner(string Table, string IpInnerage, string Auth, string Key, string BlockHour, string BlockMinute)
         {
             ValidateTable(Table);
-            // ИЗМЕНЕНО (этап 2): параметризованный INSERT. Trim() сохранён.
+            // (этап 2) параметризованный INSERT.
             Write(
                 $"INSERT INTO {Table} (IpInnerage, authorization, key, BlockHour, BlockMinute) " +
                 $"VALUES (@ip, @auth, @key, @hour, @minute)",
@@ -58,7 +57,7 @@ namespace AlcoBarrier
         public void ReWriteSettingsInner(string Table, string IpInnerage, string Auth, string Key, string BlockHour, string BlockMinute)
         {
             ValidateTable(Table);
-            // ИЗМЕНЕНО (этап 2): параметризованный UPDATE.
+            // (этап 2) параметризованный UPDATE.
             Write(
                 $"UPDATE {Table} " +
                 $"SET IpInnerage = @ip, authorization = @auth, key = @key, BlockHour = @hour, BlockMinute = @minute " +
@@ -72,16 +71,15 @@ namespace AlcoBarrier
 
         public int GetCountId(string Table)
         {
-            // ИЗМЕНЕНО (этап 2): вайтлист имён таблиц.
             ValidateTable(Table);
-            // !!! Поменять на ReadListArray !!!
-            SqlCommand = $"SELECT id FROM {Table};";
-            return ReadList(SqlCommand).Count;
+            // ИЗМЕНЕНО (этап 3): COUNT(*) вместо SELECT id + подсчёт в памяти.
+            // Возвращает то же число, что и раньше, но без выгрузки всех строк.
+            string[] res = Read($"SELECT COUNT(*) FROM {Table};");
+            return int.Parse(res[0]);
         }
 
         public string[] GetSettingString(string Table)
         {
-            // ИЗМЕНЕНО (этап 2): вайтлист имён таблиц.
             ValidateTable(Table);
             if (Table == AlcoTable)
             {
@@ -98,7 +96,7 @@ namespace AlcoBarrier
         public void WriteSettingsAlco(string Table, string IpAddressAlco)
         {
             ValidateTable(Table);
-            // ИЗМЕНЕНО (этап 2): параметризованный INSERT.
+            // (этап 2) параметризованный INSERT.
             Write(
                 $"INSERT INTO {Table} (IpAddress) VALUES (@ip)",
                 ("@ip", IpAddressAlco));
@@ -107,7 +105,7 @@ namespace AlcoBarrier
         public void ReWriteSettingsAlco(string Table, string IpAddressAlco)
         {
             ValidateTable(Table);
-            // ИЗМЕНЕНО (этап 2): параметризованный UPDATE.
+            // (этап 2) параметризованный UPDATE.
             Write(
                 $"UPDATE {Table} SET IpAddress = @ip WHERE id = 1",
                 ("@ip", IpAddressAlco));
@@ -115,7 +113,6 @@ namespace AlcoBarrier
 
         public string[] GetSettingsTime(string Table)
         {
-            // ИЗМЕНЕНО (этап 2): вайтлист имён таблиц.
             ValidateTable(Table);
             SqlCommand = $"SELECT BlockHour, BlockMinute FROM {Table};";
             return Read(SqlCommand);

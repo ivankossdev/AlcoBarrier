@@ -25,13 +25,41 @@ namespace AlcoBarrier
         public MainForm()
         {
             InitializeComponent();
+
+            // ДОБАВЛЕНО (этап 3.5): создаём отсутствующие БД до InitClass/SystemInfo/timer1.
+            // Иначе при удалённом events.db срабатывал timer1_Tick -> "no such table: events".
+            EnsureDatabases();
+
             InitClass();
             SystemInfo();
             if (Check_Databases("employees", "events", "settings", "loguser"))
             {
-                OnlineMessage();
-                SychroInnerDB();
+                //OnlineMessage();
+                //SychroInnerDB();
             }
+        }
+
+        /// <summary>
+        /// ДОБАВЛЕНО (этап 3.5): создаёт отсутствующие файлы БД.
+        /// Существующие файлы не трогает.
+        /// employees будет пересоздана в SychroInnerDB при доступном Innerage;
+        /// при недоступном — остаётся пустой, но приложение не падает на старте.
+        /// </summary>
+        private void EnsureDatabases()
+        {
+            string basePath = Directory.GetCurrentDirectory();
+
+            if (!File.Exists($"{basePath}\\employees.db"))
+                new EmloeyesDB("employees").CreateDB();
+
+            if (!File.Exists($"{basePath}\\events.db"))
+                new EventsDB("events").CreateDB();
+
+            if (!File.Exists($"{basePath}\\settings.db"))
+                new SettingsDB("settings").CreateDB();
+
+            if (!File.Exists($"{basePath}\\loguser.db"))
+                new LogUsersDB("loguser").CreateDB();
         }
 
         string Result = string.Empty;
@@ -87,10 +115,10 @@ namespace AlcoBarrier
         {
             string OldRecord = string.Empty;
 
-            while(true)
+            while (true)
             {
                 Result = await AlcoReader.GetRequestCmd(myJson.CmdTypeHeader("getLogInf"));
-                
+
                 string LastRecord = myJson.GetCountMessage(Result);
 
                 if (OldRecord != LastRecord)
@@ -98,7 +126,7 @@ namespace AlcoBarrier
                     OldRecord = LastRecord;
                     Result = await AlcoReader.GetRequestCmd(myJson.CreateLogMessage(LastRecord));
                     string[] rows = myJson.GetArrayResult(Result);
-                    if (rows[0] != null  && rows[1] != null && rows[2] != null && rows[3] != null && rows[4] != null)
+                    if (rows[0] != null && rows[1] != null && rows[2] != null && rows[3] != null && rows[4] != null)
                     {
                         dataGridView1.Rows.Add(rows);
                         await Task.Run(() => logUsersDB.WriteRow(rows));
@@ -140,7 +168,7 @@ namespace AlcoBarrier
         /// <param name="e"></param>
         private async void timer1_Tick(object sender, EventArgs e)
         {
-            foreach(string[] s in events.ReadEventList())
+            foreach (string[] s in events.ReadEventList())
             {
                 if (DateTime.Parse(s[6]) < DateTime.Now)
                 {
@@ -182,13 +210,13 @@ namespace AlcoBarrier
         /// </summary>
         private async void SychroInnerDB()
         {
-            
+
             await Task.Run(() => emploeyesDB.DeleteTable());
             await Task.Run(() => emploeyesDB.CreateDB());
             foreach (var user in await requestInner.GetDictUsers())
             {
                 await Task.Run(() => emploeyesDB.WriteRow(user));
-            } 
+            }
         }
     }
 }
