@@ -14,9 +14,11 @@ namespace AlcoBarrier
 
         public override string CreateDB()
         {
+            // ИЗМЕНЕНО (этап 3): "time NEXT NOT NULL" -> "time TEXT NOT NULL".
+            // NEXT — не тип SQLite. Влияет только на новые БД; существующие не трогаем.
             string SqlCommand = $"CREATE TABLE loguser (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
                 $"date TEXT NOT NULL, " +
-                $"time NEXT NOT NULL, " +
+                $"time TEXT NOT NULL, " +
                 $"promille TEXT NOT NULL, " +
                 $"user TEXT," +
                 $"cardnum TEXT NOT NULL);";
@@ -26,8 +28,15 @@ namespace AlcoBarrier
 
         public void WriteRow(string[] rows)
         {
-            Write($"INSERT INTO loguser (date, time, promille, user, cardnum) " +
-                  $"VALUES (\"{rows[0]}\", \"{rows[1]}\",  \"{rows[2]}\",  \"{rows[3]}\",  \"{rows[4]}\");");
+            // (этап 2) параметризованный INSERT.
+            Write(
+                "INSERT INTO loguser (date, time, promille, user, cardnum) " +
+                "VALUES (@date, @time, @promille, @user, @cardnum)",
+                ("@date", rows[0]),
+                ("@time", rows[1]),
+                ("@promille", rows[2]),
+                ("@user", rows[3]),
+                ("@cardnum", rows[4]));
         }
 
         public List<string[]> ReadRows()
@@ -37,17 +46,27 @@ namespace AlcoBarrier
 
         public List<string[]> SortByDate(string date)
         {
-            return ReadListArray($"SELECT date, time, promille, cardnum, user FROM loguser WHERE date = \"{date}\"");
+            // (этап 2) параметризованный WHERE.
+            return ReadListArray(
+                "SELECT date, time, promille, cardnum, user FROM loguser WHERE date = @date",
+                ("@date", date));
         }
 
         public List<string[]> SortByNumCardAndDate(string NumCard, string Date)
         {
-            return ReadListArray($"SELECT date, time, promille, cardnum, user FROM loguser WHERE cardnum LIKE \"%{NumCard}%\" AND date = \"{Date}\"");
+            // (этап 2) параметризованный LIKE + WHERE.
+            return ReadListArray(
+                "SELECT date, time, promille, cardnum, user FROM loguser WHERE cardnum LIKE @cardnum AND date = @date",
+                ("@cardnum", "%" + NumCard + "%"),
+                ("@date", Date));
         }
 
         public List<string[]> SortByNumCard(string NumCard)
         {
-            return ReadListArray($"SELECT date, time, promille, cardnum, user FROM loguser WHERE cardnum LIKE \"%{NumCard}%\"");
+            // (этап 2) параметризованный LIKE.
+            return ReadListArray(
+                "SELECT date, time, promille, cardnum, user FROM loguser WHERE cardnum LIKE @cardnum",
+                ("@cardnum", "%" + NumCard + "%"));
         }
 
     }

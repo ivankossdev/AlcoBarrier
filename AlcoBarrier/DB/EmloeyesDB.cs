@@ -10,8 +10,8 @@ namespace AlcoBarrier
 {
     public class EmloeyesDB : BaseSQLite
     {
-        public EmloeyesDB(string NameDataBase) : base(NameDataBase) {  }
-        
+        public EmloeyesDB(string NameDataBase) : base(NameDataBase) { }
+
         public override string CreateDB()
         {
             string SqlCommand = $"CREATE TABLE employees " +
@@ -29,19 +29,36 @@ namespace AlcoBarrier
 
         public string GetNameCard(string code)
         {
-            string[] res = Read($"SELECT name FROM employees WHERE code LIKE \"%{code}%\"");
+            // (этап 2) параметризованный LIKE; (этап 3) порядок колонок здесь не важен.
+            string[] res = Read(
+                "SELECT name FROM employees WHERE code LIKE @code",
+                ("@code", "%" + code + "%"));
             return res[0];
         }
 
         public string[] GetUserParam(string code)
         {
-            string[] res = Read($"SELECT code, hex, iduser, CardTemplate  FROM employees WHERE code LIKE \"%{code}%\"");
+            // ИЗМЕНЕНО (этап 3): порядок колонок приведён к порядку записи в events
+            // (iduser, code, hex, CardTemplate).
+            // Раньше было (code, hex, iduser, CardTemplate), из-за чего EventsDB.WriteEvent
+            // писал значения не в те колонки, а RequestInner.BlockedUser читал их по неверным индексам.
+            string[] res = Read(
+                "SELECT iduser, code, hex, CardTemplate FROM employees WHERE code LIKE @code",
+                ("@code", "%" + code + "%"));
             return res;
         }
-        public void WriteRow(string[] emp) 
+        public void WriteRow(string[] emp)
         {
-            Write($"INSERT INTO employees (name, iduser, code, hex, id, CardTemplate) " +
-                $"VALUES (\"{emp[0]}\", \"{emp[1]}\", \"{emp[2]}\", \"{emp[3]}\", \"{emp[4]}\", \"{emp[5]}\");");
+            // (этап 2) параметризованный INSERT.
+            Write(
+                "INSERT INTO employees (name, iduser, code, hex, id, CardTemplate) " +
+                "VALUES (@name, @iduser, @code, @hex, @id, @cardTemplate)",
+                ("@name", emp[0]),
+                ("@iduser", emp[1]),
+                ("@code", emp[2]),
+                ("@hex", emp[3]),
+                ("@id", emp[4]),
+                ("@cardTemplate", emp[5]));
         }
 
         public void DeleteTable()

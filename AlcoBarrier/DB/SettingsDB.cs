@@ -33,30 +33,54 @@ namespace AlcoBarrier
             return $"База данных {NameDataBase} создана \n";
         }
 
+        // (этап 2) вайтлист имён таблиц.
+        private void ValidateTable(string table)
+        {
+            if (table != InnerTable && table != AlcoTable)
+                throw new ArgumentException($"Unknown table: {table}", nameof(table));
+        }
+
         public void WriteSettingsInner(string Table, string IpInnerage, string Auth, string Key, string BlockHour, string BlockMinute)
         {
-            SqlCommand = $"INSERT INTO {Table} (IpInnerage, authorization, key, BlockHour, BlockMinute) " +
-                         $"VALUES (\"{IpInnerage.Trim()}\", \"{Auth.Trim()}\", \"{Key.Trim()}\", \"{BlockHour}\", \"{BlockMinute}\");";
-            Write(SqlCommand);
+            ValidateTable(Table);
+            // (этап 2) параметризованный INSERT.
+            Write(
+                $"INSERT INTO {Table} (IpInnerage, authorization, key, BlockHour, BlockMinute) " +
+                $"VALUES (@ip, @auth, @key, @hour, @minute)",
+                ("@ip", IpInnerage.Trim()),
+                ("@auth", Auth.Trim()),
+                ("@key", Key.Trim()),
+                ("@hour", BlockHour),
+                ("@minute", BlockMinute));
         }
-        
+
         public void ReWriteSettingsInner(string Table, string IpInnerage, string Auth, string Key, string BlockHour, string BlockMinute)
         {
-            SqlCommand = $"UPDATE {Table} " +
-                $"SET IpInnerage = \"{IpInnerage}\", authorization = \"{Auth}\", " +
-                $"key = \"{Key}\", BlockHour = \"{BlockHour}\", BlockMinute = \"{BlockMinute}\" WHERE id = 1;";
-            Write(SqlCommand);
+            ValidateTable(Table);
+            // (этап 2) параметризованный UPDATE.
+            Write(
+                $"UPDATE {Table} " +
+                $"SET IpInnerage = @ip, authorization = @auth, key = @key, BlockHour = @hour, BlockMinute = @minute " +
+                $"WHERE id = 1",
+                ("@ip", IpInnerage),
+                ("@auth", Auth),
+                ("@key", Key),
+                ("@hour", BlockHour),
+                ("@minute", BlockMinute));
         }
 
         public int GetCountId(string Table)
         {
-            // !!! Поменять на ReadListArray !!!
-            SqlCommand = $"SELECT id FROM {Table};";
-            return ReadList(SqlCommand).Count;
+            ValidateTable(Table);
+            // ИЗМЕНЕНО (этап 3): COUNT(*) вместо SELECT id + подсчёт в памяти.
+            // Возвращает то же число, что и раньше, но без выгрузки всех строк.
+            string[] res = Read($"SELECT COUNT(*) FROM {Table};");
+            return int.Parse(res[0]);
         }
 
         public string[] GetSettingString(string Table)
         {
+            ValidateTable(Table);
             if (Table == AlcoTable)
             {
                 SqlCommand = $"SELECT IpAddress FROM {Table};";
@@ -65,24 +89,31 @@ namespace AlcoBarrier
             {
                 SqlCommand = $"SELECT IpInnerage, authorization, key, BlockHour, BlockMinute FROM {Table};";
             }
-            
+
             return Read(SqlCommand);
         }
 
         public void WriteSettingsAlco(string Table, string IpAddressAlco)
         {
-            SqlCommand = $"INSERT INTO {Table} (IpAddress) VALUES (\"{IpAddressAlco}\");";
-            Write(SqlCommand);
+            ValidateTable(Table);
+            // (этап 2) параметризованный INSERT.
+            Write(
+                $"INSERT INTO {Table} (IpAddress) VALUES (@ip)",
+                ("@ip", IpAddressAlco));
         }
 
         public void ReWriteSettingsAlco(string Table, string IpAddressAlco)
         {
-            SqlCommand = $"UPDATE {Table} SET IpAddress = \"{IpAddressAlco}\" WHERE id = 1;";
-            Write(SqlCommand);
+            ValidateTable(Table);
+            // (этап 2) параметризованный UPDATE.
+            Write(
+                $"UPDATE {Table} SET IpAddress = @ip WHERE id = 1",
+                ("@ip", IpAddressAlco));
         }
 
         public string[] GetSettingsTime(string Table)
         {
+            ValidateTable(Table);
             SqlCommand = $"SELECT BlockHour, BlockMinute FROM {Table};";
             return Read(SqlCommand);
         }
