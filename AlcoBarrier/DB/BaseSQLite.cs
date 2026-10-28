@@ -1,6 +1,8 @@
 ﻿using Microsoft.Data.Sqlite;
 using System;
 using System.Collections.Generic;
+// ДОБАВЛЕНО (этап 1): для CultureInfo.InvariantCulture в SafeGetString
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -19,7 +21,7 @@ namespace AlcoBarrier
         public BaseSQLite(string _NameDataBase)
         {
             NameDataBase = _NameDataBase;
-            
+
         }
         public string Path { get; set; } = Directory.GetCurrentDirectory();
 
@@ -50,7 +52,7 @@ namespace AlcoBarrier
             }
         }
 
-        protected string[] Read(string sqlCommand) 
+        protected string[] Read(string sqlCommand)
         {
             string[] result = null;
             using (var connection = new SqliteConnection($"Data Source={Path}\\{NameDataBase}.db"))
@@ -67,7 +69,9 @@ namespace AlcoBarrier
                     {
                         for (int i = 0; i < lenghtArray; i++)
                         {
-                            Data[i] = reader.GetString(i);
+                            // ИЗМЕНЕНО (этап 1): было reader.GetString(i) — падало на INTEGER/NULL.
+                            // Теперь безопасное чтение через SafeGetString.
+                            Data[i] = SafeGetString(reader, i);
                         }
                     }
                     result = Data;
@@ -96,12 +100,13 @@ namespace AlcoBarrier
                     {
                         for (int i = 0; i < lenghtArray; i++)
                         {
-                            Data += $"{reader.GetString(i)} ";
+                            // ИЗМЕНЕНО (этап 1): было reader.GetString(i) — падало на INTEGER/NULL.
+                            Data += $"{SafeGetString(reader, i)} ";
 
                         }
                         result.Add(Data);
                         Data = string.Empty;
-                    }                  
+                    }
                 }
                 connection.Close();
             }
@@ -136,12 +141,23 @@ namespace AlcoBarrier
             int LengthArray = Data.FieldCount;
             string[] result = new string[LengthArray];
 
-            for(int i = 0; i < LengthArray; i++)
+            for (int i = 0; i < LengthArray; i++)
             {
-                result[i] = Data.GetString(i);
+                // ИЗМЕНЕНО (этап 1): было Data.GetString(i) — падало на INTEGER/NULL.
+                // Именно этот метод вызывается из ReadListArray (EventsDB.ReadEventList и т.п.).
+                result[i] = SafeGetString(Data, i);
             }
 
             return result;
+        }
+
+        // ДОБАВЛЕНО (этап 1): единая точка безопасного чтения значения из reader.
+        // NULL -> null, число -> строка через InvariantCulture, текст -> как есть.
+        private static string SafeGetString(SqliteDataReader reader, int index)
+        {
+            return reader.IsDBNull(index)
+                ? null
+                : Convert.ToString(reader.GetValue(index), CultureInfo.InvariantCulture);
         }
     }
 }
