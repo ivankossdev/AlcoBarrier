@@ -10,7 +10,7 @@ namespace AlcoBarrier
     {
         public EventsDB(string NameDataBase) : base(NameDataBase)
         {
-            
+
         }
 
         string SqlCommand { get; set; } = string.Empty;
@@ -27,9 +27,18 @@ namespace AlcoBarrier
         public void WriteEvent(string[] Table, DateTime BlockTime)
         {
             DateTime dateTime = DateTime.Now;
-            SqlCommand = $"INSERT INTO events (iduser, code, hex, cardtamplate, date, blockdate) " +
-                $"VALUES (\"{Table[0]}\", \"{Table[1]}\", \"{Table[2]}\", \"{Table[3]}\", \"{dateTime}\", \"{BlockTime}\")";
-            Write(SqlCommand);
+            // ИЗМЕНЕНО (этап 2): параметризованный INSERT.
+            // ВНИМАНИЕ: для date/blockdate сохранён прежний .ToString() (CurrentCulture),
+            // чтобы формат хранения и DateTime.Parse в MainForm не изменились.
+            Write(
+                "INSERT INTO events (iduser, code, hex, cardtamplate, date, blockdate) " +
+                "VALUES (@iduser, @code, @hex, @cardtamplate, @date, @blockdate)",
+                ("@iduser", Table[0]),
+                ("@code", Table[1]),
+                ("@hex", Table[2]),
+                ("@cardtamplate", Table[3]),
+                ("@date", dateTime.ToString()),
+                ("@blockdate", BlockTime.ToString()));
         }
 
         public List<string[]> ReadEventList()
@@ -38,10 +47,12 @@ namespace AlcoBarrier
             return ReadListArray(SqlCommand);
         }
 
-        public void DeleteString(string id) 
+        public void DeleteString(string id)
         {
-            SqlCommand = $"DELETE FROM events WHERE id = {Int32.Parse(id)}";
-            Write(SqlCommand);
+            // ИЗМЕНЕНО (этап 2): DELETE через параметр.
+            // Int32.Parse оставлен намеренно — чтобы тип исключения на невалидном id не менялся.
+            int parsedId = Int32.Parse(id);
+            Write("DELETE FROM events WHERE id = @id", ("@id", parsedId));
         }
     }
 }

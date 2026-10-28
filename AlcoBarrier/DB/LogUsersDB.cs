@@ -26,8 +26,15 @@ namespace AlcoBarrier
 
         public void WriteRow(string[] rows)
         {
-            Write($"INSERT INTO loguser (date, time, promille, user, cardnum) " +
-                  $"VALUES (\"{rows[0]}\", \"{rows[1]}\",  \"{rows[2]}\",  \"{rows[3]}\",  \"{rows[4]}\");");
+            // ИЗМЕНЕНО (этап 2): параметризованный INSERT.
+            Write(
+                "INSERT INTO loguser (date, time, promille, user, cardnum) " +
+                "VALUES (@date, @time, @promille, @user, @cardnum)",
+                ("@date", rows[0]),
+                ("@time", rows[1]),
+                ("@promille", rows[2]),
+                ("@user", rows[3]),
+                ("@cardnum", rows[4]));
         }
 
         public List<string[]> ReadRows()
@@ -37,17 +44,27 @@ namespace AlcoBarrier
 
         public List<string[]> SortByDate(string date)
         {
-            return ReadListArray($"SELECT date, time, promille, cardnum, user FROM loguser WHERE date = \"{date}\"");
+            // ИЗМЕНЕНО (этап 2): параметризованный WHERE.
+            return ReadListArray(
+                "SELECT date, time, promille, cardnum, user FROM loguser WHERE date = @date",
+                ("@date", date));
         }
 
         public List<string[]> SortByNumCardAndDate(string NumCard, string Date)
         {
-            return ReadListArray($"SELECT date, time, promille, cardnum, user FROM loguser WHERE cardnum LIKE \"%{NumCard}%\" AND date = \"{Date}\"");
+            // ИЗМЕНЕНО (этап 2): параметризованный LIKE + WHERE.
+            return ReadListArray(
+                "SELECT date, time, promille, cardnum, user FROM loguser WHERE cardnum LIKE @cardnum AND date = @date",
+                ("@cardnum", "%" + NumCard + "%"),
+                ("@date", Date));
         }
 
         public List<string[]> SortByNumCard(string NumCard)
         {
-            return ReadListArray($"SELECT date, time, promille, cardnum, user FROM loguser WHERE cardnum LIKE \"%{NumCard}%\"");
+            // ИЗМЕНЕНО (этап 2): параметризованный LIKE.
+            return ReadListArray(
+                "SELECT date, time, promille, cardnum, user FROM loguser WHERE cardnum LIKE @cardnum",
+                ("@cardnum", "%" + NumCard + "%"));
         }
 
     }

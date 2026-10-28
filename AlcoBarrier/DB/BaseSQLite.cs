@@ -1,7 +1,6 @@
 ﻿using Microsoft.Data.Sqlite;
 using System;
 using System.Collections.Generic;
-// ДОБАВЛЕНО (этап 1): для CultureInfo.InvariantCulture в SafeGetString
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -33,6 +32,20 @@ namespace AlcoBarrier
                 var command = connection.CreateCommand();
                 command.CommandText = sqlCommand;
                 command.ExecuteNonQuery();
+                connection.Close();
+            }
+        }
+
+        // ДОБАВЛЕНО (этап 2): перегрузка Write с параметрами.
+        protected void Write(string sqlCommand, params (string Name, object Value)[] parameters)
+        {
+            using (var connection = new SqliteConnection($"Data Source={Path}\\{NameDataBase}.db"))
+            {
+                connection.Open();
+                using (var command = BuildCommand(connection, sqlCommand, parameters))
+                {
+                    command.ExecuteNonQuery();
+                }
                 connection.Close();
             }
         }
@@ -69,8 +82,6 @@ namespace AlcoBarrier
                     {
                         for (int i = 0; i < lenghtArray; i++)
                         {
-                            // ИЗМЕНЕНО (этап 1): было reader.GetString(i) — падало на INTEGER/NULL.
-                            // Теперь безопасное чтение через SafeGetString.
                             Data[i] = SafeGetString(reader, i);
                         }
                     }
@@ -79,6 +90,32 @@ namespace AlcoBarrier
                 connection.Close();
             }
 
+            return result;
+        }
+
+        // ДОБАВЛЕНО (этап 2): перегрузка Read с параметрами.
+        protected string[] Read(string sqlCommand, params (string Name, object Value)[] parameters)
+        {
+            string[] result = null;
+            using (var connection = new SqliteConnection($"Data Source={Path}\\{NameDataBase}.db"))
+            {
+                connection.Open();
+                using (var command = BuildCommand(connection, sqlCommand, parameters))
+                using (var reader = command.ExecuteReader())
+                {
+                    int lenghtArray = reader.FieldCount;
+                    string[] Data = new string[lenghtArray];
+                    while (reader.Read())
+                    {
+                        for (int i = 0; i < lenghtArray; i++)
+                        {
+                            Data[i] = SafeGetString(reader, i);
+                        }
+                    }
+                    result = Data;
+                }
+                connection.Close();
+            }
             return result;
         }
 
@@ -100,9 +137,35 @@ namespace AlcoBarrier
                     {
                         for (int i = 0; i < lenghtArray; i++)
                         {
-                            // ИЗМЕНЕНО (этап 1): было reader.GetString(i) — падало на INTEGER/NULL.
                             Data += $"{SafeGetString(reader, i)} ";
 
+                        }
+                        result.Add(Data);
+                        Data = string.Empty;
+                    }
+                }
+                connection.Close();
+            }
+            return result;
+        }
+
+        // ДОБАВЛЕНО (этап 2): перегрузка ReadList с параметрами.
+        protected List<string> ReadList(string sqlCommand, params (string Name, object Value)[] parameters)
+        {
+            List<string> result = new List<string>();
+            using (var connection = new SqliteConnection($"Data Source={Path}\\{NameDataBase}.db"))
+            {
+                connection.Open();
+                using (var command = BuildCommand(connection, sqlCommand, parameters))
+                using (var reader = command.ExecuteReader())
+                {
+                    int lenghtArray = reader.FieldCount;
+                    string Data = string.Empty;
+                    while (reader.Read())
+                    {
+                        for (int i = 0; i < lenghtArray; i++)
+                        {
+                            Data += $"{SafeGetString(reader, i)} ";
                         }
                         result.Add(Data);
                         Data = string.Empty;
@@ -136,6 +199,26 @@ namespace AlcoBarrier
             return result;
         }
 
+        // ДОБАВЛЕНО (этап 2): перегрузка ReadListArray с параметрами.
+        protected List<string[]> ReadListArray(string sqlCommand, params (string Name, object Value)[] parameters)
+        {
+            List<string[]> result = new List<string[]>();
+            using (var connection = new SqliteConnection($"Data Source={Path}\\{NameDataBase}.db"))
+            {
+                connection.Open();
+                using (var command = BuildCommand(connection, sqlCommand, parameters))
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        result.Add(ArrayString(reader));
+                    }
+                }
+                connection.Close();
+            }
+            return result;
+        }
+
         private string[] ArrayString(SqliteDataReader Data)
         {
             int LengthArray = Data.FieldCount;
@@ -143,21 +226,34 @@ namespace AlcoBarrier
 
             for (int i = 0; i < LengthArray; i++)
             {
-                // ИЗМЕНЕНО (этап 1): было Data.GetString(i) — падало на INTEGER/NULL.
-                // Именно этот метод вызывается из ReadListArray (EventsDB.ReadEventList и т.п.).
                 result[i] = SafeGetString(Data, i);
             }
 
             return result;
         }
 
-        // ДОБАВЛЕНО (этап 1): единая точка безопасного чтения значения из reader.
-        // NULL -> null, число -> строка через InvariantCulture, текст -> как есть.
+        // ДОБАВЛЕНО (этап 1): NULL -> null, число -> строка через InvariantCulture, текст -> как есть.
         private static string SafeGetString(SqliteDataReader reader, int index)
         {
             return reader.IsDBNull(index)
                 ? null
                 : Convert.ToString(reader.GetValue(index), CultureInfo.InvariantCulture);
+        }
+
+        // ДОБАВЛЕНО (этап 2): общий конструктор команды с параметрами.
+        // null-значение параметра -> DBNull.Value.
+        private static SqliteCommand BuildCommand(SqliteConnection connection, string sqlCommand, (string Name, object Value)[] parameters)
+        {
+            var command = connection.CreateCommand();
+            command.CommandText = sqlCommand;
+            if (parameters != null)
+            {
+                foreach (var p in parameters)
+                {
+                    command.Parameters.AddWithValue(p.Name, p.Value ?? (object)DBNull.Value);
+                }
+            }
+            return command;
         }
     }
 }
