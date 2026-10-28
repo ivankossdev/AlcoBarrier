@@ -21,30 +21,22 @@ namespace AlcoBarrier
 {
     public partial class MainForm : Form
     {
+        private readonly CancellationTokenSource _cts = new CancellationTokenSource();
+        private int _timerBusy;
 
         public MainForm()
         {
             InitializeComponent();
 
-            // ДОБАВЛЕНО (этап 3.5): создаём отсутствующие БД до InitClass/SystemInfo/timer1.
-            // Иначе при удалённом events.db срабатывал timer1_Tick -> "no such table: events".
             EnsureDatabases();
 
+            this.FormClosing += MainForm_FormClosing;
+
             InitClass();
-            SystemInfo();
-            if (Check_Databases("employees", "events", "settings", "loguser"))
-            {
-                //OnlineMessage();
-                //SychroInnerDB();
-            }
+
+            _ = InitializeAsync(_cts.Token);
         }
 
-        /// <summary>
-        /// ДОБАВЛЕНО (этап 3.5): создаёт отсутствующие файлы БД.
-        /// Существующие файлы не трогает.
-        /// employees будет пересоздана в SychroInnerDB при доступном Innerage;
-        /// при недоступном — остаётся пустой, но приложение не падает на старте.
-        /// </summary>
         private void EnsureDatabases()
         {
             string basePath = Directory.GetCurrentDirectory();
@@ -62,8 +54,6 @@ namespace AlcoBarrier
                 new LogUsersDB("loguser").CreateDB();
         }
 
-        string Result = string.Empty;
-
         EmloeyesDB emploeyesDB;
         EventsDB events;
         LogUsersDB logUsersDB;
@@ -73,9 +63,6 @@ namespace AlcoBarrier
         string SetHour = string.Empty;
         string SetMinute = string.Empty;
 
-        /// <summary>
-        /// Иницыализация классов
-        /// </summary>
         private void InitClass()
         {
             SettingsDB setDb = new SettingsDB("settings")
@@ -95,103 +82,154 @@ namespace AlcoBarrier
             SetMinute = HourMin[1];
         }
 
-        /// <summary>
-        /// Показывает системную информацию при подключении
-        /// к алкотестеру и иннеру
-        /// </summary>
-        private async void SystemInfo()
+        private async Task InitializeAsync(CancellationToken token)
         {
-            Result = await requestInner.GetSystemInfo();
-            toolStripStatusLabel1.Text = Result;
+            try
+            {
+                await SystemInfoAsync(token);
+            }
+            // (F2) нормальная остановка при закрытии формы — не логируем как ошибку.
+            catch (OperationCanceledException)
+            {
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"SystemInfo error: {ex}");
+            }
 
-            Result = await AlcoReader.GetRequestCmd(myJson.CmdTypeHeader("getInf"));
-            toolStripStatusLabel2.Text = myJson.GetInfoAlcoBarrier(Result);
+            if (token.IsCancellationRequested) return;
+
+            if (!Check_Databases("employees", "events", "settings", "loguser"))
+                return;
+
+            try
+            {
+                await SychroInnerDBAsync(token);
+            }
+            catch (OperationCanceledException)
+            {
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"SychroInnerDB error: {ex}");
+            }
+
+            if (!token.IsCancellationRequested)
+                _ = OnlineMessageAsync(token);
         }
 
-        /// <summary>
-        /// Выводит в таблицу данные алкотестера и пользователя
-        /// </summary>
-        private async void OnlineMessage()
+        private async Task SystemInfoAsync(CancellationToken token)
         {
-            string OldRecord = string.Empty;
+            // (F2) прокинут CancellationToken.
+            string result = await requestInner.GetSystemInfo(token);
+            if (token.IsCancellationRequested) return;
+            toolStripStatusLabel1.Text = result;
 
-            while (true)
+            result = await AlcoReader.GetRequestCmd(myJson.CmdTypeHeader("getInf"));
+            if (token.IsCancellationRequested) return;
+            toolStripStatusLabel2.Text = myJson.GetInfoAlcoBarrier(result);
+        }
+
+        private async Task OnlineMessageAsync(CancellationToken token)
+        {
+            string oldRecord = string.Empty;
+
+            try
             {
-                Result = await AlcoReader.GetRequestCmd(myJson.CmdTypeHeader("getLogInf"));
-
-                string LastRecord = myJson.GetCountMessage(Result);
-
-                if (OldRecord != LastRecord)
+                while (!token.IsCancellationRequested)
                 {
-                    OldRecord = LastRecord;
-                    Result = await AlcoReader.GetRequestCmd(myJson.CreateLogMessage(LastRecord));
-                    string[] rows = myJson.GetArrayResult(Result);
-                    if (rows[0] != null && rows[1] != null && rows[2] != null && rows[3] != null && rows[4] != null)
-                    {
-                        dataGridView1.Rows.Add(rows);
-                        await Task.Run(() => logUsersDB.WriteRow(rows));
-                        string[] data = await Task.Run<string[]>(() => emploeyesDB.GetUserParam(rows[4]));
-                        await Task.Run(() => events.WriteEvent(data, CreateBlockTime(SetHour, SetMinute)));
+                    string result = await AlcoReader.GetRequestCmd(myJson.CmdTypeHeader("getLogInf"));
+                    if (token.IsCancellationRequested) return;
 
-                        foreach (string[] s in events.ReadEventList())
+                    string lastRecord = myJson.GetCountMessage(result);
+
+                    if (oldRecord != lastRecord)
+                    {
+                        oldRecord = lastRecord;
+                        result = await AlcoReader.GetRequestCmd(myJson.CreateLogMessage(lastRecord));
+                        string[] rows = myJson.GetArrayResult(result);
+                        if (rows[0] != null && rows[1] != null && rows[2] != null && rows[3] != null && rows[4] != null)
                         {
+                            AddRowToGrid(rows);
+
+                            await Task.Run(() => logUsersDB.WriteRow(rows), token);
+                            string[] data = await Task.Run(() => emploeyesDB.GetUserParam(rows[4]), token);
+                            await Task.Run(() => events.WriteEvent(data, CreateBlockTime(SetHour, SetMinute)), token);
+
+                            foreach (string[] s in events.ReadEventList())
                             {
-                                await requestInner.BlockedUser(false, s);
+                                if (token.IsCancellationRequested) return;
+                                // (F1) прокинут CancellationToken.
+                                await requestInner.BlockedUser(false, s, token);
                             }
                         }
                     }
-                }
 
-                await Task.Delay(250);
+                    await Task.Delay(250, token);
+                }
+            }
+            catch (OperationCanceledException)
+            {
+            }
+            catch (ObjectDisposedException)
+            {
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"OnlineMessage error: {ex}");
             }
         }
 
-        /// <summary>
-        /// Задает время через сколько будет заблокирован пользователь после прохода
-        /// </summary>
-        /// <param name="H"></param>
-        /// <param name="M"></param>
-        /// <returns></returns>
+        private void AddRowToGrid(string[] rows)
+        {
+            if (InvokeRequired)
+                Invoke(new Action(() => dataGridView1.Rows.Add(rows)));
+            else
+                dataGridView1.Rows.Add(rows);
+        }
+
         private DateTime CreateBlockTime(string H, string M)
         {
-            DateTime DtModyfy = DateTime.Now;
-            DtModyfy = DtModyfy.AddHours(Int32.Parse(H));
-            DtModyfy = DtModyfy.AddMinutes(Int32.Parse(M));
-
-            return DtModyfy;
+            int.TryParse(H, out int hours);
+            int.TryParse(M, out int minutes);
+            return DateTime.Now.AddHours(hours).AddMinutes(minutes);
         }
 
-        /// <summary>
-        /// Проверяет когда нужно заблокировать пользователя
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private async void timer1_Tick(object sender, EventArgs e)
         {
-            foreach (string[] s in events.ReadEventList())
+            if (Interlocked.CompareExchange(ref _timerBusy, 1, 0) != 0)
+                return;
+
+            try
             {
-                if (DateTime.Parse(s[6]) < DateTime.Now)
+                foreach (string[] s in events.ReadEventList())
                 {
-                    await requestInner.BlockedUser(true, s);
-                    events.DeleteString(s[0]);
+                    if (_cts.IsCancellationRequested) return;
+                    if (DateTime.Parse(s[6]) < DateTime.Now)
+                    {
+                        // (F1) прокинут CancellationToken.
+                        await requestInner.BlockedUser(true, s, _cts.Token);
+                        events.DeleteString(s[0]);
+                    }
                 }
             }
-        }
-
-        private void ConvertDate(string date)
-        {
-            string[] DateArray = date.Split(new char[] { '.', ' ', ':' });
-            foreach (string Date in DateArray)
+            catch (OperationCanceledException)
             {
-                Console.WriteLine(Date);
+                // (F1) нормальная остановка при закрытии формы.
+            }
+            catch (ObjectDisposedException)
+            {
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"timer1_Tick error: {ex}");
+            }
+            finally
+            {
+                Interlocked.Exchange(ref _timerBusy, 0);
             }
         }
 
-        /// <summary>
-        /// Проверяет наличае базы данных 
-        /// </summary>
-        /// <param name="databases"></param>
-        /// <returns></returns>
         private bool Check_Databases(params string[] databases)
         {
             foreach (string database in databases)
@@ -205,18 +243,24 @@ namespace AlcoBarrier
             return true;
         }
 
-        /// <summary>
-        /// Синхронизирует БД бользователей иннера с БД employees.db
-        /// </summary>
-        private async void SychroInnerDB()
+        private async Task SychroInnerDBAsync(CancellationToken token)
         {
-
-            await Task.Run(() => emploeyesDB.DeleteTable());
-            await Task.Run(() => emploeyesDB.CreateDB());
-            foreach (var user in await requestInner.GetDictUsers())
+            await Task.Run(() => emploeyesDB.DeleteTable(), token);
+            await Task.Run(() => emploeyesDB.CreateDB(), token);
+            // (F2) прокинут CancellationToken.
+            foreach (var user in await requestInner.GetDictUsers(token))
             {
-                await Task.Run(() => emploeyesDB.WriteRow(user));
+                if (token.IsCancellationRequested) return;
+                await Task.Run(() => emploeyesDB.WriteRow(user), token);
             }
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            _cts.Cancel();
+
+            requestInner?.Dispose();
+            AlcoReader?.Dispose();
         }
     }
 }

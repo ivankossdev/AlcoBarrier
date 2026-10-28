@@ -13,7 +13,7 @@ namespace AlcoBarrier
 {
     public class MyJson
     {
-       
+
         public string CreateLogMessage(string memoryAddr)
         {
             var forecastObject = new JsonObject
@@ -107,7 +107,7 @@ namespace AlcoBarrier
             JsonNode jsonNode = JsonNode.Parse(data);
             int count = jsonNode["Records"].AsArray().Count;
 
-            List<string[]>Records = new List<string[]>();
+            List<string[]> Records = new List<string[]>();
 
             for (int i = 0; i < count; i++)
             {
@@ -115,9 +115,9 @@ namespace AlcoBarrier
                 if (Code == "4" || Code == "5")
                 {
                     string CardCode = ConvertCodeCard(jsonNode["Records"][i]["WiegandLSB"].ToString());
-                    Records.Add(RecordsArray(jsonNode["Records"][i]["Date"].ToString(), 
-                                jsonNode["Records"][i]["Time"].ToString(), 
-                                $"{jsonNode["Records"][i]["Result"]} мг/л", 
+                    Records.Add(RecordsArray(jsonNode["Records"][i]["Date"].ToString(),
+                                jsonNode["Records"][i]["Time"].ToString(),
+                                $"{jsonNode["Records"][i]["Result"]} мг/л",
                                 CardCode));
                 }
             }
@@ -143,17 +143,41 @@ namespace AlcoBarrier
             try
             {
                 jsonNode = JsonNode.Parse(jsonString);
+                if (jsonNode == null) return Message;
+
                 if (jsonNode["getLog"] == null)
                 {
-                    string Code = jsonNode["Records"][0]["Code"].ToString();
+                    // ИЗМЕНЕНО (этап 4): проверка Records на null/пустоту,
+                    // чтобы не было NRE на jsonNode["Records"][0] при пустом/ошибочном ответе.
+                    var records = jsonNode["Records"]?.AsArray();
+                    if (records == null || records.Count == 0) return Message;
+
+                    var record = records[0];
+
+                    string Code = record["Code"]?.ToString();
                     if (Code == "4" || Code == "5")
                     {
-                        string CardName = ConvertCodeCard(jsonNode["Records"][0]["WiegandLSB"].ToString());
-                        Message[0] = jsonNode["Records"][0]["Date"].ToString();
-                        Message[1] = jsonNode["Records"][0]["Time"].ToString();
-                        Message[2] = $"{jsonNode["Records"][0]["Result"]} мг/л";
-                        Message[3] = employee.GetNameCard(CardName);
-                        Message[4] = CardName;
+                        string CardName = ConvertCodeCard(record["WiegandLSB"]?.ToString());
+                        Message[0] = record["Date"]?.ToString();
+                        Message[1] = record["Time"]?.ToString();
+                        Message[2] = $"{record["Result"]} мг/л";
+
+                        // ИЗМЕНЕНО (этап 4): GetNameCard бросает NRE, если карты нет
+                        // в employees (Read вернул null -> res[0]). Оборачиваем локально,
+                        // чтобы не терять весь Message и не падать в общий catch.
+                        // Если CardName == null, GetNameCard не вызываем вовсе.
+                        if (!string.IsNullOrEmpty(CardName))
+                        {
+                            Message[4] = CardName;
+                            try
+                            {
+                                Message[3] = employee.GetNameCard(CardName);
+                            }
+                            catch (NullReferenceException)
+                            {
+                                Message[3] = null;
+                            }
+                        }
                     }
                 }
             }
@@ -172,7 +196,7 @@ namespace AlcoBarrier
             try
             {
                 jsonNode = JsonNode.Parse(jsonString);
-                if(jsonNode["EthBlock"] != null)
+                if (jsonNode["EthBlock"] != null)
                 {
                     Result = $"AlcoBarrier Host: {jsonNode["EthBlock"]["HostName"]}";
                 }
@@ -186,7 +210,11 @@ namespace AlcoBarrier
 
         private string ConvertCodeCard(string code)
         {
-            int IntCode = Convert.ToInt32(code);
+            // ИЗМЕНЕНО (этап 4): TryParse вместо Convert.ToInt32 —
+            // при невалидном/отсутствующем значении возвращаем входную строку (или null),
+            // без FormatException/ArgumentNullException.
+            if (!int.TryParse(code, out int IntCode))
+                return code;
 
             //return $"{IntCode >> 16}-{IntCode & 0xFFFF}";
             return $"{IntCode & 0xFFFF}";
