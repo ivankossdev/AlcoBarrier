@@ -34,8 +34,8 @@ namespace AlcoBarrier
             SystemInfo();
             if (Check_Databases("employees", "events", "settings", "loguser"))
             {
-                //OnlineMessage();
-                //SychroInnerDB();
+                OnlineMessage();
+                SychroInnerDB();
             }
         }
 
