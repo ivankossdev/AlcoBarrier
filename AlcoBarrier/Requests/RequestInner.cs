@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AlcoBarrier
@@ -26,20 +27,28 @@ namespace AlcoBarrier
             xmlHandler = new XmlHandler();
         }
 
-        async public Task<string> GetSystemInfo()
+        async public Task<string> GetSystemInfo(CancellationToken token)
         {
             string MyResult;
             try
             {
-                using (HttpResponseMessage response = await client.GetAsync($"http://{IpAddress}/restApi/v2/SystemInfo"))
+                // (F2) ранний выход, если отмена уже запрошена.
+                token.ThrowIfCancellationRequested();
+
+                using (HttpResponseMessage response = await client.GetAsync($"http://{IpAddress}/restApi/v2/SystemInfo", token))
                 {
                     response.EnsureSuccessStatusCode();
                     string responseBody = await response.Content.ReadAsStringAsync();
                     MyResult = $"{xmlHandler.GetXmlElement(responseBody, "SystemInfo")}";
                 }
             }
-            // ИЗМЕНЕНО (этап C1-fix): HttpRequestException -> Exception.
-            // Раньше TaskCanceledException (таймаут HttpClient) улетал наверх.
+            // (F2) отмена пробрасывается наверх — MainForm ловит OperationCanceledException.
+            // Таймаут HttpClient (TaskCanceledException при token.IsCancellationRequested == false)
+            // попадает в следующий catch и превращается в "Message :...".
+            catch (OperationCanceledException) when (token.IsCancellationRequested)
+            {
+                throw;
+            }
             catch (Exception e)
             {
                 MyResult = $"Message :{e.Message}";
@@ -47,19 +56,24 @@ namespace AlcoBarrier
             return MyResult;
         }
 
-        async public Task<List<string>> GetAllUsers()
+        async public Task<List<string>> GetAllUsers(CancellationToken token)
         {
             string MyResult;
             try
             {
-                using (HttpResponseMessage response = await client.GetAsync($"http://{IpAddress}/restApi/v2/User/User?FullObject=True"))
+                token.ThrowIfCancellationRequested();
+
+                using (HttpResponseMessage response = await client.GetAsync($"http://{IpAddress}/restApi/v2/User/User?FullObject=True", token))
                 {
                     response.EnsureSuccessStatusCode();
                     string responseBody = await response.Content.ReadAsStringAsync();
                     MyResult = responseBody;
                 }
             }
-            // ИЗМЕНЕНО (этап C1-fix): HttpRequestException -> Exception.
+            catch (OperationCanceledException) when (token.IsCancellationRequested)
+            {
+                throw;
+            }
             catch (Exception e)
             {
                 MyResult = $"Message :{e.Message}";
@@ -68,19 +82,25 @@ namespace AlcoBarrier
             return xmlHandler.GetUsersString(MyResult);
         }
 
-        async public Task<List<string[]>> GetDictUsers()
+        async public Task<List<string[]>> GetDictUsers(CancellationToken token)
         {
             string MyResult;
             try
             {
-                using (HttpResponseMessage response = await client.GetAsync($"http://{IpAddress}/restApi/v2/User/User?FullObject=True"))
+                // (F2) ранний выход.
+                token.ThrowIfCancellationRequested();
+
+                using (HttpResponseMessage response = await client.GetAsync($"http://{IpAddress}/restApi/v2/User/User?FullObject=True", token))
                 {
                     response.EnsureSuccessStatusCode();
                     string responseBody = await response.Content.ReadAsStringAsync();
                     MyResult = responseBody;
                 }
             }
-            // ИЗМЕНЕНО (этап C1-fix): HttpRequestException -> Exception.
+            catch (OperationCanceledException) when (token.IsCancellationRequested)
+            {
+                throw;
+            }
             catch (Exception e)
             {
                 MyResult = $"Message :{e.Message}";
@@ -89,12 +109,16 @@ namespace AlcoBarrier
             return xmlHandler.GetUsersArray(MyResult);
         }
 
-        async public Task BlockedUser(bool set, string[] UserData)
+        async public Task BlockedUser(bool set, string[] UserData, CancellationToken token)
         {
             string MyResult = string.Empty;
 
             try
             {
+                // (F1) ранний выход — самое важное: при закрытии формы запрос
+                // PostAsync больше не будет ждать 10 сек таймаута.
+                token.ThrowIfCancellationRequested();
+
                 string command = string.Empty;
 
                 string Active = "Active";
@@ -115,17 +139,20 @@ namespace AlcoBarrier
 
                 byte[] messageToBytes = Encoding.UTF8.GetBytes(command);
 
+                // (F1) CancellationToken прокинут в PostAsync.
                 using (var content = new ByteArrayContent(messageToBytes))
-                using (HttpResponseMessage response = await client.PostAsync($"http://{IpAddress}/restApi/v2/User/AddOrUpdate", content))
+                using (HttpResponseMessage response = await client.PostAsync($"http://{IpAddress}/restApi/v2/User/AddOrUpdate", content, token))
                 {
                     response.EnsureSuccessStatusCode();
                     string responseBody = await response.Content.ReadAsStringAsync();
                     MyResult = $"{xmlHandler.GetXmlElement(responseBody, "CommandProgress")}";
                 }
             }
-            // ИЗМЕНЕНО (этап C1-fix): HttpRequestException -> Exception.
-            // Это самое важное место: раньше TaskCanceledException здесь убивал
-            // цикл OnlineMessageAsync (catch — вне while) и опрос прекращался навсегда.
+            // (F1) отмена пробрасывается — MainForm ловит OperationCanceledException.
+            catch (OperationCanceledException) when (token.IsCancellationRequested)
+            {
+                throw;
+            }
             catch (Exception e)
             {
                 MyResult = $"Message :{e.Message}";

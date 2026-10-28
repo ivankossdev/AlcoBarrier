@@ -88,10 +88,16 @@ namespace AlcoBarrier
             {
                 await SystemInfoAsync(token);
             }
+            // (F2) нормальная остановка при закрытии формы — не логируем как ошибку.
+            catch (OperationCanceledException)
+            {
+            }
             catch (Exception ex)
             {
                 Console.WriteLine($"SystemInfo error: {ex}");
             }
+
+            if (token.IsCancellationRequested) return;
 
             if (!Check_Databases("employees", "events", "settings", "loguser"))
                 return;
@@ -99,6 +105,9 @@ namespace AlcoBarrier
             try
             {
                 await SychroInnerDBAsync(token);
+            }
+            catch (OperationCanceledException)
+            {
             }
             catch (Exception ex)
             {
@@ -111,7 +120,8 @@ namespace AlcoBarrier
 
         private async Task SystemInfoAsync(CancellationToken token)
         {
-            string result = await requestInner.GetSystemInfo();
+            // (F2) прокинут CancellationToken.
+            string result = await requestInner.GetSystemInfo(token);
             if (token.IsCancellationRequested) return;
             toolStripStatusLabel1.Text = result;
 
@@ -149,7 +159,8 @@ namespace AlcoBarrier
                             foreach (string[] s in events.ReadEventList())
                             {
                                 if (token.IsCancellationRequested) return;
-                                await requestInner.BlockedUser(false, s);
+                                // (F1) прокинут CancellationToken.
+                                await requestInner.BlockedUser(false, s, token);
                             }
                         }
                     }
@@ -162,8 +173,6 @@ namespace AlcoBarrier
             }
             catch (ObjectDisposedException)
             {
-                // ДОБАВЛЕНО (этап C1): при закрытии формы HttpClient может быть уже
-                // диспозен, пока запрос был в полёте. Это нормальная остановка.
             }
             catch (Exception ex)
             {
@@ -179,12 +188,6 @@ namespace AlcoBarrier
                 dataGridView1.Rows.Add(rows);
         }
 
-        /// <summary>
-        /// Задает время через сколько будет заблокирован пользователь после прохода.
-        /// ИЗМЕНЕНО (этап C4): Int32.TryParse вместо Int32.Parse.
-        /// При пустых/некорректных настройках возвращается "сейчас" (0ч 0м),
-        /// без FormatException.
-        /// </summary>
         private DateTime CreateBlockTime(string H, string M)
         {
             int.TryParse(H, out int hours);
@@ -204,14 +207,18 @@ namespace AlcoBarrier
                     if (_cts.IsCancellationRequested) return;
                     if (DateTime.Parse(s[6]) < DateTime.Now)
                     {
-                        await requestInner.BlockedUser(true, s);
+                        // (F1) прокинут CancellationToken.
+                        await requestInner.BlockedUser(true, s, _cts.Token);
                         events.DeleteString(s[0]);
                     }
                 }
             }
+            catch (OperationCanceledException)
+            {
+                // (F1) нормальная остановка при закрытии формы.
+            }
             catch (ObjectDisposedException)
             {
-                // (этап C1) остановка при закрытии формы.
             }
             catch (Exception ex)
             {
@@ -222,8 +229,6 @@ namespace AlcoBarrier
                 Interlocked.Exchange(ref _timerBusy, 0);
             }
         }
-
-        // УДАЛЕНО (этап C5): ConvertDate — не использовался.
 
         private bool Check_Databases(params string[] databases)
         {
@@ -242,7 +247,8 @@ namespace AlcoBarrier
         {
             await Task.Run(() => emploeyesDB.DeleteTable(), token);
             await Task.Run(() => emploeyesDB.CreateDB(), token);
-            foreach (var user in await requestInner.GetDictUsers())
+            // (F2) прокинут CancellationToken.
+            foreach (var user in await requestInner.GetDictUsers(token))
             {
                 if (token.IsCancellationRequested) return;
                 await Task.Run(() => emploeyesDB.WriteRow(user), token);
@@ -251,12 +257,8 @@ namespace AlcoBarrier
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            // (этап 5.1) останавливаем фоновые циклы.
             _cts.Cancel();
 
-            // (этап C1) диспозим HttpClient'ы. Отмена уже запрошена,
-            // поэтому фоновые запросы получат ObjectDisposedException —
-            // он ловится в OnlineMessageAsync / timer1_Tick как нормальная остановка.
             requestInner?.Dispose();
             AlcoReader?.Dispose();
         }
