@@ -1,32 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlTypes;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Linq.Expressions;
 using System.Net.Http;
-using System.Net.Sockets;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Xml;
-using System.Xml.Linq;
 
 namespace AlcoBarrier
 {
-    public class RequestInner
+    public class RequestInner : IDisposable
     {
         private HttpClient client;
         private XmlHandler xmlHandler;
 
         private readonly string IpAddress;
+        private bool _disposed;
 
         public RequestInner(string ip, string auth, string key)
         {
             IpAddress = ip;
-            client = new HttpClient();
+            client = new HttpClient
+            {
+                Timeout = TimeSpan.FromSeconds(10)
+            };
             client.DefaultRequestHeaders.Add("Authorization", auth);
             client.DefaultRequestHeaders.Add("API-KEY", key);
             xmlHandler = new XmlHandler();
@@ -37,19 +31,20 @@ namespace AlcoBarrier
             string MyResult;
             try
             {
-                HttpResponseMessage response = await client.GetAsync($"http://{IpAddress}/restApi/v2/SystemInfo");
-
-                response.EnsureSuccessStatusCode();
-                
-                string responseBody = await response.Content.ReadAsStringAsync();
-                MyResult = $"{xmlHandler.GetXmlElement(responseBody, "SystemInfo")}";
-
+                using (HttpResponseMessage response = await client.GetAsync($"http://{IpAddress}/restApi/v2/SystemInfo"))
+                {
+                    response.EnsureSuccessStatusCode();
+                    string responseBody = await response.Content.ReadAsStringAsync();
+                    MyResult = $"{xmlHandler.GetXmlElement(responseBody, "SystemInfo")}";
+                }
             }
-            catch (HttpRequestException e)
+            // ИЗМЕНЕНО (этап C1-fix): HttpRequestException -> Exception.
+            // Раньше TaskCanceledException (таймаут HttpClient) улетал наверх.
+            catch (Exception e)
             {
                 MyResult = $"Message :{e.Message}";
             }
-            return MyResult ;
+            return MyResult;
         }
 
         async public Task<List<string>> GetAllUsers()
@@ -57,15 +52,15 @@ namespace AlcoBarrier
             string MyResult;
             try
             {
-                HttpResponseMessage response = await client.GetAsync($"http://{IpAddress}/restApi/v2/User/User?FullObject=True");
-
-                response.EnsureSuccessStatusCode();
-
-                string responseBody = await response.Content.ReadAsStringAsync();
-                MyResult= responseBody;
-
+                using (HttpResponseMessage response = await client.GetAsync($"http://{IpAddress}/restApi/v2/User/User?FullObject=True"))
+                {
+                    response.EnsureSuccessStatusCode();
+                    string responseBody = await response.Content.ReadAsStringAsync();
+                    MyResult = responseBody;
+                }
             }
-            catch (HttpRequestException e)
+            // ИЗМЕНЕНО (этап C1-fix): HttpRequestException -> Exception.
+            catch (Exception e)
             {
                 MyResult = $"Message :{e.Message}";
             }
@@ -78,15 +73,15 @@ namespace AlcoBarrier
             string MyResult;
             try
             {
-                HttpResponseMessage response = await client.GetAsync($"http://{IpAddress}/restApi/v2/User/User?FullObject=True");
-
-                response.EnsureSuccessStatusCode();
-
-                string responseBody = await response.Content.ReadAsStringAsync();
-                MyResult = responseBody;
-
+                using (HttpResponseMessage response = await client.GetAsync($"http://{IpAddress}/restApi/v2/User/User?FullObject=True"))
+                {
+                    response.EnsureSuccessStatusCode();
+                    string responseBody = await response.Content.ReadAsStringAsync();
+                    MyResult = responseBody;
+                }
             }
-            catch (HttpRequestException e)
+            // ИЗМЕНЕНО (этап C1-fix): HttpRequestException -> Exception.
+            catch (Exception e)
             {
                 MyResult = $"Message :{e.Message}";
             }
@@ -116,60 +111,34 @@ namespace AlcoBarrier
                           $"</CardType>\r\n<CardNumber>{UserData[1]}</CardNumber>\r\n<CardNumberNumeric>{UserData[1]}</CardNumberNumeric>\r\n" +
                           $"<IssueNumber>0</IssueNumber>\r\n" +
                           $"<CardData>{UserData[2]}</CardData>\r\n" +
-                          $"<ExternalCredentials />\r\n<CloudCredentialType>None</CloudCredentialType>\r\n</Card>\r\n</Cards>\r\n</User>";
-
-                //await Console.Out.WriteLineAsync(command);
+                          $"<ExternalCredentials />\r\n<CloudCredentialType>None</CloudCredentialType>\r\n</Card>\r\n</Cards>\r\n</User>\r\n";
 
                 byte[] messageToBytes = Encoding.UTF8.GetBytes(command);
-                var content = new ByteArrayContent(messageToBytes);
 
-                HttpResponseMessage response = await client.PostAsync($"http://{IpAddress}/restApi/v2/User/AddOrUpdate", content);
-
-                response.EnsureSuccessStatusCode();
-
-                string responseBody = await response.Content.ReadAsStringAsync();
-                MyResult = $"{xmlHandler.GetXmlElement(responseBody, "CommandProgress")}";
-
+                using (var content = new ByteArrayContent(messageToBytes))
+                using (HttpResponseMessage response = await client.PostAsync($"http://{IpAddress}/restApi/v2/User/AddOrUpdate", content))
+                {
+                    response.EnsureSuccessStatusCode();
+                    string responseBody = await response.Content.ReadAsStringAsync();
+                    MyResult = $"{xmlHandler.GetXmlElement(responseBody, "CommandProgress")}";
+                }
             }
-            catch (HttpRequestException e)
+            // ИЗМЕНЕНО (этап C1-fix): HttpRequestException -> Exception.
+            // Это самое важное место: раньше TaskCanceledException здесь убивал
+            // цикл OnlineMessageAsync (catch — вне while) и опрос прекращался навсегда.
+            catch (Exception e)
             {
                 MyResult = $"Message :{e.Message}";
             }
 
-
             await Console.Out.WriteLineAsync(MyResult);
+        }
+
+        public void Dispose()
+        {
+            if (_disposed) return;
+            _disposed = true;
+            client.Dispose();
         }
     }
 }
-
-
-// Unused
-// Active
-
-/*
-[0]232
-[1]34542 +
-[2]1A00000025000000EE860000
-[3]U3 +
-[4]TM38 +
-[5]31.07.2023 13:12:22
-[6]31.07.2023 13:13:22
- * 
- <User Address="U2">
-  <Cards>
-    <Card>
-      <Name>37358</Name>
-      <State>Active</State>
-      <CardType>
-        <Ref Type="CardTemplate" PartitionID="0" ID="TM38" />
-      </CardType>
-      <CardNumber>37358</CardNumber>
-      <CardNumberNumeric>37358</CardNumberNumeric>
-      <IssueNumber>0</IssueNumber>
-      <CardData>1A00000025000000EE910000</CardData>
-      <ExternalCredentials />
-      <CloudCredentialType>None</CloudCredentialType>
-    </Card>
-   </Cards>
- </User> 
-*/

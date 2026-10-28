@@ -1,25 +1,27 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-
 using System.Threading.Tasks;
 
 namespace AlcoBarrier
 {
-    public class RequestAlcoReader
+    // ИЗМЕНЕНО (этап C1): реализует IDisposable, HttpClient с таймаутом,
+    // HttpResponseMessage в using. Убран неиспользуемый using Newtonsoft.Json.
+    public class RequestAlcoReader : IDisposable
     {
         private readonly HttpClient client;
         private readonly string IpAddress;
+        private bool _disposed;
 
         public RequestAlcoReader(string ip)
         {
             IpAddress = ip;
-            client = new HttpClient();
+            client = new HttpClient
+            {
+                Timeout = TimeSpan.FromSeconds(10)
+            };
         }
 
         async public Task<string> GetRequestCmd(string request)
@@ -29,10 +31,9 @@ namespace AlcoBarrier
             {
                 byte[] messageToBytes = Encoding.UTF8.GetBytes(request);
 
-                using(var content = new ByteArrayContent(messageToBytes))
+                using (var content = new ByteArrayContent(messageToBytes))
+                using (HttpResponseMessage response = await client.PostAsync($"http://{IpAddress}:443/cmd", content))
                 {
-                    HttpResponseMessage response = await client.PostAsync($"http://{IpAddress}:443/cmd", content);
-
                     response.EnsureSuccessStatusCode();
                     responseBody = await response.Content.ReadAsStringAsync();
                 }
@@ -61,5 +62,11 @@ namespace AlcoBarrier
             return responseBody;
         }
 
+        public void Dispose()
+        {
+            if (_disposed) return;
+            _disposed = true;
+            client.Dispose();
+        }
     }
 }

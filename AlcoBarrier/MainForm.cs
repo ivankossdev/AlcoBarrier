@@ -21,10 +21,7 @@ namespace AlcoBarrier
 {
     public partial class MainForm : Form
     {
-        // ДОБАВЛЕНО (этап 5.1): отмена всех фоновых циклов при закрытии формы.
         private readonly CancellationTokenSource _cts = new CancellationTokenSource();
-
-        // ДОБАВЛЕНО (этап 5.3): защита от реентрантности timer1_Tick.
         private int _timerBusy;
 
         public MainForm()
@@ -33,21 +30,13 @@ namespace AlcoBarrier
 
             EnsureDatabases();
 
-            // ДОБАВЛЕНО (этап 5.1): останавливаем циклы при закрытии формы.
             this.FormClosing += MainForm_FormClosing;
 
             InitClass();
 
-            // ИЗМЕНЕНО (этап 5.2): единая асинхронная инициализация вместо
-            // разрозненных async void вызовов из конструктора.
-            // Порядок гарантирован: SystemInfo -> SychroInnerDB -> OnlineMessage.
             _ = InitializeAsync(_cts.Token);
         }
 
-        /// <summary>
-        /// ДОБАВЛЕНО (этап 3.5): создаёт отсутствующие файлы БД.
-        /// Существующие файлы не трогает.
-        /// </summary>
         private void EnsureDatabases()
         {
             string basePath = Directory.GetCurrentDirectory();
@@ -74,12 +63,6 @@ namespace AlcoBarrier
         string SetHour = string.Empty;
         string SetMinute = string.Empty;
 
-        // УДАЛЕНО (этап 5.5): общее поле `string Result` — источник гонок между
-        // асинхронными методами. Теперь в каждом методе локальная переменная.
-
-        /// <summary>
-        /// Иницыализация классов
-        /// </summary>
         private void InitClass()
         {
             SettingsDB setDb = new SettingsDB("settings")
@@ -99,10 +82,6 @@ namespace AlcoBarrier
             SetMinute = HourMin[1];
         }
 
-        /// <summary>
-        /// ДОБАВЛЕНО (этап 5.2): единая точка асинхронной инициализации.
-        /// Каждый шаг в своём try/catch, чтобы сбой одного не убивал остальные.
-        /// </summary>
         private async Task InitializeAsync(CancellationToken token)
         {
             try
@@ -119,9 +98,6 @@ namespace AlcoBarrier
 
             try
             {
-                // ИЗМЕНЕНО (этап 5.2): дожидаемся синхронизации employees до запуска
-                // OnlineMessage. Раньше SychroInnerDB пересоздавала таблицу
-                // параллельно с чтением из неё в OnlineMessage.
                 await SychroInnerDBAsync(token);
             }
             catch (Exception ex)
@@ -133,11 +109,6 @@ namespace AlcoBarrier
                 _ = OnlineMessageAsync(token);
         }
 
-        /// <summary>
-        /// Показывает системную информацию при подключении
-        /// к алкотестеру и иннеру.
-        /// ИЗМЕНЕНО (этап 5.1/5.5): async Task + локальная result вместо поля.
-        /// </summary>
         private async Task SystemInfoAsync(CancellationToken token)
         {
             string result = await requestInner.GetSystemInfo();
@@ -149,18 +120,12 @@ namespace AlcoBarrier
             toolStripStatusLabel2.Text = myJson.GetInfoAlcoBarrier(result);
         }
 
-        /// <summary>
-        /// Выводит в таблицу данные алкотестера и пользователя.
-        /// ИЗМЕНЕНО (этап 5.1/5.4/5.5): async Task, CancellationToken,
-        /// локальная result, безопасное добавление в DataGridView.
-        /// </summary>
         private async Task OnlineMessageAsync(CancellationToken token)
         {
             string oldRecord = string.Empty;
 
             try
             {
-                // ИЗМЕНЕНО (этап 5.1): while (!token.IsCancellationRequested) вместо while(true).
                 while (!token.IsCancellationRequested)
                 {
                     string result = await AlcoReader.GetRequestCmd(myJson.CmdTypeHeader("getLogInf"));
@@ -175,8 +140,6 @@ namespace AlcoBarrier
                         string[] rows = myJson.GetArrayResult(result);
                         if (rows[0] != null && rows[1] != null && rows[2] != null && rows[3] != null && rows[4] != null)
                         {
-                            // ИЗМЕНЕНО (этап 5.4): добавление строки — через AddRowToGrid
-                            // с проверкой InvokeRequired.
                             AddRowToGrid(rows);
 
                             await Task.Run(() => logUsersDB.WriteRow(rows), token);
@@ -191,24 +154,23 @@ namespace AlcoBarrier
                         }
                     }
 
-                    // ИЗМЕНЕНО (этап 5.1): отменяемая задержка.
                     await Task.Delay(250, token);
                 }
             }
             catch (OperationCanceledException)
             {
-                // Нормальная остановка при закрытии формы.
+            }
+            catch (ObjectDisposedException)
+            {
+                // ДОБАВЛЕНО (этап C1): при закрытии формы HttpClient может быть уже
+                // диспозен, пока запрос был в полёте. Это нормальная остановка.
             }
             catch (Exception ex)
             {
-                // ДОБАВЛЕНО (этап 5.1): раньше необработанное исключение молча убивало цикл.
                 Console.WriteLine($"OnlineMessage error: {ex}");
             }
         }
 
-        /// <summary>
-        /// ДОБАВЛЕНО (этап 5.4): гарантирует добавление строки из UI-потока.
-        /// </summary>
         private void AddRowToGrid(string[] rows)
         {
             if (InvokeRequired)
@@ -218,26 +180,20 @@ namespace AlcoBarrier
         }
 
         /// <summary>
-        /// Задает время через сколько будет заблокирован пользователь после прохода
+        /// Задает время через сколько будет заблокирован пользователь после прохода.
+        /// ИЗМЕНЕНО (этап C4): Int32.TryParse вместо Int32.Parse.
+        /// При пустых/некорректных настройках возвращается "сейчас" (0ч 0м),
+        /// без FormatException.
         /// </summary>
         private DateTime CreateBlockTime(string H, string M)
         {
-            DateTime DtModyfy = DateTime.Now;
-            DtModyfy = DtModyfy.AddHours(Int32.Parse(H));
-            DtModyfy = DtModyfy.AddMinutes(Int32.Parse(M));
-
-            return DtModyfy;
+            int.TryParse(H, out int hours);
+            int.TryParse(M, out int minutes);
+            return DateTime.Now.AddHours(hours).AddMinutes(minutes);
         }
 
-        /// <summary>
-        /// Проверяет когда нужно заблокировать пользователя.
-        /// ИЗМЕНЕНО (этап 5.3): защита от реентрантности через _timerBusy;
-        /// добавлен try/catch, чтобы исключение не убивало таймер.
-        /// Остаётся async void, т.к. это обработчик события WinForms.
-        /// </summary>
         private async void timer1_Tick(object sender, EventArgs e)
         {
-            // Предыдущий тик ещё выполняется — пропускаем.
             if (Interlocked.CompareExchange(ref _timerBusy, 1, 0) != 0)
                 return;
 
@@ -253,6 +209,10 @@ namespace AlcoBarrier
                     }
                 }
             }
+            catch (ObjectDisposedException)
+            {
+                // (этап C1) остановка при закрытии формы.
+            }
             catch (Exception ex)
             {
                 Console.WriteLine($"timer1_Tick error: {ex}");
@@ -263,18 +223,8 @@ namespace AlcoBarrier
             }
         }
 
-        private void ConvertDate(string date)
-        {
-            string[] DateArray = date.Split(new char[] { '.', ' ', ':' });
-            foreach (string Date in DateArray)
-            {
-                Console.WriteLine(Date);
-            }
-        }
+        // УДАЛЕНО (этап C5): ConvertDate — не использовался.
 
-        /// <summary>
-        /// Проверяет наличае базы данных 
-        /// </summary>
         private bool Check_Databases(params string[] databases)
         {
             foreach (string database in databases)
@@ -288,11 +238,6 @@ namespace AlcoBarrier
             return true;
         }
 
-        /// <summary>
-        /// Синхронизирует БД бользователей иннера с БД employees.db.
-        /// ИЗМЕНЕНО (этап 5.1/5.2): async Task + CancellationToken, чтобы
-        /// можно было дождаться завершения из InitializeAsync.
-        /// </summary>
         private async Task SychroInnerDBAsync(CancellationToken token)
         {
             await Task.Run(() => emploeyesDB.DeleteTable(), token);
@@ -304,12 +249,16 @@ namespace AlcoBarrier
             }
         }
 
-        /// <summary>
-        /// ДОБАВЛЕНО (этап 5.1): останавливаем фоновые циклы при закрытии формы.
-        /// </summary>
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            // (этап 5.1) останавливаем фоновые циклы.
             _cts.Cancel();
+
+            // (этап C1) диспозим HttpClient'ы. Отмена уже запрошена,
+            // поэтому фоновые запросы получат ObjectDisposedException —
+            // он ловится в OnlineMessageAsync / timer1_Tick как нормальная остановка.
+            requestInner?.Dispose();
+            AlcoReader?.Dispose();
         }
     }
 }
