@@ -22,8 +22,16 @@ namespace AlcoBarrier
             {
                 Timeout = TimeSpan.FromSeconds(10)
             };
-            client.DefaultRequestHeaders.Add("Authorization", auth);
-            client.DefaultRequestHeaders.Add("API-KEY", key);
+
+            // ИЗМЕНЕНО (этап C3-fix): HttpHeaders.Add не принимает пустую строку
+            // (бросает FormatException). Добавляем заголовок, только если значение непустое.
+            // Это защищает от дефолтов из EnsureSettings (auth="", key="") и от ручной
+            // очистки настроек пользователем.
+            if (!string.IsNullOrEmpty(auth))
+                client.DefaultRequestHeaders.Add("Authorization", auth);
+            if (!string.IsNullOrEmpty(key))
+                client.DefaultRequestHeaders.Add("API-KEY", key);
+
             xmlHandler = new XmlHandler();
         }
 
@@ -32,7 +40,6 @@ namespace AlcoBarrier
             string MyResult;
             try
             {
-                // (F2) ранний выход, если отмена уже запрошена.
                 token.ThrowIfCancellationRequested();
 
                 using (HttpResponseMessage response = await client.GetAsync($"http://{IpAddress}/restApi/v2/SystemInfo", token))
@@ -42,9 +49,6 @@ namespace AlcoBarrier
                     MyResult = $"{xmlHandler.GetXmlElement(responseBody, "SystemInfo")}";
                 }
             }
-            // (F2) отмена пробрасывается наверх — MainForm ловит OperationCanceledException.
-            // Таймаут HttpClient (TaskCanceledException при token.IsCancellationRequested == false)
-            // попадает в следующий catch и превращается в "Message :...".
             catch (OperationCanceledException) when (token.IsCancellationRequested)
             {
                 throw;
@@ -87,7 +91,6 @@ namespace AlcoBarrier
             string MyResult;
             try
             {
-                // (F2) ранний выход.
                 token.ThrowIfCancellationRequested();
 
                 using (HttpResponseMessage response = await client.GetAsync($"http://{IpAddress}/restApi/v2/User/User?FullObject=True", token))
@@ -115,12 +118,9 @@ namespace AlcoBarrier
 
             try
             {
-                // (F1) ранний выход — самое важное: при закрытии формы запрос
-                // PostAsync больше не будет ждать 10 сек таймаута.
                 token.ThrowIfCancellationRequested();
 
                 string command = string.Empty;
-
                 string Active = "Active";
 
                 if (set)
@@ -139,7 +139,6 @@ namespace AlcoBarrier
 
                 byte[] messageToBytes = Encoding.UTF8.GetBytes(command);
 
-                // (F1) CancellationToken прокинут в PostAsync.
                 using (var content = new ByteArrayContent(messageToBytes))
                 using (HttpResponseMessage response = await client.PostAsync($"http://{IpAddress}/restApi/v2/User/AddOrUpdate", content, token))
                 {
@@ -148,7 +147,6 @@ namespace AlcoBarrier
                     MyResult = $"{xmlHandler.GetXmlElement(responseBody, "CommandProgress")}";
                 }
             }
-            // (F1) отмена пробрасывается — MainForm ловит OperationCanceledException.
             catch (OperationCanceledException) when (token.IsCancellationRequested)
             {
                 throw;
@@ -158,7 +156,7 @@ namespace AlcoBarrier
                 MyResult = $"Message :{e.Message}";
             }
 
-            await Console.Out.WriteLineAsync(MyResult);
+            Logger.Info($"BlockedUser set={set}, address={UserData[3]}: {MyResult}");
         }
 
         public void Dispose()

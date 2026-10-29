@@ -29,6 +29,9 @@ namespace AlcoBarrier
             InitializeComponent();
 
             EnsureDatabases();
+            // ДОБАВЛЕНО (этап C3): дефолтные настройки, если settings.db пуст.
+            // Иначе InitClass упал бы на ParamsInner[0] (NRE).
+            EnsureSettings();
 
             this.FormClosing += MainForm_FormClosing;
 
@@ -52,6 +55,31 @@ namespace AlcoBarrier
 
             if (!File.Exists($"{basePath}\\loguser.db"))
                 new LogUsersDB("loguser").CreateDB();
+        }
+
+        /// <summary>
+        /// ДОБАВЛЕНО (этап C3): если setInner или setAlco пусты — пишем дефолты.
+        /// Существующие данные не трогаем. Защищает InitClass от NRE на пустой БД.
+        /// Реальные IP/ключи пользователь задаёт через UI (когда появится) или вручную.
+        /// </summary>
+        private void EnsureSettings()
+        {
+            SettingsDB setDb = new SettingsDB("settings")
+            {
+                Path = Directory.GetCurrentDirectory()
+            };
+
+            if (setDb.GetCountId(setDb.InnerTable) == 0)
+            {
+                setDb.WriteSettingsInner(setDb.InnerTable, "127.0.0.1", "", "", "0", "5");
+                Logger.Info("settings.db: setInner initialized with defaults (ip=127.0.0.1, block=0h 5m)");
+            }
+
+            if (setDb.GetCountId(setDb.AlcoTable) == 0)
+            {
+                setDb.WriteSettingsAlco(setDb.AlcoTable, "127.0.0.1");
+                Logger.Info("settings.db: setAlco initialized with defaults (ip=127.0.0.1)");
+            }
         }
 
         EmloeyesDB emploeyesDB;
@@ -88,13 +116,13 @@ namespace AlcoBarrier
             {
                 await SystemInfoAsync(token);
             }
-            // (F2) нормальная остановка при закрытии формы — не логируем как ошибку.
             catch (OperationCanceledException)
             {
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"SystemInfo error: {ex}");
+                // ИЗМЕНЕНО (этап C2): Console.WriteLine -> Logger.Error.
+                Logger.Error("SystemInfo error", ex);
             }
 
             if (token.IsCancellationRequested) return;
@@ -111,7 +139,7 @@ namespace AlcoBarrier
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"SychroInnerDB error: {ex}");
+                Logger.Error("SychroInnerDB error", ex);
             }
 
             if (!token.IsCancellationRequested)
@@ -120,7 +148,6 @@ namespace AlcoBarrier
 
         private async Task SystemInfoAsync(CancellationToken token)
         {
-            // (F2) прокинут CancellationToken.
             string result = await requestInner.GetSystemInfo(token);
             if (token.IsCancellationRequested) return;
             toolStripStatusLabel1.Text = result;
@@ -133,6 +160,7 @@ namespace AlcoBarrier
         private async Task OnlineMessageAsync(CancellationToken token)
         {
             string oldRecord = string.Empty;
+            int consecutiveFailures = 0;
 
             try
             {
@@ -143,29 +171,47 @@ namespace AlcoBarrier
 
                     string lastRecord = myJson.GetCountMessage(result);
 
-                    if (oldRecord != lastRecord)
+                    if (string.IsNullOrEmpty(lastRecord))
                     {
-                        oldRecord = lastRecord;
-                        result = await AlcoReader.GetRequestCmd(myJson.CreateLogMessage(lastRecord));
-                        string[] rows = myJson.GetArrayResult(result);
-                        if (rows[0] != null && rows[1] != null && rows[2] != null && rows[3] != null && rows[4] != null)
+                        consecutiveFailures++;
+                        // ДОБАВЛЕНО (этап C2): фиксируем только переход 0 -> 1, не каждый фейл.
+                        if (consecutiveFailures == 1)
                         {
-                            AddRowToGrid(rows);
+                            Logger.Warning("AlcoReader connection lost");
+                        }
+                    }
+                    else
+                    {
+                        if (consecutiveFailures > 0)
+                        {
+                            // ИЗМЕНЕНО (этап C2): Console.WriteLine -> Logger.Info.
+                            Logger.Info($"AlcoReader connection restored after {consecutiveFailures} failure(s)");
+                        }
+                        consecutiveFailures = 0;
 
-                            await Task.Run(() => logUsersDB.WriteRow(rows), token);
-                            string[] data = await Task.Run(() => emploeyesDB.GetUserParam(rows[4]), token);
-                            await Task.Run(() => events.WriteEvent(data, CreateBlockTime(SetHour, SetMinute)), token);
-
-                            foreach (string[] s in events.ReadEventList())
+                        if (oldRecord != lastRecord)
+                        {
+                            oldRecord = lastRecord;
+                            result = await AlcoReader.GetRequestCmd(myJson.CreateLogMessage(lastRecord));
+                            string[] rows = myJson.GetArrayResult(result);
+                            if (rows[0] != null && rows[1] != null && rows[2] != null && rows[3] != null && rows[4] != null)
                             {
-                                if (token.IsCancellationRequested) return;
-                                // (F1) прокинут CancellationToken.
-                                await requestInner.BlockedUser(false, s, token);
+                                AddRowToGrid(rows);
+
+                                await Task.Run(() => logUsersDB.WriteRow(rows), token);
+                                string[] data = await Task.Run(() => emploeyesDB.GetUserParam(rows[4]), token);
+                                await Task.Run(() => events.WriteEvent(data, CreateBlockTime(SetHour, SetMinute)), token);
+
+                                foreach (string[] s in events.ReadEventList())
+                                {
+                                    if (token.IsCancellationRequested) return;
+                                    await requestInner.BlockedUser(false, s, token);
+                                }
                             }
                         }
                     }
 
-                    await Task.Delay(250, token);
+                    await Task.Delay(GetPollDelayMs(consecutiveFailures), token);
                 }
             }
             catch (OperationCanceledException)
@@ -176,8 +222,17 @@ namespace AlcoBarrier
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"OnlineMessage error: {ex}");
+                Logger.Error("OnlineMessage error", ex);
             }
+        }
+
+        private static int GetPollDelayMs(int consecutiveFailures)
+        {
+            if (consecutiveFailures == 0) return 250;
+            if (consecutiveFailures <= 2) return 500;
+            if (consecutiveFailures <= 5) return 1000;
+            if (consecutiveFailures <= 10) return 3000;
+            return 5000;
         }
 
         private void AddRowToGrid(string[] rows)
@@ -207,7 +262,6 @@ namespace AlcoBarrier
                     if (_cts.IsCancellationRequested) return;
                     if (DateTime.Parse(s[6]) < DateTime.Now)
                     {
-                        // (F1) прокинут CancellationToken.
                         await requestInner.BlockedUser(true, s, _cts.Token);
                         events.DeleteString(s[0]);
                     }
@@ -215,14 +269,13 @@ namespace AlcoBarrier
             }
             catch (OperationCanceledException)
             {
-                // (F1) нормальная остановка при закрытии формы.
             }
             catch (ObjectDisposedException)
             {
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"timer1_Tick error: {ex}");
+                Logger.Error("timer1_Tick error", ex);
             }
             finally
             {
@@ -247,7 +300,6 @@ namespace AlcoBarrier
         {
             await Task.Run(() => emploeyesDB.DeleteTable(), token);
             await Task.Run(() => emploeyesDB.CreateDB(), token);
-            // (F2) прокинут CancellationToken.
             foreach (var user in await requestInner.GetDictUsers(token))
             {
                 if (token.IsCancellationRequested) return;
