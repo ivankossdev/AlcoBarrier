@@ -29,26 +29,29 @@ namespace AlcoBarrier
 
         public string GetNameCard(string code)
         {
-            // ИЗМЕНЕНО (этап C6): LIKE '%...%' -> точное сравнение.
-            // Раньше код "1234" мог найти "51234" или "91230".
-            // + null-safe: при отсутствии карты возвращаем null (раньше был NRE на res[0]).
+            // ИЗМЕНЕНО (этап C6-fix): Read при пустом результате возвращает
+            // массив из null'ов, а не null. Проверяем res[0] явно.
             string[] res = Read(
                 "SELECT name FROM employees WHERE code = @code",
                 ("@code", code));
-            if (res == null) return null;
+            if (res == null || res[0] == null) return null;
             return res[0];
         }
 
         public string[] GetUserParam(string code)
         {
-            // ИЗМЕНЕНО (этап C6): LIKE '%...%' -> точное сравнение.
-            // null-safe: при отсутствии карты возвращаем null,
-            // вызывающий (MainForm.OnlineMessageAsync) это проверяет.
+            // ИЗМЕНЕНО (этап C6-fix): было `if (res == null) return null;` —
+            // не срабатывало, т.к. Read возвращает массив [null, null, ...].
+            // Теперь проверяем res[0] == null — это означает "строк нет".
+            // Без этой проверки WriteEvent(data) получал массив из null'ов
+            // и падал на events.iduser NOT NULL.
             string[] res = Read(
                 "SELECT iduser, code, hex, CardTemplate FROM employees WHERE code = @code",
                 ("@code", code));
+            if (res == null || res[0] == null) return null;
             return res;
         }
+
         public void WriteRow(string[] emp)
         {
             Write(
