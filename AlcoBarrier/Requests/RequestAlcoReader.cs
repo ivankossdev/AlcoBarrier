@@ -45,7 +45,7 @@ namespace AlcoBarrier
 
 
             // Временный вывод сообщения в файл
-            Logger.Info($"AlcoReader raw response: {responseBody}");
+            //Logger.Info($"AlcoReader raw response: {responseBody}");
 
             return GetNode(responseBody);
         }
