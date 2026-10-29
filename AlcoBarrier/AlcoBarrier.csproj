@@ -124,6 +124,7 @@
     <Compile Include="DB\EventsDB.cs" />
     <Compile Include="DB\ReportDB.cs" />
     <Compile Include="DB\LogUsersDB.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="Requests\RequestAlcoReader.cs" />
     <Compile Include="Requests\RequestInner.cs" />
     <Compile Include="MainForm.cs">

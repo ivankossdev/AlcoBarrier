@@ -29,6 +29,9 @@ namespace AlcoBarrier
             InitializeComponent();
 
             EnsureDatabases();
+            // ДОБАВЛЕНО (этап C3): дефолтные настройки, если settings.db пуст.
+            // Иначе InitClass упал бы на ParamsInner[0] (NRE).
+            EnsureSettings();
 
             this.FormClosing += MainForm_FormClosing;
 
@@ -52,6 +55,31 @@ namespace AlcoBarrier
 
             if (!File.Exists($"{basePath}\\loguser.db"))
                 new LogUsersDB("loguser").CreateDB();
+        }
+
+        /// <summary>
+        /// ДОБАВЛЕНО (этап C3): если setInner или setAlco пусты — пишем дефолты.
+        /// Существующие данные не трогаем. Защищает InitClass от NRE на пустой БД.
+        /// Реальные IP/ключи пользователь задаёт через UI (когда появится) или вручную.
+        /// </summary>
+        private void EnsureSettings()
+        {
+            SettingsDB setDb = new SettingsDB("settings")
+            {
+                Path = Directory.GetCurrentDirectory()
+            };
+
+            if (setDb.GetCountId(setDb.InnerTable) == 0)
+            {
+                setDb.WriteSettingsInner(setDb.InnerTable, "127.0.0.1", "", "", "0", "5");
+                Logger.Info("settings.db: setInner initialized with defaults (ip=127.0.0.1, block=0h 5m)");
+            }
+
+            if (setDb.GetCountId(setDb.AlcoTable) == 0)
+            {
+                setDb.WriteSettingsAlco(setDb.AlcoTable, "127.0.0.1");
+                Logger.Info("settings.db: setAlco initialized with defaults (ip=127.0.0.1)");
+            }
         }
 
         EmloeyesDB emploeyesDB;
@@ -93,7 +121,8 @@ namespace AlcoBarrier
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"SystemInfo error: {ex}");
+                // ИЗМЕНЕНО (этап C2): Console.WriteLine -> Logger.Error.
+                Logger.Error("SystemInfo error", ex);
             }
 
             if (token.IsCancellationRequested) return;
@@ -110,7 +139,7 @@ namespace AlcoBarrier
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"SychroInnerDB error: {ex}");
+                Logger.Error("SychroInnerDB error", ex);
             }
 
             if (!token.IsCancellationRequested)
@@ -128,15 +157,6 @@ namespace AlcoBarrier
             toolStripStatusLabel2.Text = myJson.GetInfoAlcoBarrier(result);
         }
 
-        /// <summary>
-        /// ИЗМЕНЕНО (этап F3): backoff при недоступном AlcoReader.
-        /// - consecutiveFailures инкрементируется, если GetCountMessage вернул пусто
-        ///   (это означает, что GetNode вернул "Message :..." или иной невалидный ответ).
-        /// - oldRecord обновляется только при успешном ответе — это заодно исправляет
-        ///   пре-существующий баг "дубликат лога после реконнекта": раньше при offline
-        ///   oldRecord обнулялся на "", и после восстановления связи запись обрабатывалась повторно.
-        /// - Задержка между итерациями растёт: 250 → 500 → 1000 → 3000 → 5000 мс.
-        /// </summary>
         private async Task OnlineMessageAsync(CancellationToken token)
         {
             string oldRecord = string.Empty;
@@ -153,16 +173,19 @@ namespace AlcoBarrier
 
                     if (string.IsNullOrEmpty(lastRecord))
                     {
-                        // (F3) пусто = ошибка (offline, таймаут, невалидный JSON).
-                        // oldRecord НЕ трогаем — сохраняем последнее валидное значение.
                         consecutiveFailures++;
+                        // ДОБАВЛЕНО (этап C2): фиксируем только переход 0 -> 1, не каждый фейл.
+                        if (consecutiveFailures == 1)
+                        {
+                            Logger.Warning("AlcoReader connection lost");
+                        }
                     }
                     else
                     {
                         if (consecutiveFailures > 0)
                         {
-                            // (F3) восстановление связи — одна строка на переход, не спам.
-                            Console.WriteLine($"AlcoReader connection restored after {consecutiveFailures} failure(s)");
+                            // ИЗМЕНЕНО (этап C2): Console.WriteLine -> Logger.Info.
+                            Logger.Info($"AlcoReader connection restored after {consecutiveFailures} failure(s)");
                         }
                         consecutiveFailures = 0;
 
@@ -188,7 +211,6 @@ namespace AlcoBarrier
                         }
                     }
 
-                    // (F3) задержка с backoff.
                     await Task.Delay(GetPollDelayMs(consecutiveFailures), token);
                 }
             }
@@ -200,18 +222,10 @@ namespace AlcoBarrier
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"OnlineMessage error: {ex}");
+                Logger.Error("OnlineMessage error", ex);
             }
         }
 
-        /// <summary>
-        /// ДОБАВЛЕНО (этап F3): ступенчатая задержка между итерациями опроса.
-        ///   онлайн (0)      : 250 мс  — как раньше
-        ///   1–2 фейла       : 500 мс
-        ///   3–5 фейлов      : 1000 мс
-        ///   6–10 фейлов     : 3000 мс
-        ///   11+ фейлов      : 5000 мс  — потолок, не растёт дальше
-        /// </summary>
         private static int GetPollDelayMs(int consecutiveFailures)
         {
             if (consecutiveFailures == 0) return 250;
@@ -261,7 +275,7 @@ namespace AlcoBarrier
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"timer1_Tick error: {ex}");
+                Logger.Error("timer1_Tick error", ex);
             }
             finally
             {
