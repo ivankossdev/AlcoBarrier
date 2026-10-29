@@ -43,6 +43,10 @@ namespace AlcoBarrier
                 responseBody = $"Message :{e.Message}";
             }
 
+
+            // Временный вывод сообщения в файл
+            //Logger.Info($"AlcoReader raw response: {responseBody}");
+
             return GetNode(responseBody);
         }
 
