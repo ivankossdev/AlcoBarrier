@@ -29,27 +29,28 @@ namespace AlcoBarrier
 
         public string GetNameCard(string code)
         {
-            // (этап 2) параметризованный LIKE; (этап 3) порядок колонок здесь не важен.
+            // ИЗМЕНЕНО (этап C6): LIKE '%...%' -> точное сравнение.
+            // Раньше код "1234" мог найти "51234" или "91230".
+            // + null-safe: при отсутствии карты возвращаем null (раньше был NRE на res[0]).
             string[] res = Read(
-                "SELECT name FROM employees WHERE code LIKE @code",
-                ("@code", "%" + code + "%"));
+                "SELECT name FROM employees WHERE code = @code",
+                ("@code", code));
+            if (res == null) return null;
             return res[0];
         }
 
         public string[] GetUserParam(string code)
         {
-            // ИЗМЕНЕНО (этап 3): порядок колонок приведён к порядку записи в events
-            // (iduser, code, hex, CardTemplate).
-            // Раньше было (code, hex, iduser, CardTemplate), из-за чего EventsDB.WriteEvent
-            // писал значения не в те колонки, а RequestInner.BlockedUser читал их по неверным индексам.
+            // ИЗМЕНЕНО (этап C6): LIKE '%...%' -> точное сравнение.
+            // null-safe: при отсутствии карты возвращаем null,
+            // вызывающий (MainForm.OnlineMessageAsync) это проверяет.
             string[] res = Read(
-                "SELECT iduser, code, hex, CardTemplate FROM employees WHERE code LIKE @code",
-                ("@code", "%" + code + "%"));
+                "SELECT iduser, code, hex, CardTemplate FROM employees WHERE code = @code",
+                ("@code", code));
             return res;
         }
         public void WriteRow(string[] emp)
         {
-            // (этап 2) параметризованный INSERT.
             Write(
                 "INSERT INTO employees (name, iduser, code, hex, id, CardTemplate) " +
                 "VALUES (@name, @iduser, @code, @hex, @id, @cardTemplate)",

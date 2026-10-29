@@ -29,8 +29,6 @@ namespace AlcoBarrier
             InitializeComponent();
 
             EnsureDatabases();
-            // ДОБАВЛЕНО (этап C3): дефолтные настройки, если settings.db пуст.
-            // Иначе InitClass упал бы на ParamsInner[0] (NRE).
             EnsureSettings();
 
             this.FormClosing += MainForm_FormClosing;
@@ -57,11 +55,6 @@ namespace AlcoBarrier
                 new LogUsersDB("loguser").CreateDB();
         }
 
-        /// <summary>
-        /// ДОБАВЛЕНО (этап C3): если setInner или setAlco пусты — пишем дефолты.
-        /// Существующие данные не трогаем. Защищает InitClass от NRE на пустой БД.
-        /// Реальные IP/ключи пользователь задаёт через UI (когда появится) или вручную.
-        /// </summary>
         private void EnsureSettings()
         {
             SettingsDB setDb = new SettingsDB("settings")
@@ -121,7 +114,6 @@ namespace AlcoBarrier
             }
             catch (Exception ex)
             {
-                // ИЗМЕНЕНО (этап C2): Console.WriteLine -> Logger.Error.
                 Logger.Error("SystemInfo error", ex);
             }
 
@@ -174,7 +166,6 @@ namespace AlcoBarrier
                     if (string.IsNullOrEmpty(lastRecord))
                     {
                         consecutiveFailures++;
-                        // ДОБАВЛЕНО (этап C2): фиксируем только переход 0 -> 1, не каждый фейл.
                         if (consecutiveFailures == 1)
                         {
                             Logger.Warning("AlcoReader connection lost");
@@ -184,7 +175,6 @@ namespace AlcoBarrier
                     {
                         if (consecutiveFailures > 0)
                         {
-                            // ИЗМЕНЕНО (этап C2): Console.WriteLine -> Logger.Info.
                             Logger.Info($"AlcoReader connection restored after {consecutiveFailures} failure(s)");
                         }
                         consecutiveFailures = 0;
@@ -194,18 +184,33 @@ namespace AlcoBarrier
                             oldRecord = lastRecord;
                             result = await AlcoReader.GetRequestCmd(myJson.CreateLogMessage(lastRecord));
                             string[] rows = myJson.GetArrayResult(result);
-                            if (rows[0] != null && rows[1] != null && rows[2] != null && rows[3] != null && rows[4] != null)
+
+                            // ИЗМЕНЕНО (этап C6): обязательные поля — date, time, promile, cardnum.
+                            // Имя (rows[3]) может быть null, если карта не найдена в employees.
+                            if (rows[0] != null && rows[1] != null && rows[2] != null && rows[4] != null)
                             {
                                 AddRowToGrid(rows);
 
+                                // loguser пишем всегда — это аудит замеров,
+                                // даже если сотрудник не распознан.
                                 await Task.Run(() => logUsersDB.WriteRow(rows), token);
-                                string[] data = await Task.Run(() => emploeyesDB.GetUserParam(rows[4]), token);
-                                await Task.Run(() => events.WriteEvent(data, CreateBlockTime(SetHour, SetMinute)), token);
 
-                                foreach (string[] s in events.ReadEventList())
+                                // events — только если карта найдена (есть iduser/hex/CardTemplate,
+                                // иначе BlockedUser не сможет заблокировать пользователя).
+                                string[] data = await Task.Run(() => emploeyesDB.GetUserParam(rows[4]), token);
+                                if (data != null)
                                 {
-                                    if (token.IsCancellationRequested) return;
-                                    await requestInner.BlockedUser(false, s, token);
+                                    await Task.Run(() => events.WriteEvent(data, CreateBlockTime(SetHour, SetMinute)), token);
+
+                                    foreach (string[] s in events.ReadEventList())
+                                    {
+                                        if (token.IsCancellationRequested) return;
+                                        await requestInner.BlockedUser(false, s, token);
+                                    }
+                                }
+                                else
+                                {
+                                    Logger.Warning($"Unknown card: {rows[4]} (logged to loguser, no block)");
                                 }
                             }
                         }

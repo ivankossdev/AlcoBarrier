@@ -60,7 +60,6 @@ namespace AlcoBarrier
 
         private string GetQTY(string jsonString)
         {
-
             string Result = string.Empty;
             try
             {
@@ -92,7 +91,6 @@ namespace AlcoBarrier
             try
             {
                 JsonNode jsonNode = JsonNode.Parse(CreateAllRecordMessage(qty));
-
                 return jsonNode.ToString();
             }
             catch (Exception ex)
@@ -147,8 +145,6 @@ namespace AlcoBarrier
 
                 if (jsonNode["getLog"] == null)
                 {
-                    // ИЗМЕНЕНО (этап 4): проверка Records на null/пустоту,
-                    // чтобы не было NRE на jsonNode["Records"][0] при пустом/ошибочном ответе.
                     var records = jsonNode["Records"]?.AsArray();
                     if (records == null || records.Count == 0) return Message;
 
@@ -162,21 +158,13 @@ namespace AlcoBarrier
                         Message[1] = record["Time"]?.ToString();
                         Message[2] = $"{record["Result"]} мг/л";
 
-                        // ИЗМЕНЕНО (этап 4): GetNameCard бросает NRE, если карты нет
-                        // в employees (Read вернул null -> res[0]). Оборачиваем локально,
-                        // чтобы не терять весь Message и не падать в общий catch.
-                        // Если CardName == null, GetNameCard не вызываем вовсе.
+                        // ИЗМЕНЕНО (этап C6): GetNameCard теперь сам возвращает null,
+                        // если карты нет в employees (без NRE). try/catch NRE больше не нужен.
+                        // Message[3] может остаться null — MainForm это обрабатывает.
                         if (!string.IsNullOrEmpty(CardName))
                         {
                             Message[4] = CardName;
-                            try
-                            {
-                                Message[3] = employee.GetNameCard(CardName);
-                            }
-                            catch (NullReferenceException)
-                            {
-                                Message[3] = null;
-                            }
+                            Message[3] = employee.GetNameCard(CardName);
                         }
                     }
                 }
@@ -210,13 +198,9 @@ namespace AlcoBarrier
 
         private string ConvertCodeCard(string code)
         {
-            // ИЗМЕНЕНО (этап 4): TryParse вместо Convert.ToInt32 —
-            // при невалидном/отсутствующем значении возвращаем входную строку (или null),
-            // без FormatException/ArgumentNullException.
             if (!int.TryParse(code, out int IntCode))
                 return code;
 
-            //return $"{IntCode >> 16}-{IntCode & 0xFFFF}";
             return $"{IntCode & 0xFFFF}";
         }
     }
