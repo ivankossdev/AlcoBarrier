@@ -88,7 +88,6 @@ namespace AlcoBarrier
             {
                 await SystemInfoAsync(token);
             }
-            // (F2) нормальная остановка при закрытии формы — не логируем как ошибку.
             catch (OperationCanceledException)
             {
             }
@@ -120,7 +119,6 @@ namespace AlcoBarrier
 
         private async Task SystemInfoAsync(CancellationToken token)
         {
-            // (F2) прокинут CancellationToken.
             string result = await requestInner.GetSystemInfo(token);
             if (token.IsCancellationRequested) return;
             toolStripStatusLabel1.Text = result;
@@ -130,9 +128,19 @@ namespace AlcoBarrier
             toolStripStatusLabel2.Text = myJson.GetInfoAlcoBarrier(result);
         }
 
+        /// <summary>
+        /// ИЗМЕНЕНО (этап F3): backoff при недоступном AlcoReader.
+        /// - consecutiveFailures инкрементируется, если GetCountMessage вернул пусто
+        ///   (это означает, что GetNode вернул "Message :..." или иной невалидный ответ).
+        /// - oldRecord обновляется только при успешном ответе — это заодно исправляет
+        ///   пре-существующий баг "дубликат лога после реконнекта": раньше при offline
+        ///   oldRecord обнулялся на "", и после восстановления связи запись обрабатывалась повторно.
+        /// - Задержка между итерациями растёт: 250 → 500 → 1000 → 3000 → 5000 мс.
+        /// </summary>
         private async Task OnlineMessageAsync(CancellationToken token)
         {
             string oldRecord = string.Empty;
+            int consecutiveFailures = 0;
 
             try
             {
@@ -143,29 +151,45 @@ namespace AlcoBarrier
 
                     string lastRecord = myJson.GetCountMessage(result);
 
-                    if (oldRecord != lastRecord)
+                    if (string.IsNullOrEmpty(lastRecord))
                     {
-                        oldRecord = lastRecord;
-                        result = await AlcoReader.GetRequestCmd(myJson.CreateLogMessage(lastRecord));
-                        string[] rows = myJson.GetArrayResult(result);
-                        if (rows[0] != null && rows[1] != null && rows[2] != null && rows[3] != null && rows[4] != null)
+                        // (F3) пусто = ошибка (offline, таймаут, невалидный JSON).
+                        // oldRecord НЕ трогаем — сохраняем последнее валидное значение.
+                        consecutiveFailures++;
+                    }
+                    else
+                    {
+                        if (consecutiveFailures > 0)
                         {
-                            AddRowToGrid(rows);
+                            // (F3) восстановление связи — одна строка на переход, не спам.
+                            Console.WriteLine($"AlcoReader connection restored after {consecutiveFailures} failure(s)");
+                        }
+                        consecutiveFailures = 0;
 
-                            await Task.Run(() => logUsersDB.WriteRow(rows), token);
-                            string[] data = await Task.Run(() => emploeyesDB.GetUserParam(rows[4]), token);
-                            await Task.Run(() => events.WriteEvent(data, CreateBlockTime(SetHour, SetMinute)), token);
-
-                            foreach (string[] s in events.ReadEventList())
+                        if (oldRecord != lastRecord)
+                        {
+                            oldRecord = lastRecord;
+                            result = await AlcoReader.GetRequestCmd(myJson.CreateLogMessage(lastRecord));
+                            string[] rows = myJson.GetArrayResult(result);
+                            if (rows[0] != null && rows[1] != null && rows[2] != null && rows[3] != null && rows[4] != null)
                             {
-                                if (token.IsCancellationRequested) return;
-                                // (F1) прокинут CancellationToken.
-                                await requestInner.BlockedUser(false, s, token);
+                                AddRowToGrid(rows);
+
+                                await Task.Run(() => logUsersDB.WriteRow(rows), token);
+                                string[] data = await Task.Run(() => emploeyesDB.GetUserParam(rows[4]), token);
+                                await Task.Run(() => events.WriteEvent(data, CreateBlockTime(SetHour, SetMinute)), token);
+
+                                foreach (string[] s in events.ReadEventList())
+                                {
+                                    if (token.IsCancellationRequested) return;
+                                    await requestInner.BlockedUser(false, s, token);
+                                }
                             }
                         }
                     }
 
-                    await Task.Delay(250, token);
+                    // (F3) задержка с backoff.
+                    await Task.Delay(GetPollDelayMs(consecutiveFailures), token);
                 }
             }
             catch (OperationCanceledException)
@@ -178,6 +202,23 @@ namespace AlcoBarrier
             {
                 Console.WriteLine($"OnlineMessage error: {ex}");
             }
+        }
+
+        /// <summary>
+        /// ДОБАВЛЕНО (этап F3): ступенчатая задержка между итерациями опроса.
+        ///   онлайн (0)      : 250 мс  — как раньше
+        ///   1–2 фейла       : 500 мс
+        ///   3–5 фейлов      : 1000 мс
+        ///   6–10 фейлов     : 3000 мс
+        ///   11+ фейлов      : 5000 мс  — потолок, не растёт дальше
+        /// </summary>
+        private static int GetPollDelayMs(int consecutiveFailures)
+        {
+            if (consecutiveFailures == 0) return 250;
+            if (consecutiveFailures <= 2) return 500;
+            if (consecutiveFailures <= 5) return 1000;
+            if (consecutiveFailures <= 10) return 3000;
+            return 5000;
         }
 
         private void AddRowToGrid(string[] rows)
@@ -207,7 +248,6 @@ namespace AlcoBarrier
                     if (_cts.IsCancellationRequested) return;
                     if (DateTime.Parse(s[6]) < DateTime.Now)
                     {
-                        // (F1) прокинут CancellationToken.
                         await requestInner.BlockedUser(true, s, _cts.Token);
                         events.DeleteString(s[0]);
                     }
@@ -215,7 +255,6 @@ namespace AlcoBarrier
             }
             catch (OperationCanceledException)
             {
-                // (F1) нормальная остановка при закрытии формы.
             }
             catch (ObjectDisposedException)
             {
@@ -247,7 +286,6 @@ namespace AlcoBarrier
         {
             await Task.Run(() => emploeyesDB.DeleteTable(), token);
             await Task.Run(() => emploeyesDB.CreateDB(), token);
-            // (F2) прокинут CancellationToken.
             foreach (var user in await requestInner.GetDictUsers(token))
             {
                 if (token.IsCancellationRequested) return;
