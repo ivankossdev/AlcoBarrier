@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,6 +33,14 @@ namespace AlcoBarrier
             // (этап 2) параметризованный INSERT.
             // (этап 3) Table приходит из EmloeyesDB.GetUserParam в порядке
             // (iduser, code, hex, CardTemplate) — теперь совпадает с порядком колонок.
+            //
+            // ИЗМЕНЕНО (этап 1.2): date/blockdate пишутся через InvariantCulture,
+            // чтобы timer1_Tick мог их так же прочитать через InvariantCulture
+            // независимо от локали машины.
+            // ВНИМАНИЕ: старые БД содержат даты в культуре, действовавшей на момент
+            // записи. На машине, где культура не менялась, поведение не изменится.
+            // Если БД переносится между машинами с разными локалями — нужна миграция
+            // (отдельный этап).
             Write(
                 "INSERT INTO events (iduser, code, hex, cardtamplate, date, blockdate) " +
                 "VALUES (@iduser, @code, @hex, @cardtamplate, @date, @blockdate)",
@@ -39,8 +48,8 @@ namespace AlcoBarrier
                 ("@code", Table[1]),
                 ("@hex", Table[2]),
                 ("@cardtamplate", Table[3]),
-                ("@date", dateTime.ToString()),
-                ("@blockdate", BlockTime.ToString()));
+                ("@date", dateTime.ToString(CultureInfo.InvariantCulture)),
+                ("@blockdate", BlockTime.ToString(CultureInfo.InvariantCulture)));
         }
 
         public List<string[]> ReadEventList()
@@ -61,8 +70,17 @@ namespace AlcoBarrier
 
         public void DeleteString(string id)
         {
-            // (этап 2) параметризованный DELETE; Int32.Parse сохранён.
-            int parsedId = Int32.Parse(id);
+            // ИЗМЕНЕНО (этап 1.3): Int32.Parse -> TryParse.
+            // При невалидном id (мусор в БД) раньше было FormatException,
+            // из-за которого в timer1_Tick не обрабатывались оставшиеся события тика.
+            // Теперь — предупреждение в лог и выход.
+            if (!int.TryParse(id, out int parsedId))
+            {
+                Logger.Warning($"DeleteString: non-numeric id '{id}', skip");
+                return;
+            }
+
+            // (этап 2) параметризованный DELETE.
             Write("DELETE FROM events WHERE id = @id", ("@id", parsedId));
         }
     }

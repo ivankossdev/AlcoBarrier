@@ -132,16 +132,18 @@ namespace AlcoBarrier
                 using (var reader = command.ExecuteReader())
                 {
                     int lenghtArray = reader.FieldCount;
-                    string Data = string.Empty;
+                    // ИЗМЕНЕНО (этап 1.4): += в цикле -> StringBuilder.
+                    // Поведение идентичное: значения склеиваются через пробел,
+                    // в конце строки тоже остаётся пробел (как и было).
+                    var sb = new StringBuilder();
                     while (reader.Read())
                     {
+                        sb.Clear();
                         for (int i = 0; i < lenghtArray; i++)
                         {
-                            Data += $"{SafeGetString(reader, i)} ";
-
+                            sb.Append(SafeGetString(reader, i)).Append(' ');
                         }
-                        result.Add(Data);
-                        Data = string.Empty;
+                        result.Add(sb.ToString());
                     }
                 }
                 connection.Close();
@@ -160,15 +162,16 @@ namespace AlcoBarrier
                 using (var reader = command.ExecuteReader())
                 {
                     int lenghtArray = reader.FieldCount;
-                    string Data = string.Empty;
+                    // ИЗМЕНЕНО (этап 1.4): += в цикле -> StringBuilder.
+                    var sb = new StringBuilder();
                     while (reader.Read())
                     {
+                        sb.Clear();
                         for (int i = 0; i < lenghtArray; i++)
                         {
-                            Data += $"{SafeGetString(reader, i)} ";
+                            sb.Append(SafeGetString(reader, i)).Append(' ');
                         }
-                        result.Add(Data);
-                        Data = string.Empty;
+                        result.Add(sb.ToString());
                     }
                 }
                 connection.Close();
