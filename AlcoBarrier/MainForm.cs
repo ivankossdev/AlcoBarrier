@@ -265,7 +265,14 @@ namespace AlcoBarrier
                 foreach (string[] s in events.ReadEventList())
                 {
                     if (_cts.IsCancellationRequested) return;
-                    if (DateTime.Parse(s[6]) < DateTime.Now)
+
+                    // ИЗМЕНЕНО (этап 1.1): Parse с InvariantCulture — парная правка к 1.2
+                    // (EventsDB.WriteEvent теперь пишет date/blockdate через InvariantCulture).
+                    // Без этого на машине с локалью, отличной от en-US, Parse мог кинуть
+                    // FormatException (роняя тик) или распарсить дату неверно (блокировка
+                    // раньше/позже нужного).
+                    DateTime blockTime = DateTime.Parse(s[6], CultureInfo.InvariantCulture);
+                    if (blockTime < DateTime.Now)
                     {
                         await requestInner.BlockedUser(true, s, _cts.Token);
                         events.DeleteString(s[0]);
