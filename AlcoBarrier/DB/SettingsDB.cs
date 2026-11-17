@@ -74,7 +74,11 @@ namespace AlcoBarrier
             ValidateTable(Table);
             // ИЗМЕНЕНО (этап 3): COUNT(*) вместо SELECT id + подсчёт в памяти.
             // Возвращает то же число, что и раньше, но без выгрузки всех строк.
+            // ИЗМЕНЕНО (этап 2): защита от null после нового контракта Read.
+            // На корректных данных не срабатывает (COUNT(*) всегда одна строка),
+            // но если таблицу удалили/повредили — вернём 0, а не NRE.
             string[] res = Read($"SELECT COUNT(*) FROM {Table};");
+            if (res == null || res[0] == null) return 0;
             return int.Parse(res[0]);
         }
 

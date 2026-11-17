@@ -65,6 +65,12 @@ namespace AlcoBarrier
             }
         }
 
+        // ИЗМЕНЕНО (этап 2): новый контракт Read.
+        //   0 строк -> null (раньше возвращался массив из null'ов, из-за чего
+        //              вызывающие не могли отличить "нет строк" от "строка есть, значение NULL");
+        //   1 строка -> её значения;
+        //   >1 строка -> первая + Logger.Warning (запрос рассчитан на 0/1 строку,
+        //              большее число — аномалия; раньше молча возвращалась последняя).
         protected string[] Read(string sqlCommand)
         {
             string[] result = null;
@@ -76,16 +82,23 @@ namespace AlcoBarrier
 
                 using (var reader = command.ExecuteReader())
                 {
-                    int lenghtArray = reader.FieldCount;
-                    string[] Data = new string[lenghtArray];
-                    while (reader.Read())
+                    if (reader.Read())
                     {
+                        int lenghtArray = reader.FieldCount;
+                        string[] Data = new string[lenghtArray];
                         for (int i = 0; i < lenghtArray; i++)
                         {
                             Data[i] = SafeGetString(reader, i);
                         }
+
+                        if (reader.Read())
+                        {
+                            Logger.Warning($"Read: query returned more than one row, using first. SQL: {sqlCommand}");
+                        }
+
+                        result = Data;
                     }
-                    result = Data;
+                    // else: 0 строк -> result остаётся null
                 }
                 connection.Close();
             }
@@ -94,6 +107,8 @@ namespace AlcoBarrier
         }
 
         // ДОБАВЛЕНО (этап 2): перегрузка Read с параметрами.
+        // ИЗМЕНЕНО (этап 2): контракт как в Read без параметров (0 строк -> null,
+        // >1 строка -> первая + warning).
         protected string[] Read(string sqlCommand, params (string Name, object Value)[] parameters)
         {
             string[] result = null;
@@ -103,16 +118,22 @@ namespace AlcoBarrier
                 using (var command = BuildCommand(connection, sqlCommand, parameters))
                 using (var reader = command.ExecuteReader())
                 {
-                    int lenghtArray = reader.FieldCount;
-                    string[] Data = new string[lenghtArray];
-                    while (reader.Read())
+                    if (reader.Read())
                     {
+                        int lenghtArray = reader.FieldCount;
+                        string[] Data = new string[lenghtArray];
                         for (int i = 0; i < lenghtArray; i++)
                         {
                             Data[i] = SafeGetString(reader, i);
                         }
+
+                        if (reader.Read())
+                        {
+                            Logger.Warning($"Read: query returned more than one row, using first. SQL: {sqlCommand}");
+                        }
+
+                        result = Data;
                     }
-                    result = Data;
                 }
                 connection.Close();
             }

@@ -29,26 +29,25 @@ namespace AlcoBarrier
 
         public string GetNameCard(string code)
         {
-            // ИЗМЕНЕНО (этап C6-fix): Read при пустом результате возвращает
-            // массив из null'ов, а не null. Проверяем res[0] явно.
+            // ИЗМЕНЕНО (этап 2): после нового контракта Read (0 строк -> null)
+            // проверка res[0] == null больше не нужна: name объявлен NOT NULL,
+            // поэтому если строка есть — значение не null.
             string[] res = Read(
                 "SELECT name FROM employees WHERE code = @code",
                 ("@code", code));
-            if (res == null || res[0] == null) return null;
+            if (res == null) return null;
             return res[0];
         }
 
         public string[] GetUserParam(string code)
         {
-            // ИЗМЕНЕНО (этап C6-fix): было `if (res == null) return null;` —
-            // не срабатывало, т.к. Read возвращает массив [null, null, ...].
-            // Теперь проверяем res[0] == null — это означает "строк нет".
-            // Без этой проверки WriteEvent(data) получал массив из null'ов
-            // и падал на events.iduser NOT NULL.
+            // ИЗМЕНЕНО (этап 2): то же упрощение, что и в GetNameCard.
+            // iduser/code/hex/CardTemplate — все NOT NULL, проверка res[0] == null
+            // после нового контракта Read избыточна.
             string[] res = Read(
                 "SELECT iduser, code, hex, CardTemplate FROM employees WHERE code = @code",
                 ("@code", code));
-            if (res == null || res[0] == null) return null;
+            if (res == null) return null;
             return res;
         }
 
