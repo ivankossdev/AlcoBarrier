@@ -1,3 +1,5 @@
 .vs/
-AlcoBarrier/obj/
-AlcoBarrier/bin/
+
+# Build artifacts
+bin/
+obj/

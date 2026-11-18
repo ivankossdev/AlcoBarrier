@@ -174,4 +174,8 @@
     </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- ДОБАВЛЕНО: нативные библиотеки e_sqlite3 копируются в bin\runtimes\win-*.
+       Без этого импорта приложение падает на старте с "Library e_sqlite3 not found":
+       сборка не знала о Content-файлах из пакета SQLitePCLRaw.lib.e_sqlite3. -->
+  <Import Project="packages\SQLitePCLRaw.lib.e_sqlite3.2.1.5\buildTransitive\net461\SQLitePCLRaw.lib.e_sqlite3.targets" Condition="Exists('packages\SQLitePCLRaw.lib.e_sqlite3.2.1.5\buildTransitive\net461\SQLitePCLRaw.lib.e_sqlite3.targets')" />
 </Project>
