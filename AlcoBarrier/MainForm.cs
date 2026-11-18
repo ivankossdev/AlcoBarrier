@@ -24,6 +24,18 @@ namespace AlcoBarrier
         private readonly CancellationTokenSource _cts = new CancellationTokenSource();
         private int _timerBusy;
 
+        // ИЗМЕНЕНО (пункт 5): все обращения к events.db идут через этот семафор и
+        // выполняются в пуле потоков — чтобы не блокировать UI и не пересекаться
+        // между таймером и циклом опроса.
+        private readonly SemaphoreSlim _eventsLock = new SemaphoreSlim(1, 1);
+
+        // ИЗМЕНЕНО (пункт 2): состояние повторов блокировки по каждому событию events.id.
+        private readonly Dictionary<string, BlockRetryState> _blockRetries = new Dictionary<string, BlockRetryState>();
+
+        // ИЗМЕНЕНО (пункт 4): о том, что устройство не передаёт код карты, предупреждаем
+        // один раз за запуск, чтобы не заливать лог каждым замером.
+        private bool _cardNotReportedLogged;
+
         public MainForm()
         {
             InitializeComponent();
@@ -177,27 +189,48 @@ namespace AlcoBarrier
                         {
                             oldRecord = lastRecord;
                             result = await AlcoReader.GetRequestCmd(myJson.CreateLogMessage(lastRecord));
-                            string[] rows = myJson.GetArrayResult(result);
 
-                            if (rows[0] != null && rows[1] != null && rows[2] != null && rows[4] != null)
+                            // ИЗМЕНЕНО (пункт 5): разбор ответа и поиск карты в employees —
+                            // это синхронные обращения к SQLite, выносим их с UI-потока.
+                            string[] rows = await Task.Run(() => myJson.GetArrayResult(result), token);
+
+                            if (rows[0] != null && rows[1] != null && rows[2] != null)
                             {
                                 AddRowToGrid(rows);
                                 await Task.Run(() => logUsersDB.WriteRow(rows), token);
 
-                                string[] data = await Task.Run(() => emploeyesDB.GetUserParam(rows[4]), token);
-                                if (data != null)
+                                // ИЗМЕНЕНО (пункт 4): «карта не передана» и «карта неизвестна» —
+                                // разные ситуации. Раньше отсутствие Wiegand-кода превращалось
+                                // в cardnum "0" и предупреждение «Unknown card: 0».
+                                if (rows[4] == null)
                                 {
-                                    await Task.Run(() => events.WriteEvent(data, CreateBlockTime(SetHour, SetMinute)), token);
-
-                                    foreach (string[] s in events.ReadEventList())
-                                    {
-                                        if (token.IsCancellationRequested) return;
-                                        await requestInner.BlockedUser(false, s, token);
-                                    }
+                                    LogCardNotReported();
                                 }
                                 else
                                 {
-                                    Logger.Warning($"Unknown card: {rows[4]} (logged to loguser, no block)");
+                                    string[] data = await Task.Run(() => emploeyesDB.GetUserParam(rows[4]), token);
+                                    if (data != null)
+                                    {
+                                        // ИЗМЕНЕНО (пункт 5): запись события и чтение списка — под
+                                        // тем же семафором, что и таймер, и вне UI-потока.
+                                        List<string[]> pendingEvents = await RunEventsAsync(
+                                            () =>
+                                            {
+                                                events.WriteEvent(data, CreateBlockTime(SetHour, SetMinute));
+                                                return events.ReadEventList();
+                                            },
+                                            token);
+
+                                        foreach (string[] s in pendingEvents)
+                                        {
+                                            if (token.IsCancellationRequested) return;
+                                            await requestInner.BlockedUser(false, s, token);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Logger.Warning($"Unknown card: {rows[4]} (logged to loguser, no block)");
+                                    }
                                 }
                             }
                         }
@@ -235,11 +268,56 @@ namespace AlcoBarrier
                 dataGridView1.Rows.Add(rows);
         }
 
+        // ИЗМЕНЕНО (пункт 4): устройство по умолчанию не записывает Wiegand-коды
+        // в память событий, поэтому замер может прийти без номера карты. Это не ошибка
+        // сопоставления («Unknown card»), а отсутствие данных от блока сопряжения.
+        private void LogCardNotReported()
+        {
+            if (_cardNotReportedLogged) return;
+
+            _cardNotReportedLogged = true;
+            Logger.Warning("Алкотестер не передаёт код карты (WiegandLSB отсутствует или равен 0): " +
+                           "замеры сохраняются, но привязать их к сотрудникам и выполнить блокировку нельзя. " +
+                           "Проверьте, что блок сопряжения записывает Wiegand-коды в память событий " +
+                           "(по умолчанию запись запрещена) и что считыватель подключён к Wiegand-входу.");
+        }
+
         private DateTime CreateBlockTime(string H, string M)
         {
             int.TryParse(H, out int hours);
             int.TryParse(M, out int minutes);
             return DateTime.Now.AddHours(hours).AddMinutes(minutes);
+        }
+
+        // ИЗМЕНЕНО (пункт 5): SQLite синхронный, поэтому операции с events
+        // (ReadEventList, WriteEvent, DeleteString) выполняются в пуле потоков и
+        // строго по одной. Раньше они вызывались прямо в UI-потоке и могли
+        // подвешивать интерфейс, а таймер и цикл опроса работали с таблицей
+        // одновременно.
+        private async Task RunEventsAsync(Action action, CancellationToken token)
+        {
+            await _eventsLock.WaitAsync(token);
+            try
+            {
+                await Task.Run(action, token);
+            }
+            finally
+            {
+                _eventsLock.Release();
+            }
+        }
+
+        private async Task<T> RunEventsAsync<T>(Func<T> func, CancellationToken token)
+        {
+            await _eventsLock.WaitAsync(token);
+            try
+            {
+                return await Task.Run(func, token);
+            }
+            finally
+            {
+                _eventsLock.Release();
+            }
         }
 
         private async void timer1_Tick(object sender, EventArgs e)
@@ -249,17 +327,40 @@ namespace AlcoBarrier
 
             try
             {
-                foreach (string[] s in events.ReadEventList())
+                DateTime now = DateTime.Now;
+                HashSet<string> aliveIds = new HashSet<string>(StringComparer.Ordinal);
+
+                // ИЗМЕНЕНО (пункт 5): чтение списка событий — в пуле потоков.
+                List<string[]> scheduledEvents = await RunEventsAsync(() => events.ReadEventList(), _cts.Token);
+
+                foreach (string[] s in scheduledEvents)
                 {
                     if (_cts.IsCancellationRequested) return;
 
+                    aliveIds.Add(s[0]);
+
                     DateTime blockTime = DateTime.Parse(s[6], CultureInfo.InvariantCulture);
-                    if (blockTime < DateTime.Now)
+                    if (blockTime >= now) continue;
+
+                    // ИЗМЕНЕНО (пункт 2): запись из events удаляется только после того,
+                    // как Innerage подтвердил блокировку. Раньше DeleteString вызывался
+                    // безусловно, и при недоступном Innerage задача терялась навсегда.
+                    if (!IsBlockAttemptDue(s[0], now)) continue;
+
+                    if (await requestInner.BlockedUser(true, s, _cts.Token))
                     {
-                        await requestInner.BlockedUser(true, s, _cts.Token);
-                        events.DeleteString(s[0]);
+                        // ИЗМЕНЕНО (пункт 5): удаление — тоже вне UI-потока и под семафором.
+                        await RunEventsAsync(() => events.DeleteString(s[0]), _cts.Token);
+                        _blockRetries.Remove(s[0]);
+                    }
+                    else
+                    {
+                        // Событие остаётся в events и будет повторено с нарастающей паузой.
+                        ScheduleBlockRetry(s[0]);
                     }
                 }
+
+                PruneBlockRetries(aliveIds);
             }
             catch (OperationCanceledException)
             {
@@ -275,6 +376,49 @@ namespace AlcoBarrier
             {
                 Interlocked.Exchange(ref _timerBusy, 0);
             }
+        }
+
+        // Пункт 2: состояние повторов для конкретного события. Хранится в памяти,
+        // поэтому после перезапуска приложения события из events пробуются сразу.
+        private sealed class BlockRetryState
+        {
+            public int Failures { get; set; }
+            public DateTime NextAttempt { get; set; }
+        }
+
+        private bool IsBlockAttemptDue(string id, DateTime now)
+        {
+            return !_blockRetries.TryGetValue(id, out BlockRetryState state) || state.NextAttempt <= now;
+        }
+
+        private void ScheduleBlockRetry(string id)
+        {
+            if (!_blockRetries.TryGetValue(id, out BlockRetryState state))
+            {
+                state = new BlockRetryState();
+                _blockRetries[id] = state;
+            }
+
+            state.Failures++;
+
+            // Пауза 5, 10, 20, 40, 80, 160, 300, 300... секунд: не долбим недоступный
+            // Innerage каждые 5 секунд и не заливаем лог одинаковыми предупреждениями.
+            int delaySeconds = Math.Min(5 * (int)Math.Pow(2, Math.Min(state.Failures - 1, 6)), 300);
+            state.NextAttempt = DateTime.Now.AddSeconds(delaySeconds);
+
+            if (state.Failures == 1)
+            {
+                Logger.Warning($"Innerage: блокировка события id={id} не выполнена, событие оставлено в events, " +
+                               $"повтор через {delaySeconds} с");
+            }
+        }
+
+        private void PruneBlockRetries(HashSet<string> aliveIds)
+        {
+            if (_blockRetries.Count == 0) return;
+
+            foreach (string id in _blockRetries.Keys.Where(k => !aliveIds.Contains(k)).ToList())
+                _blockRetries.Remove(id);
         }
 
         private bool Check_Databases(params string[] databases)
