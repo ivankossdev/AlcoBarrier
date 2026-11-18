@@ -12,7 +12,6 @@ namespace AlcoBarrier
     public abstract class BaseSQLite
     {
         public string NameDataBase { get; }
-        public char[] TrimChars { get; } = { ';', '>', '<', '\'', '\\', '{', '}', ':', '-', ' ', '%', '$' };
         public string Path { get; set; } = Directory.GetCurrentDirectory();
 
         public abstract string CreateDB();

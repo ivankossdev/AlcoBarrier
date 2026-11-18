@@ -104,22 +104,12 @@ namespace AlcoBarrier
             return res;
         }
 
-        public void WriteRow(string[] emp)
-        {
-            Write(
-                "INSERT INTO employees (name, iduser, code, hex, id, CardTemplate) " +
-                "VALUES (@name, @iduser, @code, @hex, @id, @cardTemplate)",
-                ("@name", emp[0]),
-                ("@iduser", emp[1]),
-                ("@code", emp[2]),
-                ("@hex", emp[3]),
-                ("@id", emp[4]),
-                ("@cardTemplate", emp[5]));
-        }
-
-        public void DeleteTable()
-        {
-            Write("DROP TABLE IF EXISTS employees");
-        }
+        // ИЗМЕНЕНО (пункт 7): удалён WriteRow(string[] emp) — позиционный массив
+        // на 6 элементов, в который легко передать несовместимый набор (например,
+        // 4 элемента из GetUserParam) и испортить строку. В приложении employees
+        // наполняется только через ReplaceAll.
+        //
+        // ИЗМЕНЕНО (пункт 7): удалён DeleteTable() — не использовался;
+        // полная замена таблицы уже есть в ReplaceAll (в одной транзакции).
     }
 }
