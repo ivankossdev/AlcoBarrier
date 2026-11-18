@@ -21,19 +21,19 @@ namespace AlcoBarrier
 
         public override string CreateDB()
         {
-            SqlCommand = $"CREATE TABLE {InnerTable} " +
+            // ИЗМЕНЕНО (этап 3): IF NOT EXISTS.
+            SqlCommand = $"CREATE TABLE IF NOT EXISTS {InnerTable} " +
                          $"(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, IpInnerage TEXT NOT NULL, " +
                          $"authorization TEXT NOT NULL, key TEXT NOT NULL, BlockHour TEXT NOT NULL, BlockMinute TEXT NOT NULL);";
             Write(SqlCommand);
 
-            SqlCommand = $"CREATE TABLE {AlcoTable} " +
+            SqlCommand = $"CREATE TABLE IF NOT EXISTS {AlcoTable} " +
                          $"(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, IpAddress TEXT NOT NULL);";
             Write(SqlCommand);
 
             return $"База данных {NameDataBase} создана \n";
         }
 
-        // (этап 2) вайтлист имён таблиц.
         private void ValidateTable(string table)
         {
             if (table != InnerTable && table != AlcoTable)
@@ -43,7 +43,6 @@ namespace AlcoBarrier
         public void WriteSettingsInner(string Table, string IpInnerage, string Auth, string Key, string BlockHour, string BlockMinute)
         {
             ValidateTable(Table);
-            // (этап 2) параметризованный INSERT.
             Write(
                 $"INSERT INTO {Table} (IpInnerage, authorization, key, BlockHour, BlockMinute) " +
                 $"VALUES (@ip, @auth, @key, @hour, @minute)",
@@ -57,7 +56,6 @@ namespace AlcoBarrier
         public void ReWriteSettingsInner(string Table, string IpInnerage, string Auth, string Key, string BlockHour, string BlockMinute)
         {
             ValidateTable(Table);
-            // (этап 2) параметризованный UPDATE.
             Write(
                 $"UPDATE {Table} " +
                 $"SET IpInnerage = @ip, authorization = @auth, key = @key, BlockHour = @hour, BlockMinute = @minute " +
@@ -72,11 +70,6 @@ namespace AlcoBarrier
         public int GetCountId(string Table)
         {
             ValidateTable(Table);
-            // ИЗМЕНЕНО (этап 3): COUNT(*) вместо SELECT id + подсчёт в памяти.
-            // Возвращает то же число, что и раньше, но без выгрузки всех строк.
-            // ИЗМЕНЕНО (этап 2): защита от null после нового контракта Read.
-            // На корректных данных не срабатывает (COUNT(*) всегда одна строка),
-            // но если таблицу удалили/повредили — вернём 0, а не NRE.
             string[] res = Read($"SELECT COUNT(*) FROM {Table};");
             if (res == null || res[0] == null) return 0;
             return int.Parse(res[0]);
@@ -100,7 +93,6 @@ namespace AlcoBarrier
         public void WriteSettingsAlco(string Table, string IpAddressAlco)
         {
             ValidateTable(Table);
-            // (этап 2) параметризованный INSERT.
             Write(
                 $"INSERT INTO {Table} (IpAddress) VALUES (@ip)",
                 ("@ip", IpAddressAlco));
@@ -109,7 +101,6 @@ namespace AlcoBarrier
         public void ReWriteSettingsAlco(string Table, string IpAddressAlco)
         {
             ValidateTable(Table);
-            // (этап 2) параметризованный UPDATE.
             Write(
                 $"UPDATE {Table} SET IpAddress = @ip WHERE id = 1",
                 ("@ip", IpAddressAlco));

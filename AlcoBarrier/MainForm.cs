@@ -40,19 +40,15 @@ namespace AlcoBarrier
 
         private void EnsureDatabases()
         {
-            string basePath = Directory.GetCurrentDirectory();
-
-            if (!File.Exists($"{basePath}\\employees.db"))
-                new EmloeyesDB("employees").CreateDB();
-
-            if (!File.Exists($"{basePath}\\events.db"))
-                new EventsDB("events").CreateDB();
-
-            if (!File.Exists($"{basePath}\\settings.db"))
-                new SettingsDB("settings").CreateDB();
-
-            if (!File.Exists($"{basePath}\\loguser.db"))
-                new LogUsersDB("loguser").CreateDB();
+            // ИЗМЕНЕНО (этап 3): методы CreateDB теперь используют CREATE TABLE IF NOT EXISTS.
+            // Мы можем вызывать их безусловно при каждом старте. Это также гарантирует,
+            // что новые индексы будут созданы в уже существующих базах данных.
+            new EmloeyesDB("employees").CreateDB();
+            new EventsDB("events").CreateDB();
+            new SettingsDB("settings").CreateDB();
+            new LogUsersDB("loguser").CreateDB();
+            // Если в проекте используется ReportDB, его тоже стоит инициализировать здесь:
+            // new ReportDB("report").CreateDB();
         }
 
         private void EnsureSettings()
@@ -185,18 +181,11 @@ namespace AlcoBarrier
                             result = await AlcoReader.GetRequestCmd(myJson.CreateLogMessage(lastRecord));
                             string[] rows = myJson.GetArrayResult(result);
 
-                            // ИЗМЕНЕНО (этап C6): обязательные поля — date, time, promile, cardnum.
-                            // Имя (rows[3]) может быть null, если карта не найдена в employees.
                             if (rows[0] != null && rows[1] != null && rows[2] != null && rows[4] != null)
                             {
                                 AddRowToGrid(rows);
-
-                                // loguser пишем всегда — это аудит замеров,
-                                // даже если сотрудник не распознан.
                                 await Task.Run(() => logUsersDB.WriteRow(rows), token);
 
-                                // events — только если карта найдена (есть iduser/hex/CardTemplate,
-                                // иначе BlockedUser не сможет заблокировать пользователя).
                                 string[] data = await Task.Run(() => emploeyesDB.GetUserParam(rows[4]), token);
                                 if (data != null)
                                 {
@@ -266,11 +255,6 @@ namespace AlcoBarrier
                 {
                     if (_cts.IsCancellationRequested) return;
 
-                    // ИЗМЕНЕНО (этап 1.1): Parse с InvariantCulture — парная правка к 1.2
-                    // (EventsDB.WriteEvent теперь пишет date/blockdate через InvariantCulture).
-                    // Без этого на машине с локалью, отличной от en-US, Parse мог кинуть
-                    // FormatException (роняя тик) или распарсить дату неверно (блокировка
-                    // раньше/позже нужного).
                     DateTime blockTime = DateTime.Parse(s[6], CultureInfo.InvariantCulture);
                     if (blockTime < DateTime.Now)
                     {
@@ -310,13 +294,12 @@ namespace AlcoBarrier
 
         private async Task SychroInnerDBAsync(CancellationToken token)
         {
-            await Task.Run(() => emploeyesDB.DeleteTable(), token);
-            await Task.Run(() => emploeyesDB.CreateDB(), token);
-            foreach (var user in await requestInner.GetDictUsers(token))
-            {
-                if (token.IsCancellationRequested) return;
-                await Task.Run(() => emploeyesDB.WriteRow(user), token);
-            }
+            // ИЗМЕНЕНО (этап 3): получаем список пользователей и атомарно заменяем таблицу
+            // в рамках одной транзакции. Если связь оборвется на середине — база останется старой.
+            var users = await requestInner.GetDictUsers(token);
+            if (token.IsCancellationRequested) return;
+
+            await Task.Run(() => emploeyesDB.ReplaceAll(users), token);
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)

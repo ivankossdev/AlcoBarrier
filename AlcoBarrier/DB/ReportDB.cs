@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AlcoBarrier;
 
 namespace AlcoBarrier
 {
@@ -15,11 +13,17 @@ namespace AlcoBarrier
         }
 
         string SqlCommand { get; set; } = string.Empty;
+
         public override string CreateDB()
         {
-            SqlCommand = $"CREATE TABLE report (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+            // ИЗМЕНЕНО (этап 3): IF NOT EXISTS и индекс.
+            SqlCommand = $"CREATE TABLE IF NOT EXISTS report " +
+                $"(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
                 $"date TEXT NOT NULL, time TEXT NOT NULL, promille TEXT NOT NULL, numcard TEXT NOT NULL, fio TEXT);";
             Write(SqlCommand);
+
+            Write("CREATE INDEX IF NOT EXISTS idx_report_date ON report(date);");
+
             return $"База данных {NameDataBase} создана \n";
         }
 
@@ -34,8 +38,6 @@ namespace AlcoBarrier
         {
             foreach (string[] Row in Memory)
             {
-                // ИЗМЕНЕНО (этап 2): параметризованный INSERT.
-                // Сохранён прежний ведущий пробел в fio (" " + name).
                 Write(
                     "INSERT INTO report (date, time, promille, numcard, fio) " +
                     "VALUES (@date, @time, @promille, @numcard, @fio)",
@@ -49,7 +51,6 @@ namespace AlcoBarrier
 
         public void WriteFIO(string fio, string numcard)
         {
-            // ИЗМЕНЕНО (этап 2): параметризованный UPDATE.
             Write(
                 "UPDATE report SET fio = @fio WHERE numcard = @numcard",
                 ("@fio", fio),
@@ -63,7 +64,6 @@ namespace AlcoBarrier
 
         public List<string[]> SortByDate(string date)
         {
-            // ИЗМЕНЕНО (этап 2): параметризованный WHERE.
             return ReadListArray(
                 "SELECT date, time, promille, numcard, fio FROM report WHERE date = @date",
                 ("@date", date));
@@ -71,7 +71,6 @@ namespace AlcoBarrier
 
         public List<string[]> SortByNumCard(string NumCard)
         {
-            // ИЗМЕНЕНО (этап 2): параметризованный LIKE.
             return ReadListArray(
                 "SELECT date, time, promille, numcard, fio FROM report WHERE numcard LIKE @numcard",
                 ("@numcard", "%" + NumCard + "%"));
@@ -79,7 +78,6 @@ namespace AlcoBarrier
 
         public List<string[]> SortByNumCardAndDate(string NumCard, string Date)
         {
-            // ИЗМЕНЕНО (этап 2): параметризованный LIKE + WHERE.
             return ReadListArray(
                 "SELECT date, time, promille, numcard, fio FROM report WHERE numcard LIKE @numcard AND date = @date",
                 ("@numcard", "%" + NumCard + "%"),

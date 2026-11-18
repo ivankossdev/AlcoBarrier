@@ -15,14 +15,17 @@ namespace AlcoBarrier
         }
 
         string SqlCommand { get; set; } = string.Empty;
+
         public override string CreateDB()
         {
-            // TODO (этап 3): имя колонки "cardtamplate" — опечатка (cardtemplate).
-            // Оставлено как есть, чтобы не ломать существующую БД. Переименование = отдельная миграция.
-            SqlCommand = $"CREATE TABLE events " +
+            // ИЗМЕНЕНО (этап 3): IF NOT EXISTS.
+            SqlCommand = $"CREATE TABLE IF NOT EXISTS events " +
                 $"(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, iduser TEXT NOT NULL, code TEXT NOT NULL, " +
                 $"hex TEXT NOT NULL, cardtamplate TEXT NOT NULL, date TEXT NOT NULL, blockdate TEXT NOT NULL);";
             Write(SqlCommand);
+
+            // ДОБАВЛЕНО (этап 3): индекс для быстрого поиска по iduser.
+            Write("CREATE INDEX IF NOT EXISTS idx_events_iduser ON events(iduser);");
 
             return $"База данных {NameDataBase} создана \n";
         }
@@ -30,17 +33,6 @@ namespace AlcoBarrier
         public void WriteEvent(string[] Table, DateTime BlockTime)
         {
             DateTime dateTime = DateTime.Now;
-            // (этап 2) параметризованный INSERT.
-            // (этап 3) Table приходит из EmloeyesDB.GetUserParam в порядке
-            // (iduser, code, hex, CardTemplate) — теперь совпадает с порядком колонок.
-            //
-            // ИЗМЕНЕНО (этап 1.2): date/blockdate пишутся через InvariantCulture,
-            // чтобы timer1_Tick мог их так же прочитать через InvariantCulture
-            // независимо от локали машины.
-            // ВНИМАНИЕ: старые БД содержат даты в культуре, действовавшей на момент
-            // записи. На машине, где культура не менялась, поведение не изменится.
-            // Если БД переносится между машинами с разными локалями — нужна миграция
-            // (отдельный этап).
             Write(
                 "INSERT INTO events (iduser, code, hex, cardtamplate, date, blockdate) " +
                 "VALUES (@iduser, @code, @hex, @cardtamplate, @date, @blockdate)",
@@ -54,33 +46,18 @@ namespace AlcoBarrier
 
         public List<string[]> ReadEventList()
         {
-            // ИЗМЕНЕНО (этап 3): явный список колонок в порядке, ожидаемом RequestInner.BlockedUser
-            // и MainForm:
-            //   [0]=id           -> EventsDB.DeleteString(s[0])
-            //   [1]=code         -> <Name>, <CardNumber>, <CardNumberNumeric>
-            //   [2]=hex          -> <CardData>
-            //   [3]=iduser       -> <User Address="...">
-            //   [4]=cardtamplate -> <Ref ... ID="...">
-            //   [5]=date
-            //   [6]=blockdate    -> MainForm.timer1_Tick (DateTime.Parse(s[6]))
-            // Раньше был SELECT * (id, iduser, code, hex, ...) — поля уходили перепутанными.
             SqlCommand = "SELECT id, code, hex, iduser, cardtamplate, date, blockdate FROM events";
             return ReadListArray(SqlCommand);
         }
 
         public void DeleteString(string id)
         {
-            // ИЗМЕНЕНО (этап 1.3): Int32.Parse -> TryParse.
-            // При невалидном id (мусор в БД) раньше было FormatException,
-            // из-за которого в timer1_Tick не обрабатывались оставшиеся события тика.
-            // Теперь — предупреждение в лог и выход.
             if (!int.TryParse(id, out int parsedId))
             {
                 Logger.Warning($"DeleteString: non-numeric id '{id}', skip");
                 return;
             }
 
-            // (этап 2) параметризованный DELETE.
             Write("DELETE FROM events WHERE id = @id", ("@id", parsedId));
         }
     }
