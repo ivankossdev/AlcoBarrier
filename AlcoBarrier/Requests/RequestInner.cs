@@ -80,9 +80,14 @@ namespace AlcoBarrier
             }
             catch (Exception e)
             {
-                MyResult = $"Message :{e.Message}";
+                // ИЗМЕНЕНО (пункт 1): при сетевой ошибке или не-2xx ответе возвращаем null,
+                // а не строку "Message :...". Пустой/битый ответ не должен приводить
+                // к перезаписи локальной базы сотрудников пустой таблицей.
+                Logger.Warning($"GetDictUsers failed: {e.Message}");
+                return null;
             }
 
+            // null здесь означает, что XML не разобрался (например, Innerage вернул не XML).
             return xmlHandler.GetUsersArray(MyResult);
         }
 

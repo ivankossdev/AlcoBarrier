@@ -45,6 +45,11 @@ namespace AlcoBarrier
             return body;
         }
 
+        /// <summary>
+        /// Возвращает список сотрудников или null, если ответ Innerage не удалось разобрать
+        /// (пустой ответ, текст/HTML ошибки вместо XML и т.п.).
+        /// Пустой список означает корректно разобранный ответ, в котором сотрудников нет.
+        /// </summary>
         public List<string[]> GetUsersArray(string xml)
         {
             List<string[]> Users = new List<string[]>();
@@ -54,13 +59,20 @@ namespace AlcoBarrier
             // (до LoadXml), из-за чего результат всегда был пустым списком,
             // и employees никогда не наполнялась.
             // Плюс try/catch XmlException.
+            //
+            // ИЗМЕНЕНО (пункт 1): неразобранный ответ возвращает null, а не пустой список.
+            // Иначе сетевая ошибка или 401 от Innerage («Message :...») выглядели бы
+            // как валидный ответ без сотрудников, и employees можно было бы обнулить.
+            if (string.IsNullOrWhiteSpace(xml))
+                return null;
+
             try
             {
                 innerage.LoadXml(xml);
             }
             catch (XmlException)
             {
-                return Users;
+                return null;
             }
 
             XmlNodeList users = innerage.GetElementsByTagName("Rows");

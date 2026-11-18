@@ -297,7 +297,27 @@ namespace AlcoBarrier
             var users = await requestInner.GetDictUsers(token);
             if (token.IsCancellationRequested) return;
 
+            // ИЗМЕНЕНО (пункт 1): неудачный или пустой ответ Innerage больше не обнуляет employees.
+            // null — запрос не выполнился или XML не разобрался; пустой список — валидный,
+            // но подозрительный ответ (например, «Rows» без пользователей). В обоих случаях
+            // оставляем локальную базу как есть: без сотрудников не работает ни одна блокировка.
+            if (users == null)
+            {
+                Logger.Error("SychroInnerDB: не удалось получить список сотрудников от Innerage, " +
+                             "локальная база employees оставлена без изменений");
+                return;
+            }
+
+            if (users.Count == 0)
+            {
+                Logger.Warning("SychroInnerDB: Innerage вернул пустой список сотрудников, " +
+                               "локальная база employees оставлена без изменений");
+                return;
+            }
+
             await Task.Run(() => emploeyesDB.ReplaceAll(users), token);
+
+            Logger.Info($"SychroInnerDB: employees синхронизирована, сотрудников: {users.Count}");
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)

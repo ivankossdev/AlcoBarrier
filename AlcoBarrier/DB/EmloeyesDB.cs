@@ -28,8 +28,17 @@ namespace AlcoBarrier
         }
 
         // ДОБАВЛЕНО (этап 3): атомарная замена всей таблицы сотрудников.
+        // ИЗМЕНЕНО (пункт 1): защита от обнуления — null или пустой список не трогает таблицу.
+        // DROP TABLE в этом методе выполняется безвозвратно, поэтому пустой набор данных
+        // (сбой сети, пустой ответ Innerage) не должен приводить к потере базы.
         public void ReplaceAll(List<string[]> users)
         {
+            if (users == null || users.Count == 0)
+            {
+                Logger.Warning("ReplaceAll: пустой список сотрудников, таблица employees не изменена");
+                return;
+            }
+
             ExecuteInTransaction((connection) =>
             {
                 using (var cmd = connection.CreateCommand())
