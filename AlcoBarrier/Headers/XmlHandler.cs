@@ -77,14 +77,18 @@ namespace AlcoBarrier
 
             XmlNodeList users = innerage.GetElementsByTagName("Rows");
 
-            string Name = string.Empty, Address = string.Empty,
-                   CardCode = string.Empty, Id = string.Empty,
-                   CardData = string.Empty, CardTemplate = string.Empty;
-
             foreach (XmlElement x in users)
             {
                 foreach (XmlNode user in x.ChildNodes)
                 {
+                    // ИЗМЕНЕНО (пункт 6): переменные объявляются внутри итерации пользователя,
+                    // поэтому данные предыдущего пользователя не могут перейти в следующего.
+                    // Раньше они объявлялись один раз снаружи, а в блоке очистки забывали Id —
+                    // и при отсутствии тега <ID> в карту попадал идентификатор предыдущей карты.
+                    string Name = string.Empty, Address = string.Empty,
+                           CardCode = string.Empty, Id = string.Empty,
+                           CardData = string.Empty, CardTemplate = string.Empty;
+
                     foreach (XmlNode data in user.ChildNodes)
                     {
                         if (data.Name == "Name")
@@ -129,9 +133,6 @@ namespace AlcoBarrier
                         }
                     }
                     Users.Add(CreateArray(Name, Address, CardCode, CardData, Id, CardTemplate));
-
-                    Name = string.Empty; Address = string.Empty; CardCode = string.Empty; CardData = string.Empty;
-                    CardTemplate = string.Empty;
                 }
             }
             return Users;
