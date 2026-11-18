@@ -24,6 +24,9 @@ namespace AlcoBarrier
         private readonly CancellationTokenSource _cts = new CancellationTokenSource();
         private int _timerBusy;
 
+        // ИЗМЕНЕНО (пункт 2): состояние повторов блокировки по каждому событию events.id.
+        private readonly Dictionary<string, BlockRetryState> _blockRetries = new Dictionary<string, BlockRetryState>();
+
         public MainForm()
         {
             InitializeComponent();
@@ -249,17 +252,36 @@ namespace AlcoBarrier
 
             try
             {
+                DateTime now = DateTime.Now;
+                HashSet<string> aliveIds = new HashSet<string>(StringComparer.Ordinal);
+
                 foreach (string[] s in events.ReadEventList())
                 {
                     if (_cts.IsCancellationRequested) return;
 
+                    aliveIds.Add(s[0]);
+
                     DateTime blockTime = DateTime.Parse(s[6], CultureInfo.InvariantCulture);
-                    if (blockTime < DateTime.Now)
+                    if (blockTime >= now) continue;
+
+                    // ИЗМЕНЕНО (пункт 2): запись из events удаляется только после того,
+                    // как Innerage подтвердил блокировку. Раньше DeleteString вызывался
+                    // безусловно, и при недоступном Innerage задача терялась навсегда.
+                    if (!IsBlockAttemptDue(s[0], now)) continue;
+
+                    if (await requestInner.BlockedUser(true, s, _cts.Token))
                     {
-                        await requestInner.BlockedUser(true, s, _cts.Token);
                         events.DeleteString(s[0]);
+                        _blockRetries.Remove(s[0]);
+                    }
+                    else
+                    {
+                        // Событие остаётся в events и будет повторено с нарастающей паузой.
+                        ScheduleBlockRetry(s[0]);
                     }
                 }
+
+                PruneBlockRetries(aliveIds);
             }
             catch (OperationCanceledException)
             {
@@ -275,6 +297,49 @@ namespace AlcoBarrier
             {
                 Interlocked.Exchange(ref _timerBusy, 0);
             }
+        }
+
+        // Пункт 2: состояние повторов для конкретного события. Хранится в памяти,
+        // поэтому после перезапуска приложения события из events пробуются сразу.
+        private sealed class BlockRetryState
+        {
+            public int Failures { get; set; }
+            public DateTime NextAttempt { get; set; }
+        }
+
+        private bool IsBlockAttemptDue(string id, DateTime now)
+        {
+            return !_blockRetries.TryGetValue(id, out BlockRetryState state) || state.NextAttempt <= now;
+        }
+
+        private void ScheduleBlockRetry(string id)
+        {
+            if (!_blockRetries.TryGetValue(id, out BlockRetryState state))
+            {
+                state = new BlockRetryState();
+                _blockRetries[id] = state;
+            }
+
+            state.Failures++;
+
+            // Пауза 5, 10, 20, 40, 80, 160, 300, 300... секунд: не долбим недоступный
+            // Innerage каждые 5 секунд и не заливаем лог одинаковыми предупреждениями.
+            int delaySeconds = Math.Min(5 * (int)Math.Pow(2, Math.Min(state.Failures - 1, 6)), 300);
+            state.NextAttempt = DateTime.Now.AddSeconds(delaySeconds);
+
+            if (state.Failures == 1)
+            {
+                Logger.Warning($"Innerage: блокировка события id={id} не выполнена, событие оставлено в events, " +
+                               $"повтор через {delaySeconds} с");
+            }
+        }
+
+        private void PruneBlockRetries(HashSet<string> aliveIds)
+        {
+            if (_blockRetries.Count == 0) return;
+
+            foreach (string id in _blockRetries.Keys.Where(k => !aliveIds.Contains(k)).ToList())
+                _blockRetries.Remove(id);
         }
 
         private bool Check_Databases(params string[] databases)

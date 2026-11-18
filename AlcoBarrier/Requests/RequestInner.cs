@@ -91,9 +91,16 @@ namespace AlcoBarrier
             return xmlHandler.GetUsersArray(MyResult);
         }
 
-        async public Task BlockedUser(bool set, string[] UserData, CancellationToken token)
+        /// <summary>
+        /// Блокирует (set = true, State=Unused) или разблокирует (set = false, State=Active) карту.
+        /// Возвращает true, только если Innerage подтвердил команду (HTTP 2xx без исключения).
+        /// ИЗМЕНЕНО (пункт 2): результат возвращается вызывающему коду — от него зависит,
+        /// можно ли удалять задачу из events.
+        /// </summary>
+        async public Task<bool> BlockedUser(bool set, string[] UserData, CancellationToken token)
         {
             string MyResult = string.Empty;
+            bool completed = false;
 
             try
             {
@@ -125,6 +132,8 @@ namespace AlcoBarrier
                     string responseBody = await response.Content.ReadAsStringAsync();
                     MyResult = $"{xmlHandler.GetXmlElement(responseBody, "CommandProgress")}";
                 }
+
+                completed = true;
             }
             catch (OperationCanceledException) when (token.IsCancellationRequested)
             {
@@ -135,7 +144,14 @@ namespace AlcoBarrier
                 MyResult = $"Message :{e.Message}";
             }
 
-            Logger.Info($"BlockedUser set={set}, address={UserData[3]}: {MyResult}");
+            // ИЗМЕНЕНО (пункт 2): успех пишется как Info, сбой — как Warning.
+            // Раньше любой исход логировался как Info, и неудачная блокировка была незаметна.
+            if (completed)
+                Logger.Info($"BlockedUser set={set}, address={UserData[3]}: {MyResult}");
+            else
+                Logger.Warning($"BlockedUser set={set}, address={UserData[3]} не выполнено: {MyResult}");
+
+            return completed;
         }
 
         public void Dispose()
