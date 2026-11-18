@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -47,8 +47,6 @@ namespace AlcoBarrier
             new EventsDB("events").CreateDB();
             new SettingsDB("settings").CreateDB();
             new LogUsersDB("loguser").CreateDB();
-            // Если в проекте используется ReportDB, его тоже стоит инициализировать здесь:
-            // new ReportDB("report").CreateDB();
         }
 
         private void EnsureSettings()

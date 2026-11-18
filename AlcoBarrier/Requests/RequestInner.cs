@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
@@ -58,32 +58,6 @@ namespace AlcoBarrier
                 MyResult = $"Message :{e.Message}";
             }
             return MyResult;
-        }
-
-        async public Task<List<string>> GetAllUsers(CancellationToken token)
-        {
-            string MyResult;
-            try
-            {
-                token.ThrowIfCancellationRequested();
-
-                using (HttpResponseMessage response = await client.GetAsync($"http://{IpAddress}/restApi/v2/User/User?FullObject=True", token))
-                {
-                    response.EnsureSuccessStatusCode();
-                    string responseBody = await response.Content.ReadAsStringAsync();
-                    MyResult = responseBody;
-                }
-            }
-            catch (OperationCanceledException) when (token.IsCancellationRequested)
-            {
-                throw;
-            }
-            catch (Exception e)
-            {
-                MyResult = $"Message :{e.Message}";
-            }
-
-            return xmlHandler.GetUsersString(MyResult);
         }
 
         async public Task<List<string[]>> GetDictUsers(CancellationToken token)
