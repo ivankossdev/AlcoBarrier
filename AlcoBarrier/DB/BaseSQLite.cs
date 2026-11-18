@@ -12,109 +12,138 @@ namespace AlcoBarrier
     public abstract class BaseSQLite
     {
         public string NameDataBase { get; }
-
         public char[] TrimChars { get; } = { ';', '>', '<', '\'', '\\', '{', '}', ':', '-', ' ', '%', '$' };
+        public string Path { get; set; } = Directory.GetCurrentDirectory();
 
         public abstract string CreateDB();
 
         public BaseSQLite(string _NameDataBase)
         {
             NameDataBase = _NameDataBase;
-
         }
-        public string Path { get; set; } = Directory.GetCurrentDirectory();
 
-        protected void Write(string sqlCommand)
+        // ДОБАВЛЕНО (этап 3): централизованное создание подключения.
+        // Включает WAL (для параллельного чтения/записи) и таймаут (защита от Database is locked).
+        private SqliteConnection GetConnection()
         {
-            using (var connection = new SqliteConnection($"Data Source={Path}\\{NameDataBase}.db"))
+            var connection = new SqliteConnection($"Data Source={Path}\\{NameDataBase}.db;Default Timeout=5");
+            connection.Open();
+
+            using (var command = connection.CreateCommand())
             {
-                connection.Open();
-                var command = connection.CreateCommand();
-                command.CommandText = sqlCommand;
+                command.CommandText = "PRAGMA journal_mode=WAL; PRAGMA busy_timeout=5000;";
                 command.ExecuteNonQuery();
-                connection.Close();
+            }
+            return connection;
+        }
+
+        // ДОБАВЛЕНО (этап 3): выполнение группы команд в одной транзакции.
+        protected void ExecuteInTransaction(Action<SqliteConnection> action)
+        {
+            using (var connection = GetConnection())
+            using (var transaction = connection.BeginTransaction())
+            {
+                try
+                {
+                    action(connection);
+                    transaction.Commit();
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    throw;
+                }
             }
         }
 
-        // ДОБАВЛЕНО (этап 2): перегрузка Write с параметрами.
+        protected void Write(string sqlCommand)
+        {
+            using (var connection = GetConnection())
+            {
+                var command = connection.CreateCommand();
+                command.CommandText = sqlCommand;
+                command.ExecuteNonQuery();
+            }
+        }
+
         protected void Write(string sqlCommand, params (string Name, object Value)[] parameters)
         {
-            using (var connection = new SqliteConnection($"Data Source={Path}\\{NameDataBase}.db"))
+            using (var connection = GetConnection())
             {
-                connection.Open();
                 using (var command = BuildCommand(connection, sqlCommand, parameters))
                 {
                     command.ExecuteNonQuery();
                 }
-                connection.Close();
             }
         }
 
         protected void Write(List<string> data)
         {
-            using (var connection = new SqliteConnection($"Data Source={Path}\\{NameDataBase}.db"))
+            using (var connection = GetConnection())
             {
-                connection.Open();
                 foreach (string _data in data)
                 {
                     var command = connection.CreateCommand();
                     command.CommandText = _data;
                     command.ExecuteNonQuery();
                 }
-                connection.Close();
             }
         }
 
         protected string[] Read(string sqlCommand)
         {
             string[] result = null;
-            using (var connection = new SqliteConnection($"Data Source={Path}\\{NameDataBase}.db"))
+            using (var connection = GetConnection())
             {
-                connection.Open();
                 var command = connection.CreateCommand();
                 command.CommandText = sqlCommand;
 
                 using (var reader = command.ExecuteReader())
                 {
-                    int lenghtArray = reader.FieldCount;
-                    string[] Data = new string[lenghtArray];
-                    while (reader.Read())
+                    if (reader.Read())
                     {
+                        int lenghtArray = reader.FieldCount;
+                        string[] Data = new string[lenghtArray];
                         for (int i = 0; i < lenghtArray; i++)
                         {
                             Data[i] = SafeGetString(reader, i);
                         }
-                    }
-                    result = Data;
-                }
-                connection.Close();
-            }
 
+                        if (reader.Read())
+                        {
+                            Logger.Warning($"Read: query returned more than one row, using first. SQL: {sqlCommand}");
+                        }
+                        result = Data;
+                    }
+                }
+            }
             return result;
         }
 
-        // ДОБАВЛЕНО (этап 2): перегрузка Read с параметрами.
         protected string[] Read(string sqlCommand, params (string Name, object Value)[] parameters)
         {
             string[] result = null;
-            using (var connection = new SqliteConnection($"Data Source={Path}\\{NameDataBase}.db"))
+            using (var connection = GetConnection())
             {
-                connection.Open();
                 using (var command = BuildCommand(connection, sqlCommand, parameters))
                 using (var reader = command.ExecuteReader())
                 {
-                    int lenghtArray = reader.FieldCount;
-                    string[] Data = new string[lenghtArray];
-                    while (reader.Read())
+                    if (reader.Read())
                     {
+                        int lenghtArray = reader.FieldCount;
+                        string[] Data = new string[lenghtArray];
                         for (int i = 0; i < lenghtArray; i++)
                         {
                             Data[i] = SafeGetString(reader, i);
                         }
+
+                        if (reader.Read())
+                        {
+                            Logger.Warning($"Read: query returned more than one row, using first. SQL: {sqlCommand}");
+                        }
+                        result = Data;
                     }
-                    result = Data;
                 }
-                connection.Close();
             }
             return result;
         }
@@ -122,19 +151,14 @@ namespace AlcoBarrier
         protected List<string> ReadList(string sqlCommand)
         {
             List<string> result = new List<string>();
-
-            using (var connection = new SqliteConnection($"Data Source={Path}\\{NameDataBase}.db"))
+            using (var connection = GetConnection())
             {
-                connection.Open();
                 var command = connection.CreateCommand();
                 command.CommandText = sqlCommand;
 
                 using (var reader = command.ExecuteReader())
                 {
                     int lenghtArray = reader.FieldCount;
-                    // ИЗМЕНЕНО (этап 1.4): += в цикле -> StringBuilder.
-                    // Поведение идентичное: значения склеиваются через пробел,
-                    // в конце строки тоже остаётся пробел (как и было).
                     var sb = new StringBuilder();
                     while (reader.Read())
                     {
@@ -146,23 +170,19 @@ namespace AlcoBarrier
                         result.Add(sb.ToString());
                     }
                 }
-                connection.Close();
             }
             return result;
         }
 
-        // ДОБАВЛЕНО (этап 2): перегрузка ReadList с параметрами.
         protected List<string> ReadList(string sqlCommand, params (string Name, object Value)[] parameters)
         {
             List<string> result = new List<string>();
-            using (var connection = new SqliteConnection($"Data Source={Path}\\{NameDataBase}.db"))
+            using (var connection = GetConnection())
             {
-                connection.Open();
                 using (var command = BuildCommand(connection, sqlCommand, parameters))
                 using (var reader = command.ExecuteReader())
                 {
                     int lenghtArray = reader.FieldCount;
-                    // ИЗМЕНЕНО (этап 1.4): += в цикле -> StringBuilder.
                     var sb = new StringBuilder();
                     while (reader.Read())
                     {
@@ -174,7 +194,6 @@ namespace AlcoBarrier
                         result.Add(sb.ToString());
                     }
                 }
-                connection.Close();
             }
             return result;
         }
@@ -182,33 +201,27 @@ namespace AlcoBarrier
         protected List<string[]> ReadListArray(string sqlCommand)
         {
             List<string[]> result = new List<string[]>();
-
-            using (var connection = new SqliteConnection($"Data Source={Path}\\{NameDataBase}.db"))
+            using (var connection = GetConnection())
             {
-                connection.Open();
                 var command = connection.CreateCommand();
                 command.CommandText = sqlCommand;
 
                 using (var reader = command.ExecuteReader())
                 {
-                    int lenghtArray = reader.FieldCount;
                     while (reader.Read())
                     {
                         result.Add(ArrayString(reader));
                     }
                 }
-                connection.Close();
             }
             return result;
         }
 
-        // ДОБАВЛЕНО (этап 2): перегрузка ReadListArray с параметрами.
         protected List<string[]> ReadListArray(string sqlCommand, params (string Name, object Value)[] parameters)
         {
             List<string[]> result = new List<string[]>();
-            using (var connection = new SqliteConnection($"Data Source={Path}\\{NameDataBase}.db"))
+            using (var connection = GetConnection())
             {
-                connection.Open();
                 using (var command = BuildCommand(connection, sqlCommand, parameters))
                 using (var reader = command.ExecuteReader())
                 {
@@ -217,7 +230,6 @@ namespace AlcoBarrier
                         result.Add(ArrayString(reader));
                     }
                 }
-                connection.Close();
             }
             return result;
         }
@@ -231,11 +243,9 @@ namespace AlcoBarrier
             {
                 result[i] = SafeGetString(Data, i);
             }
-
             return result;
         }
 
-        // ДОБАВЛЕНО (этап 1): NULL -> null, число -> строка через InvariantCulture, текст -> как есть.
         private static string SafeGetString(SqliteDataReader reader, int index)
         {
             return reader.IsDBNull(index)
@@ -243,8 +253,6 @@ namespace AlcoBarrier
                 : Convert.ToString(reader.GetValue(index), CultureInfo.InvariantCulture);
         }
 
-        // ДОБАВЛЕНО (этап 2): общий конструктор команды с параметрами.
-        // null-значение параметра -> DBNull.Value.
         private static SqliteCommand BuildCommand(SqliteConnection connection, string sqlCommand, (string Name, object Value)[] parameters)
         {
             var command = connection.CreateCommand();

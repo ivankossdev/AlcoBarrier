@@ -1,10 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
-using System.IO;
 
 namespace AlcoBarrier
 {
@@ -15,13 +11,6 @@ namespace AlcoBarrier
         public XmlHandler()
         {
             innerage = new XmlDocument();
-        }
-
-        public XmlHandler(string fileName)
-        {
-            innerage = new XmlDocument();
-            string path = $"{Directory.GetCurrentDirectory()}/{fileName}";
-            innerage.Load(path);
         }
 
         public string GetXmlElement(string xml, string name)
@@ -56,68 +45,11 @@ namespace AlcoBarrier
             return body;
         }
 
-        public List<string> GetUsersString(string xml)
-        {
-            // ИЗМЕНЕНО (этап 4): try/catch XmlException.
-            try
-            {
-                innerage.LoadXml(xml);
-            }
-            catch (XmlException)
-            {
-                return new List<string>();
-            }
-
-            XmlNodeList users = innerage.GetElementsByTagName("Rows");
-
-            string Name = string.Empty, Address = string.Empty,
-                   CardCode = string.Empty, Id = string.Empty,
-                   CardData = string.Empty;
-
-            List<string> Info = new List<string>();
-
-            foreach (XmlElement x in users)
-            {
-                foreach (XmlNode user in x.ChildNodes)
-                {
-                    foreach (XmlNode data in user.ChildNodes)
-                    {
-                        if (data.Name == "Name")
-                        {
-                            Name = data.InnerText;
-                        }
-                        if (data.Name == "Address")
-                        {
-                            Address = data.InnerText;
-                        }
-                        foreach (XmlNode cards in data.ChildNodes)
-                        {
-                            foreach (XmlNode card in cards.ChildNodes)
-                            {
-                                if (card.Name == "Name")
-                                {
-                                    CardCode = card.InnerText;
-                                }
-                                if (card.Name == "ID")
-                                {
-                                    Id = card.InnerText;
-                                }
-                                if (card.Name == "CardData")
-                                {
-                                    CardData = card.InnerText;
-                                }
-                            }
-                        }
-                    }
-
-                    Info.Add($"Name-{Name} User ID-{Address} Card code-{CardCode} hex {CardData} id-{Id}");
-                    Name = string.Empty; Address = string.Empty; CardCode = string.Empty; CardData = string.Empty;
-                }
-            }
-
-            return Info;
-        }
-
+        /// <summary>
+        /// Возвращает список сотрудников или null, если ответ Innerage не удалось разобрать
+        /// (пустой ответ, текст/HTML ошибки вместо XML и т.п.).
+        /// Пустой список означает корректно разобранный ответ, в котором сотрудников нет.
+        /// </summary>
         public List<string[]> GetUsersArray(string xml)
         {
             List<string[]> Users = new List<string[]>();
@@ -127,13 +59,20 @@ namespace AlcoBarrier
             // (до LoadXml), из-за чего результат всегда был пустым списком,
             // и employees никогда не наполнялась.
             // Плюс try/catch XmlException.
+            //
+            // ИЗМЕНЕНО (пункт 1): неразобранный ответ возвращает null, а не пустой список.
+            // Иначе сетевая ошибка или 401 от Innerage («Message :...») выглядели бы
+            // как валидный ответ без сотрудников, и employees можно было бы обнулить.
+            if (string.IsNullOrWhiteSpace(xml))
+                return null;
+
             try
             {
                 innerage.LoadXml(xml);
             }
             catch (XmlException)
             {
-                return Users;
+                return null;
             }
 
             XmlNodeList users = innerage.GetElementsByTagName("Rows");

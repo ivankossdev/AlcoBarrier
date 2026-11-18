@@ -1,13 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Text.Json;
 using System.Text.Json.Nodes;
-using System.Windows.Forms;
-using System.Xml.Linq;
-using System.IO;
 
 namespace AlcoBarrier
 {
@@ -56,80 +49,6 @@ namespace AlcoBarrier
                 Console.WriteLine(ex);
             }
             return Result;
-        }
-
-        private string GetQTY(string jsonString)
-        {
-            string Result = string.Empty;
-            try
-            {
-                JsonNode jsonNode = JsonNode.Parse(jsonString);
-                Result = jsonNode["QTY"].ToString();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-            }
-            return Result;
-        }
-
-        private string CreateAllRecordMessage(string qty)
-        {
-            var forecastObject = new JsonObject
-            {
-                ["cmdType"] = "getLog",
-                ["Position"] = "toLast",
-                ["QTY"] = GetQTY(qty),
-            };
-
-            return forecastObject.ToJsonString();
-        }
-
-        public string CmdTypeHeaderAllMemory(string qty)
-        {
-            string Result = string.Empty;
-            try
-            {
-                JsonNode jsonNode = JsonNode.Parse(CreateAllRecordMessage(qty));
-                return jsonNode.ToString();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-            }
-            return Result;
-        }
-
-        public List<string[]> RecordsMemoryList(string data)
-        {
-            JsonNode jsonNode = JsonNode.Parse(data);
-            int count = jsonNode["Records"].AsArray().Count;
-
-            List<string[]> Records = new List<string[]>();
-
-            for (int i = 0; i < count; i++)
-            {
-                string Code = jsonNode["Records"][i]["Code"].ToString();
-                if (Code == "4" || Code == "5")
-                {
-                    string CardCode = ConvertCodeCard(jsonNode["Records"][i]["WiegandLSB"].ToString());
-                    Records.Add(RecordsArray(jsonNode["Records"][i]["Date"].ToString(),
-                                jsonNode["Records"][i]["Time"].ToString(),
-                                $"{jsonNode["Records"][i]["Result"]} мг/л",
-                                CardCode));
-                }
-            }
-            return Records;
-        }
-
-        private string[] RecordsArray(string Date, string Time, string Result, string CardCode)
-        {
-            string[] Rec = new string[]
-            {
-                Date, Time, Result, CardCode
-            };
-
-            return Rec;
         }
 
         EmloeyesDB employee = new EmloeyesDB("employees");

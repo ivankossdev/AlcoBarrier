@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
@@ -60,32 +60,6 @@ namespace AlcoBarrier
             return MyResult;
         }
 
-        async public Task<List<string>> GetAllUsers(CancellationToken token)
-        {
-            string MyResult;
-            try
-            {
-                token.ThrowIfCancellationRequested();
-
-                using (HttpResponseMessage response = await client.GetAsync($"http://{IpAddress}/restApi/v2/User/User?FullObject=True", token))
-                {
-                    response.EnsureSuccessStatusCode();
-                    string responseBody = await response.Content.ReadAsStringAsync();
-                    MyResult = responseBody;
-                }
-            }
-            catch (OperationCanceledException) when (token.IsCancellationRequested)
-            {
-                throw;
-            }
-            catch (Exception e)
-            {
-                MyResult = $"Message :{e.Message}";
-            }
-
-            return xmlHandler.GetUsersString(MyResult);
-        }
-
         async public Task<List<string[]>> GetDictUsers(CancellationToken token)
         {
             string MyResult;
@@ -106,9 +80,14 @@ namespace AlcoBarrier
             }
             catch (Exception e)
             {
-                MyResult = $"Message :{e.Message}";
+                // ИЗМЕНЕНО (пункт 1): при сетевой ошибке или не-2xx ответе возвращаем null,
+                // а не строку "Message :...". Пустой/битый ответ не должен приводить
+                // к перезаписи локальной базы сотрудников пустой таблицей.
+                Logger.Warning($"GetDictUsers failed: {e.Message}");
+                return null;
             }
 
+            // null здесь означает, что XML не разобрался (например, Innerage вернул не XML).
             return xmlHandler.GetUsersArray(MyResult);
         }
 

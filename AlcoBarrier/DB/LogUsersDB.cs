@@ -14,21 +14,24 @@ namespace AlcoBarrier
 
         public override string CreateDB()
         {
-            // ИЗМЕНЕНО (этап 3): "time NEXT NOT NULL" -> "time TEXT NOT NULL".
-            // NEXT — не тип SQLite. Влияет только на новые БД; существующие не трогаем.
-            string SqlCommand = $"CREATE TABLE loguser (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+            // ИЗМЕНЕНО (этап 3): IF NOT EXISTS и индексы.
+            string SqlCommand = $"CREATE TABLE IF NOT EXISTS loguser " +
+                $"(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
                 $"date TEXT NOT NULL, " +
                 $"time TEXT NOT NULL, " +
                 $"promille TEXT NOT NULL, " +
                 $"user TEXT," +
                 $"cardnum TEXT NOT NULL);";
             Write(SqlCommand);
+
+            Write("CREATE INDEX IF NOT EXISTS idx_loguser_date ON loguser(date);");
+            Write("CREATE INDEX IF NOT EXISTS idx_loguser_cardnum ON loguser(cardnum);");
+
             return $"База данных {NameDataBase} создана \n";
         }
 
         public void WriteRow(string[] rows)
         {
-            // (этап 2) параметризованный INSERT.
             Write(
                 "INSERT INTO loguser (date, time, promille, user, cardnum) " +
                 "VALUES (@date, @time, @promille, @user, @cardnum)",
@@ -46,7 +49,6 @@ namespace AlcoBarrier
 
         public List<string[]> SortByDate(string date)
         {
-            // (этап 2) параметризованный WHERE.
             return ReadListArray(
                 "SELECT date, time, promille, cardnum, user FROM loguser WHERE date = @date",
                 ("@date", date));
@@ -54,7 +56,6 @@ namespace AlcoBarrier
 
         public List<string[]> SortByNumCardAndDate(string NumCard, string Date)
         {
-            // (этап 2) параметризованный LIKE + WHERE.
             return ReadListArray(
                 "SELECT date, time, promille, cardnum, user FROM loguser WHERE cardnum LIKE @cardnum AND date = @date",
                 ("@cardnum", "%" + NumCard + "%"),
@@ -63,11 +64,9 @@ namespace AlcoBarrier
 
         public List<string[]> SortByNumCard(string NumCard)
         {
-            // (этап 2) параметризованный LIKE.
             return ReadListArray(
                 "SELECT date, time, promille, cardnum, user FROM loguser WHERE cardnum LIKE @cardnum",
                 ("@cardnum", "%" + NumCard + "%"));
         }
-
     }
 }
