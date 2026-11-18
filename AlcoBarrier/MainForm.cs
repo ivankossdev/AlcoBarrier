@@ -24,6 +24,11 @@ namespace AlcoBarrier
         private readonly CancellationTokenSource _cts = new CancellationTokenSource();
         private int _timerBusy;
 
+        // ИЗМЕНЕНО (пункт 5): все обращения к events.db идут через этот семафор и
+        // выполняются в пуле потоков — чтобы не блокировать UI и не пересекаться
+        // между таймером и циклом опроса.
+        private readonly SemaphoreSlim _eventsLock = new SemaphoreSlim(1, 1);
+
         // ИЗМЕНЕНО (пункт 2): состояние повторов блокировки по каждому событию events.id.
         private readonly Dictionary<string, BlockRetryState> _blockRetries = new Dictionary<string, BlockRetryState>();
 
@@ -184,7 +189,10 @@ namespace AlcoBarrier
                         {
                             oldRecord = lastRecord;
                             result = await AlcoReader.GetRequestCmd(myJson.CreateLogMessage(lastRecord));
-                            string[] rows = myJson.GetArrayResult(result);
+
+                            // ИЗМЕНЕНО (пункт 5): разбор ответа и поиск карты в employees —
+                            // это синхронные обращения к SQLite, выносим их с UI-потока.
+                            string[] rows = await Task.Run(() => myJson.GetArrayResult(result), token);
 
                             if (rows[0] != null && rows[1] != null && rows[2] != null)
                             {
@@ -203,9 +211,17 @@ namespace AlcoBarrier
                                     string[] data = await Task.Run(() => emploeyesDB.GetUserParam(rows[4]), token);
                                     if (data != null)
                                     {
-                                        await Task.Run(() => events.WriteEvent(data, CreateBlockTime(SetHour, SetMinute)), token);
+                                        // ИЗМЕНЕНО (пункт 5): запись события и чтение списка — под
+                                        // тем же семафором, что и таймер, и вне UI-потока.
+                                        List<string[]> pendingEvents = await RunEventsAsync(
+                                            () =>
+                                            {
+                                                events.WriteEvent(data, CreateBlockTime(SetHour, SetMinute));
+                                                return events.ReadEventList();
+                                            },
+                                            token);
 
-                                        foreach (string[] s in events.ReadEventList())
+                                        foreach (string[] s in pendingEvents)
                                         {
                                             if (token.IsCancellationRequested) return;
                                             await requestInner.BlockedUser(false, s, token);
@@ -273,6 +289,37 @@ namespace AlcoBarrier
             return DateTime.Now.AddHours(hours).AddMinutes(minutes);
         }
 
+        // ИЗМЕНЕНО (пункт 5): SQLite синхронный, поэтому операции с events
+        // (ReadEventList, WriteEvent, DeleteString) выполняются в пуле потоков и
+        // строго по одной. Раньше они вызывались прямо в UI-потоке и могли
+        // подвешивать интерфейс, а таймер и цикл опроса работали с таблицей
+        // одновременно.
+        private async Task RunEventsAsync(Action action, CancellationToken token)
+        {
+            await _eventsLock.WaitAsync(token);
+            try
+            {
+                await Task.Run(action, token);
+            }
+            finally
+            {
+                _eventsLock.Release();
+            }
+        }
+
+        private async Task<T> RunEventsAsync<T>(Func<T> func, CancellationToken token)
+        {
+            await _eventsLock.WaitAsync(token);
+            try
+            {
+                return await Task.Run(func, token);
+            }
+            finally
+            {
+                _eventsLock.Release();
+            }
+        }
+
         private async void timer1_Tick(object sender, EventArgs e)
         {
             if (Interlocked.CompareExchange(ref _timerBusy, 1, 0) != 0)
@@ -283,7 +330,10 @@ namespace AlcoBarrier
                 DateTime now = DateTime.Now;
                 HashSet<string> aliveIds = new HashSet<string>(StringComparer.Ordinal);
 
-                foreach (string[] s in events.ReadEventList())
+                // ИЗМЕНЕНО (пункт 5): чтение списка событий — в пуле потоков.
+                List<string[]> scheduledEvents = await RunEventsAsync(() => events.ReadEventList(), _cts.Token);
+
+                foreach (string[] s in scheduledEvents)
                 {
                     if (_cts.IsCancellationRequested) return;
 
@@ -299,7 +349,8 @@ namespace AlcoBarrier
 
                     if (await requestInner.BlockedUser(true, s, _cts.Token))
                     {
-                        events.DeleteString(s[0]);
+                        // ИЗМЕНЕНО (пункт 5): удаление — тоже вне UI-потока и под семафором.
+                        await RunEventsAsync(() => events.DeleteString(s[0]), _cts.Token);
                         _blockRetries.Remove(s[0]);
                     }
                     else
