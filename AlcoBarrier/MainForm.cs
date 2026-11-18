@@ -27,6 +27,10 @@ namespace AlcoBarrier
         // ИЗМЕНЕНО (пункт 2): состояние повторов блокировки по каждому событию events.id.
         private readonly Dictionary<string, BlockRetryState> _blockRetries = new Dictionary<string, BlockRetryState>();
 
+        // ИЗМЕНЕНО (пункт 4): о том, что устройство не передаёт код карты, предупреждаем
+        // один раз за запуск, чтобы не заливать лог каждым замером.
+        private bool _cardNotReportedLogged;
+
         public MainForm()
         {
             InitializeComponent();
@@ -182,25 +186,35 @@ namespace AlcoBarrier
                             result = await AlcoReader.GetRequestCmd(myJson.CreateLogMessage(lastRecord));
                             string[] rows = myJson.GetArrayResult(result);
 
-                            if (rows[0] != null && rows[1] != null && rows[2] != null && rows[4] != null)
+                            if (rows[0] != null && rows[1] != null && rows[2] != null)
                             {
                                 AddRowToGrid(rows);
                                 await Task.Run(() => logUsersDB.WriteRow(rows), token);
 
-                                string[] data = await Task.Run(() => emploeyesDB.GetUserParam(rows[4]), token);
-                                if (data != null)
+                                // ИЗМЕНЕНО (пункт 4): «карта не передана» и «карта неизвестна» —
+                                // разные ситуации. Раньше отсутствие Wiegand-кода превращалось
+                                // в cardnum "0" и предупреждение «Unknown card: 0».
+                                if (rows[4] == null)
                                 {
-                                    await Task.Run(() => events.WriteEvent(data, CreateBlockTime(SetHour, SetMinute)), token);
-
-                                    foreach (string[] s in events.ReadEventList())
-                                    {
-                                        if (token.IsCancellationRequested) return;
-                                        await requestInner.BlockedUser(false, s, token);
-                                    }
+                                    LogCardNotReported();
                                 }
                                 else
                                 {
-                                    Logger.Warning($"Unknown card: {rows[4]} (logged to loguser, no block)");
+                                    string[] data = await Task.Run(() => emploeyesDB.GetUserParam(rows[4]), token);
+                                    if (data != null)
+                                    {
+                                        await Task.Run(() => events.WriteEvent(data, CreateBlockTime(SetHour, SetMinute)), token);
+
+                                        foreach (string[] s in events.ReadEventList())
+                                        {
+                                            if (token.IsCancellationRequested) return;
+                                            await requestInner.BlockedUser(false, s, token);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Logger.Warning($"Unknown card: {rows[4]} (logged to loguser, no block)");
+                                    }
                                 }
                             }
                         }
@@ -236,6 +250,20 @@ namespace AlcoBarrier
                 Invoke(new Action(() => dataGridView1.Rows.Add(rows)));
             else
                 dataGridView1.Rows.Add(rows);
+        }
+
+        // ИЗМЕНЕНО (пункт 4): устройство по умолчанию не записывает Wiegand-коды
+        // в память событий, поэтому замер может прийти без номера карты. Это не ошибка
+        // сопоставления («Unknown card»), а отсутствие данных от блока сопряжения.
+        private void LogCardNotReported()
+        {
+            if (_cardNotReportedLogged) return;
+
+            _cardNotReportedLogged = true;
+            Logger.Warning("Алкотестер не передаёт код карты (WiegandLSB отсутствует или равен 0): " +
+                           "замеры сохраняются, но привязать их к сотрудникам и выполнить блокировку нельзя. " +
+                           "Проверьте, что блок сопряжения записывает Wiegand-коды в память событий " +
+                           "(по умолчанию запись запрещена) и что считыватель подключён к Wiegand-входу.");
         }
 
         private DateTime CreateBlockTime(string H, string M)

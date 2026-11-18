@@ -32,6 +32,9 @@ namespace AlcoBarrier
 
         public void WriteRow(string[] rows)
         {
+            // ИЗМЕНЕНО (пункт 4): замер может прийти без кода карты (устройство не передало
+            // Wiegand-код). Колонка cardnum объявлена NOT NULL, поэтому, как и раньше,
+            // для таких записей сохраняем "0".
             Write(
                 "INSERT INTO loguser (date, time, promille, user, cardnum) " +
                 "VALUES (@date, @time, @promille, @user, @cardnum)",
@@ -39,7 +42,7 @@ namespace AlcoBarrier
                 ("@time", rows[1]),
                 ("@promille", rows[2]),
                 ("@user", rows[3]),
-                ("@cardnum", rows[4]));
+                ("@cardnum", rows[4] ?? "0"));
         }
 
         public List<string[]> ReadRows()
