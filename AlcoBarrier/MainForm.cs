@@ -436,32 +436,49 @@ namespace AlcoBarrier
 
         private async Task SychroInnerDBAsync(CancellationToken token)
         {
-            // ИЗМЕНЕНО (этап 3): получаем список пользователей и атомарно заменяем таблицу
+            // ИЗМЕНЕНО (этап 3): получаем список карт и атомарно заменяем таблицу
             // в рамках одной транзакции. Если связь оборвется на середине — база останется старой.
-            var users = await requestInner.GetDictUsers(token);
+            UsersParseResult parsed = await requestInner.GetDictUsers(token);
             if (token.IsCancellationRequested) return;
 
             // ИЗМЕНЕНО (пункт 1): неудачный или пустой ответ Innerage больше не обнуляет employees.
-            // null — запрос не выполнился или XML не разобрался; пустой список — валидный,
-            // но подозрительный ответ (например, «Rows» без пользователей). В обоих случаях
-            // оставляем локальную базу как есть: без сотрудников не работает ни одна блокировка.
-            if (users == null)
+            // ИЗМЕНЕНО (рефакторинг XmlHandler): различаем сетевую ошибку, неразобранный XML,
+            // отсутствие ожидаемой структуры и честно пустой список карт — в каждом случае
+            // база остаётся прежней, но в лог пишется своя причина.
+            if (parsed == null)
             {
-                Logger.Error("SychroInnerDB: не удалось получить список сотрудников от Innerage, " +
+                Logger.Error("SychroInnerDB: не удалось получить ответ от Innerage, " +
                              "локальная база employees оставлена без изменений");
                 return;
             }
 
-            if (users.Count == 0)
+            if (!parsed.XmlParsed)
             {
-                Logger.Warning("SychroInnerDB: Innerage вернул пустой список сотрудников, " +
-                               "локальная база employees оставлена без изменений");
+                Logger.Error($"SychroInnerDB: ответ Innerage не разобран ({parsed.Error}), " +
+                             $"локальная база employees оставлена без изменений");
                 return;
             }
 
-            await Task.Run(() => emploeyesDB.ReplaceAll(users), token);
+            if (!parsed.StructureFound)
+            {
+                Logger.Warning($"SychroInnerDB: в ответе Innerage нет ожидаемой структуры ({parsed.Warning}), " +
+                               $"локальная база employees оставлена без изменений");
+                return;
+            }
 
-            Logger.Info($"SychroInnerDB: employees синхронизирована, сотрудников: {users.Count}");
+            if (parsed.Cards.Count == 0)
+            {
+                Logger.Warning($"SychroInnerDB: Innerage не вернул ни одной карты ({parsed.Warning}), " +
+                               $"локальная база employees оставлена без изменений");
+                return;
+            }
+
+            if (!string.IsNullOrEmpty(parsed.Warning))
+                Logger.Warning($"SychroInnerDB: {parsed.Warning}");
+
+            await Task.Run(() => emploeyesDB.ReplaceAll(parsed.Cards), token);
+
+            Logger.Info($"SychroInnerDB: employees синхронизирована, карт: {parsed.Cards.Count}");
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)

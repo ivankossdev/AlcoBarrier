@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Microsoft.Data.Sqlite;
 
@@ -31,11 +31,13 @@ namespace AlcoBarrier
         // ИЗМЕНЕНО (пункт 1): защита от обнуления — null или пустой список не трогает таблицу.
         // DROP TABLE в этом методе выполняется безвозвратно, поэтому пустой набор данных
         // (сбой сети, пустой ответ Innerage) не должен приводить к потере базы.
-        public void ReplaceAll(List<string[]> users)
+        // ИЗМЕНЕНО (рефакторинг XmlHandler): на вход приходят типизированные карты,
+        // а не позиционный string[6] — перепутать колонки больше нельзя.
+        public void ReplaceAll(IReadOnlyList<EmployeeCard> cards)
         {
-            if (users == null || users.Count == 0)
+            if (cards == null || cards.Count == 0)
             {
-                Logger.Warning("ReplaceAll: пустой список сотрудников, таблица employees не изменена");
+                Logger.Warning("ReplaceAll: пустой список карт, таблица employees не изменена");
                 return;
             }
 
@@ -69,14 +71,14 @@ namespace AlcoBarrier
                     var pId = cmd.Parameters.Add("@id", SqliteType.Text);
                     var pCardTemplate = cmd.Parameters.Add("@cardTemplate", SqliteType.Text);
 
-                    foreach (var emp in users)
+                    foreach (EmployeeCard card in cards)
                     {
-                        pName.Value = emp[0] ?? (object)DBNull.Value;
-                        pIdUser.Value = emp[1] ?? (object)DBNull.Value;
-                        pCode.Value = emp[2] ?? (object)DBNull.Value;
-                        pHex.Value = emp[3] ?? (object)DBNull.Value;
-                        pId.Value = emp[4] ?? (object)DBNull.Value;
-                        pCardTemplate.Value = emp[5] ?? (object)DBNull.Value;
+                        pName.Value = card.UserName ?? string.Empty;
+                        pIdUser.Value = card.UserAddress ?? string.Empty;
+                        pCode.Value = card.CardNumber ?? string.Empty;
+                        pHex.Value = card.CardData ?? string.Empty;
+                        pId.Value = card.CardId ?? string.Empty;
+                        pCardTemplate.Value = card.CardTemplate ?? string.Empty;
 
                         cmd.ExecuteNonQuery();
                     }

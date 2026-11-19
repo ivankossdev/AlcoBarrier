@@ -10,7 +10,6 @@ namespace AlcoBarrier
     public class RequestInner : IDisposable
     {
         private HttpClient client;
-        private XmlHandler xmlHandler;
 
         private readonly string IpAddress;
         private bool _disposed;
@@ -31,8 +30,6 @@ namespace AlcoBarrier
                 client.DefaultRequestHeaders.Add("Authorization", auth);
             if (!string.IsNullOrEmpty(key))
                 client.DefaultRequestHeaders.Add("API-KEY", key);
-
-            xmlHandler = new XmlHandler();
         }
 
         async public Task<string> GetSystemInfo(CancellationToken token)
@@ -46,7 +43,7 @@ namespace AlcoBarrier
                 {
                     response.EnsureSuccessStatusCode();
                     string responseBody = await response.Content.ReadAsStringAsync();
-                    MyResult = $"{xmlHandler.GetXmlElement(responseBody, "SystemInfo")}";
+                    MyResult = $"{InnerageXmlParser.GetElementText(responseBody, "SystemInfo")}";
                 }
             }
             catch (OperationCanceledException) when (token.IsCancellationRequested)
@@ -60,7 +57,14 @@ namespace AlcoBarrier
             return MyResult;
         }
 
-        async public Task<List<string[]>> GetDictUsers(CancellationToken token)
+        /// <summary>
+        /// Загружает сотрудников из Innerage и разбирает ответ.
+        /// Возвращает null только при сетевой ошибке/не-2xx: тогда синхронизация
+        /// не выполняется и локальная база остаётся прежней (пункт 1).
+        /// ИЗМЕНЕНО (рефакторинг XmlHandler): результат разбора типизирован, а сам разбор
+        /// выполняется в пуле потоков — раньше XML парсился на UI-контексте.
+        /// </summary>
+        async public Task<UsersParseResult> GetDictUsers(CancellationToken token)
         {
             string MyResult;
             try
@@ -87,8 +91,7 @@ namespace AlcoBarrier
                 return null;
             }
 
-            // null здесь означает, что XML не разобрался (например, Innerage вернул не XML).
-            return xmlHandler.GetUsersArray(MyResult);
+            return await Task.Run(() => InnerageXmlParser.ParseUserCards(MyResult), token);
         }
 
         /// <summary>
@@ -130,7 +133,7 @@ namespace AlcoBarrier
                 {
                     response.EnsureSuccessStatusCode();
                     string responseBody = await response.Content.ReadAsStringAsync();
-                    MyResult = $"{xmlHandler.GetXmlElement(responseBody, "CommandProgress")}";
+                    MyResult = $"{InnerageXmlParser.GetElementText(responseBody, "CommandProgress")}";
                 }
 
                 completed = true;
