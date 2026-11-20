@@ -36,6 +36,12 @@ namespace AlcoBarrier
         // один раз за запуск, чтобы не заливать лог каждым замером.
         private bool _cardNotReportedLogged;
 
+        // ИЗМЕНЕНО (P0.5): периодическая синхронизация сотрудников.
+        // Интервал берётся из settings.db (SyncMinutes), см. SettingsDB.GetSyncMinutes.
+        private readonly System.Windows.Forms.Timer _syncTimer = new System.Windows.Forms.Timer();
+        private int _syncBusy;
+        private int _syncMinutes;
+
         public MainForm()
         {
             InitializeComponent();
@@ -107,6 +113,9 @@ namespace AlcoBarrier
             string[] HourMin = setDb.GetSettingsTime(setDb.InnerTable);
             SetHour = HourMin[0];
             SetMinute = HourMin[1];
+
+            // ИЗМЕНЕНО (P0.5): интервал периодической синхронизации.
+            _syncMinutes = setDb.GetSyncMinutes();
         }
 
         private async Task InitializeAsync(CancellationToken token)
@@ -141,7 +150,52 @@ namespace AlcoBarrier
             }
 
             if (!token.IsCancellationRequested)
+            {
+                // ИЗМЕНЕНО (P0.5): после стартовой синхронизации включаем периодическую.
+                StartSyncTimer(_syncMinutes);
                 _ = OnlineMessageAsync(token);
+            }
+        }
+
+        /// <summary>
+        /// Запускает периодическую синхронизацию сотрудников.
+        /// ИЗМЕНЕНО (P0.5): интервал берётся из settings.db (SyncMinutes).
+        /// Значение &lt;= 0 отключает периодическую синхронизацию — остаётся только стартовая.
+        /// </summary>
+        private void StartSyncTimer(int minutes)
+        {
+            if (minutes <= 0)
+            {
+                Logger.Info("SychroInnerDB: периодическая синхронизация отключена (SyncMinutes <= 0)");
+                return;
+            }
+
+            const int maxMinutes = 24 * 60;
+            int intervalMinutes = Math.Min(minutes, maxMinutes);
+
+            _syncTimer.Interval = intervalMinutes * 60 * 1000;
+            _syncTimer.Tick += SyncTimer_Tick;
+            _syncTimer.Start();
+
+            Logger.Info($"SychroInnerDB: периодическая синхронизация каждые {intervalMinutes} мин");
+        }
+
+        private async void SyncTimer_Tick(object sender, EventArgs e)
+        {
+            try
+            {
+                await SychroInnerDBAsync(_cts.Token);
+            }
+            catch (OperationCanceledException)
+            {
+            }
+            catch (ObjectDisposedException)
+            {
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("SyncTimer error", ex);
+            }
         }
 
         private async Task SystemInfoAsync(CancellationToken token)
@@ -436,53 +490,68 @@ namespace AlcoBarrier
 
         private async Task SychroInnerDBAsync(CancellationToken token)
         {
-            // ИЗМЕНЕНО (этап 3): получаем список карт и атомарно заменяем таблицу
-            // в рамках одной транзакции. Если связь оборвется на середине — база останется старой.
-            UsersParseResult parsed = await requestInner.GetDictUsers(token);
-            if (token.IsCancellationRequested) return;
-
-            // ИЗМЕНЕНО (пункт 1): неудачный или пустой ответ Innerage больше не обнуляет employees.
-            // ИЗМЕНЕНО (рефакторинг XmlHandler): различаем сетевую ошибку, неразобранный XML,
-            // отсутствие ожидаемой структуры и честно пустой список карт — в каждом случае
-            // база остаётся прежней, но в лог пишется своя причина.
-            if (parsed == null)
-            {
-                Logger.Error("SychroInnerDB: не удалось получить ответ от Innerage, " +
-                             "локальная база employees оставлена без изменений");
+            // ИЗМЕНЕНО (P0.5): синхронизация вызывается и из инициализации, и из таймера —
+            // одновременно выполняется только одна, чтобы не дублировать ReplaceAll.
+            if (Interlocked.CompareExchange(ref _syncBusy, 1, 0) != 0)
                 return;
-            }
 
-            if (!parsed.XmlParsed)
+            try
             {
-                Logger.Error($"SychroInnerDB: ответ Innerage не разобран ({parsed.Error}), " +
-                             $"локальная база employees оставлена без изменений");
-                return;
-            }
+                // ИЗМЕНЕНО (этап 3): получаем список карт и атомарно заменяем таблицу
+                // в рамках одной транзакции. Если связь оборвется на середине — база останется старой.
+                UsersParseResult parsed = await requestInner.GetDictUsers(token);
+                if (token.IsCancellationRequested) return;
 
-            if (!parsed.StructureFound)
+                // ИЗМЕНЕНО (пункт 1): неудачный или пустой ответ Innerage больше не обнуляет employees.
+                // ИЗМЕНЕНО (рефакторинг XmlHandler): различаем сетевую ошибку, неразобранный XML,
+                // отсутствие ожидаемой структуры и честно пустой список карт — в каждом случае
+                // база остаётся прежней, но в лог пишется своя причина.
+                if (parsed == null)
+                {
+                    Logger.Error("SychroInnerDB: не удалось получить ответ от Innerage, " +
+                                 "локальная база employees оставлена без изменений");
+                    return;
+                }
+
+                if (!parsed.XmlParsed)
+                {
+                    Logger.Error($"SychroInnerDB: ответ Innerage не разобран ({parsed.Error}), " +
+                                 $"локальная база employees оставлена без изменений");
+                    return;
+                }
+
+                if (!parsed.StructureFound)
+                {
+                    Logger.Warning($"SychroInnerDB: в ответе Innerage нет ожидаемой структуры ({parsed.Warning}), " +
+                                   $"локальная база employees оставлена без изменений");
+                    return;
+                }
+
+                if (parsed.Cards.Count == 0)
+                {
+                    Logger.Warning($"SychroInnerDB: Innerage не вернул ни одной карты ({parsed.Warning}), " +
+                                   $"локальная база employees оставлена без изменений");
+                    return;
+                }
+
+                if (!string.IsNullOrEmpty(parsed.Warning))
+                    Logger.Warning($"SychroInnerDB: {parsed.Warning}");
+
+                await Task.Run(() => emploeyesDB.ReplaceAll(parsed.Cards), token);
+
+                Logger.Info($"SychroInnerDB: employees синхронизирована, карт: {parsed.Cards.Count}");
+            }
+            finally
             {
-                Logger.Warning($"SychroInnerDB: в ответе Innerage нет ожидаемой структуры ({parsed.Warning}), " +
-                               $"локальная база employees оставлена без изменений");
-                return;
+                Interlocked.Exchange(ref _syncBusy, 0);
             }
-
-            if (parsed.Cards.Count == 0)
-            {
-                Logger.Warning($"SychroInnerDB: Innerage не вернул ни одной карты ({parsed.Warning}), " +
-                               $"локальная база employees оставлена без изменений");
-                return;
-            }
-
-            if (!string.IsNullOrEmpty(parsed.Warning))
-                Logger.Warning($"SychroInnerDB: {parsed.Warning}");
-
-            await Task.Run(() => emploeyesDB.ReplaceAll(parsed.Cards), token);
-
-            Logger.Info($"SychroInnerDB: employees синхронизирована, карт: {parsed.Cards.Count}");
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            _syncTimer.Stop();
+            _syncTimer.Dispose();
+
             _cts.Cancel();
 
             requestInner?.Dispose();

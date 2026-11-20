@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Xml;
 using AlcoBarrier;
 
 /// <summary>
@@ -14,6 +15,7 @@ internal static class XmlParserHarness
     private static int _failed;
     private static MethodInfo _parseCards;
     private static MethodInfo _elementText;
+    private static MethodInfo _buildCommand;
 
     private static int Main()
     {
@@ -26,14 +28,18 @@ internal static class XmlParserHarness
         _parseCards = parser.GetMethod("ParseUserCards", flags);
         _elementText = parser.GetMethod("GetElementText", flags);
 
-        if (_parseCards == null || _elementText == null)
+        Type commandBuilder = assembly.GetType("AlcoBarrier.InnerageCommandBuilder", true);
+        _buildCommand = commandBuilder.GetMethod("BuildCardStateCommand", flags);
+
+        if (_parseCards == null || _elementText == null || _buildCommand == null)
         {
-            Console.WriteLine("Не найдены методы InnerageXmlParser — харнесс не соответствует сборке.");
+            Console.WriteLine("Не найдены методы InnerageXmlParser/InnerageCommandBuilder — харнесс не соответствует сборке.");
             return 99;
         }
 
         CardsTests();
         ElementTextTests();
+        CommandBuilderTests();
 
         Console.WriteLine();
         if (_failed == 0)
@@ -179,6 +185,95 @@ internal static class XmlParserHarness
         Check("18. GetElementText: XXE => пустая строка", ElementText(xxe, "Users") == "");
 
         Check("19. GetElementText: null => пустая строка", ElementText(null, "SystemInfo") == "");
+    }
+
+    private static void CommandBuilderTests()
+    {
+        string blockCommand = BuildCommand(true, "addr-1", "1111", "D1", "tpl1");
+        Check("20. команда блокировки: корректный XML", IsWellFormed(blockCommand));
+
+        XmlDocument blockDoc = Load(blockCommand);
+        Check("20a. корень User и Address",
+            blockDoc.DocumentElement.Name == "User" && blockDoc.DocumentElement.GetAttribute("Address") == "addr-1",
+            blockCommand);
+        Check("20b. State=Unused при block=true",
+            TextOf(blockDoc, "//Cards/Card/State") == "Unused", blockCommand);
+        Check("20c. CardType/Ref с шаблоном",
+            AttributeOf(blockDoc, "//Cards/Card/CardType/Ref", "Type") == "CardTemplate" &&
+            AttributeOf(blockDoc, "//Cards/Card/CardType/Ref", "PartitionID") == "0" &&
+            AttributeOf(blockDoc, "//Cards/Card/CardType/Ref", "ID") == "tpl1",
+            blockCommand);
+        Check("20d. CardData/CloudCredentialType",
+            TextOf(blockDoc, "//Cards/Card/CardData") == "D1" &&
+            TextOf(blockDoc, "//Cards/Card/CloudCredentialType") == "None",
+            blockCommand);
+
+        XmlDocument activeDoc = Load(BuildCommand(false, "a", "c", "d", "t"));
+        Check("21. State=Active при block=false", TextOf(activeDoc, "//Cards/Card/State") == "Active");
+
+        const string nasty = "a&b<c>d\"e'f";
+        string nastyCommand = BuildCommand(true, nasty, nasty, nasty, nasty);
+        Check("22. спецсимволы: команда остаётся корректным XML", IsWellFormed(nastyCommand), nastyCommand);
+        Check("22a. в тексте присутствует &amp;", nastyCommand.Contains("&amp;"));
+
+        XmlDocument nastyDoc = Load(nastyCommand);
+        Check("22b. значения после разбора совпадают с исходными",
+            nastyDoc.DocumentElement.GetAttribute("Address") == nasty &&
+            TextOf(nastyDoc, "//Cards/Card/Name") == nasty &&
+            TextOf(nastyDoc, "//Cards/Card/CardData") == nasty &&
+            AttributeOf(nastyDoc, "//Cards/Card/CardType/Ref", "ID") == nasty,
+            nastyCommand);
+
+        Check("22c. управляющий символ не проходит (команда отклоняется)",
+            IsRejectedCommand(true, "a", "b\u0001c", "d", "t"));
+    }
+
+    private static string BuildCommand(bool block, string address, string code, string data, string template)
+    {
+        return (string)_buildCommand.Invoke(null, new object[] { block, address, code, data, template });
+    }
+
+    private static bool IsRejectedCommand(bool block, string address, string code, string data, string template)
+    {
+        try
+        {
+            BuildCommand(block, address, code, data, template);
+            return false;
+        }
+        catch (TargetInvocationException)
+        {
+            return true;
+        }
+    }
+
+    private static bool IsWellFormed(string xml)
+    {
+        try
+        {
+            Load(xml);
+            return true;
+        }
+        catch (XmlException)
+        {
+            return false;
+        }
+    }
+
+    private static XmlDocument Load(string xml)
+    {
+        var document = new XmlDocument();
+        document.LoadXml(xml);
+        return document;
+    }
+
+    private static string TextOf(XmlDocument document, string xpath)
+    {
+        return document.SelectSingleNode(xpath)?.InnerText;
+    }
+
+    private static string AttributeOf(XmlDocument document, string xpath, string name)
+    {
+        return document.SelectSingleNode(xpath)?.Attributes?[name]?.Value;
     }
 
     private static UsersParseResult Parse(string xml)

@@ -105,26 +105,24 @@ namespace AlcoBarrier
             string MyResult = string.Empty;
             bool completed = false;
 
+            if (UserData == null || UserData.Length < 5)
+            {
+                Logger.Warning("BlockedUser: некорректные данные карты (ожидается 5+ полей)");
+                return false;
+            }
+
             try
             {
                 token.ThrowIfCancellationRequested();
 
-                string command = string.Empty;
-                string Active = "Active";
-
-                if (set)
-                {
-                    Active = "Unused";
-                }
-                command = $"<User Address=\"{UserData[3]}\">\r\n" +
-                          $"<Cards>\r\n" +
-                          $"<Card>\r\n<Name>{UserData[1]}</Name>\r\n" +
-                          $"<State>{Active}</State>\r\n" +
-                          $"<CardType>\r\n<Ref Type=\"CardTemplate\" PartitionID=\"0\" ID=\"{UserData[4]}\" />\r\n" +
-                          $"</CardType>\r\n<CardNumber>{UserData[1]}</CardNumber>\r\n<CardNumberNumeric>{UserData[1]}</CardNumberNumeric>\r\n" +
-                          $"<IssueNumber>0</IssueNumber>\r\n" +
-                          $"<CardData>{UserData[2]}</CardData>\r\n" +
-                          $"<ExternalCredentials />\r\n<CloudCredentialType>None</CloudCredentialType>\r\n</Card>\r\n</Cards>\r\n</User>\r\n";
+                // ДОБАВЛЕНО (P0.3): XML собирается InnerageCommandBuilder,
+                // значения экранируются — данные карты больше не ломают команду.
+                string command = InnerageCommandBuilder.BuildCardStateCommand(
+                    set,
+                    UserData[3],
+                    UserData[1],
+                    UserData[2],
+                    UserData[4]);
 
                 byte[] messageToBytes = Encoding.UTF8.GetBytes(command);
 
